@@ -217,7 +217,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
 
     const draw = () => {
       t += 0.012;
-      const lon0 = 20 + Math.sin(t * 0.18) * 8;
+      const lon0 = (t * 5) % 360;
 
       ctx.clearRect(0, 0, SIZE, SIZE);
 
@@ -444,12 +444,10 @@ export default function Hero() {
   const textOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
   const textY       = useTransform(scrollYProgress, [0, 0.5],  [0, -50]);
 
-  // Globe follows scroll — moves up, spins, and fades out
+  // Globe follows scroll — moves up, shrinks, and fades out
   const globeY       = useTransform(scrollYProgress, [0, 1],    [0, -200]);
   const globeScale   = useTransform(scrollYProgress, [0, 0.75], [1, 0.82]);
   const globeOpacity = useTransform(scrollYProgress, [0, 0.72], [1, 0]);
-  // Full 360° spin mapped across the scroll range
-  const globeRotate  = useTransform(scrollYProgress, [0, 0.9],  [0, 360]);
 
   return (
     <section
@@ -624,7 +622,7 @@ export default function Hero() {
       {/* ── Globe — scroll-driven + phase-tinted ── */}
       <motion.div
         className="relative z-5 flex flex-col items-center w-full px-4"
-        style={{ y: globeY, scale: globeScale, opacity: globeOpacity, rotateZ: globeRotate }}
+        style={{ y: globeY, scale: globeScale, opacity: globeOpacity }}
         initial={{ opacity: 0, scale: 0.88, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 1.1, ease: EASE, delay: 0.35 }}
