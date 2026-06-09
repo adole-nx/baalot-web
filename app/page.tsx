@@ -4,6 +4,7 @@ import ProblemSection     from "@/components/ProblemSection";
 import SolutionSection    from "@/components/SolutionSection";
 import HowItWorks         from "@/components/HowItWorks";
 import StatsImpact        from "@/components/StatsImpact";
+import FeaturedVideo      from "@/components/FeaturedVideo";
 import UseCases           from "@/components/UseCases";
 import Security           from "@/components/Security";
 import AppFeatureShowcase from "@/components/AppFeatureShowcase";
@@ -21,6 +22,7 @@ export default function Home() {
       <SolutionSection />
       <HowItWorks />
       <StatsImpact />
+      <FeaturedVideo />
       <UseCases />
       <Security />
       <AppFeatureShowcase />

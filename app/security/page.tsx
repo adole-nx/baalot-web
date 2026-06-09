@@ -5,6 +5,7 @@ import Link from "next/link";
 import SplitHeading from "@/components/SplitHeading";
 import NodeDiagram from "@/components/NodeDiagram";
 import VerifyTerminal from "@/components/VerifyTerminal";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -137,6 +138,39 @@ export default function SecurityPage() {
                 <p className="text-muted text-sm leading-relaxed">{p.body}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Security video */}
+      <section className="section-pad bg-bg">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-8 text-center">
+            <p className="text-[10px] font-bold tracking-[0.18em] uppercase mb-3" style={{ color: "#9B5DE5" }}>
+              The Case for Digital Elections
+            </p>
+            <h2
+              className="font-syne font-bold text-primary"
+              style={{ fontSize: "clamp(1.5rem, 3vw, 2.2rem)", letterSpacing: "-0.02em" }}
+            >
+              Why experts are calling for e-voting now.
+            </h2>
+          </div>
+          <div
+            className="rounded-2xl p-[1px]"
+            style={{
+              background: "linear-gradient(135deg, rgba(155,93,229,0.2), rgba(255,255,255,0.04))",
+              boxShadow: "0 0 60px rgba(155,93,229,0.08)",
+            }}
+          >
+            <div className="rounded-[calc(1rem-1px)] overflow-hidden">
+              <YouTubeEmbed
+                videoId="v7inQSORNl4"
+                title="Nigeria's Election Process: Experts in Tech, Academia and Law call for E-Voting"
+                label="Experts on digital election security"
+                aspectRatio="16/9"
+              />
+            </div>
           </div>
         </div>
       </section>
