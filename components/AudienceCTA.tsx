@@ -80,6 +80,7 @@ export default function AudienceCTA() {
               <motion.div
                 key={audience.eyebrow}
                 variants={fadeUp}
+                whileHover={{ y: -6, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
                 className="card-dark card-glow flex flex-col p-7 rounded-2xl"
                 style={{
                   background: "#0A0E16",

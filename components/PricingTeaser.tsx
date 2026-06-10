@@ -102,9 +102,10 @@ export default function PricingTeaser() {
               key={plan.name}
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -4, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.65, ease: EASE, delay: i * 0.1 }}
-              className="relative rounded-2xl p-[1px] flex flex-col"
+              className="relative rounded-2xl p-[1px] flex flex-col cursor-pointer"
               style={{
                 background: plan.highlight
                   ? "linear-gradient(135deg, rgba(155,93,229,0.35), rgba(155,93,229,0.08), rgba(155,93,229,0.03))"

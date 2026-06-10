@@ -118,9 +118,10 @@ export default function SecurityPage() {
                 key={p.title}
                 initial={{ opacity: 0, filter: "blur(12px)", scale: 0.96 }}
                 whileInView={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+                whileHover={{ y: -4, boxShadow: `0 0 0 1px ${p.accent}30, 0 8px 32px rgba(0,0,0,0.3)`, transition: { duration: 0.22 } }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.65, delay: i * 0.1, ease: EASE }}
-                className="p-6 rounded-2xl"
+                className="p-6 rounded-2xl cursor-default"
                 style={{
                   background: "rgba(255,255,255,0.04)",
                   backdropFilter: "blur(20px)",

@@ -1,687 +1,379 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { useTypewriter } from "@/hooks/useTypewriter";
+import { X, ArrowUpRight } from "lucide-react";
 
-// ── Tour stops — specific key factors per section ─────────────────────────────
-const TOUR_STOPS = [
-  {
-    id: 0,
-    selector: '[data-levi-stop="0"]',
-    text: "Hey, I'm Levi. Baalot runs elections on the blockchain — every vote a transaction, every result provably true. Scroll to see how it works.",
-  },
-  {
-    id: 1,
-    selector: '[data-levi-stop="1"]',
-    text: "Voters open the app, find their institution, and tap once to cast a sealed ballot. Results update live — no waiting, no disputes.",
-  },
-  {
-    id: 2,
-    selector: '[data-levi-stop="2"]',
-    text: "ZK proofs verify your vote without exposing who you voted for. NIN/BVN links each ballot to a real person — ghost voters can't get in.",
-  },
-  {
-    id: 3,
-    selector: '[data-levi-stop="3"]',
-    text: "₦150,000 flat — whether you have 50 voters or 50,000. No per-seat fees, no hidden charges. First election is on us.",
-  },
-  {
-    id: 4,
-    selector: '[data-levi-stop="4"]',
-    text: "That's Baalot. Book a demo call and we'll set up your first election together — free, no commitment needed. 🗳️",
-  },
-] as const;
+// ─── Levi floating pill + click-to-reveal bubble ───────────────
+export default function LeviAgent() {
+  const [visible, setVisible]   = useState(false);
+  const [open, setOpen]         = useState(false);
+  const wrapRef                 = useRef<HTMLDivElement>(null);
 
-type TourStop = (typeof TOUR_STOPS)[number];
-type AgentState = "hidden" | "speaking" | "collapsed" | "dismissed";
+  // Gentle parallax follow on desktop
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const px = useSpring(mouseX, { stiffness: 160, damping: 22 });
+  const py = useSpring(mouseY, { stiffness: 160, damping: 22 });
 
-// ── Section Highlight ─────────────────────────────────────────────────────────
-function SectionHighlight({ stop }: { stop: TourStop }) {
-  const [rect, setRect] = useState<DOMRect | null>(null);
-
-  const updateRect = useCallback(() => {
-    const el = document.querySelector(stop.selector);
-    if (!el) return;
-    setRect(el.getBoundingClientRect());
-  }, [stop.selector]);
-
+  // Appear after a short delay
   useEffect(() => {
-    updateRect();
-    window.addEventListener("scroll", updateRect, { passive: true });
-    window.addEventListener("resize", updateRect);
-    return () => {
-      window.removeEventListener("scroll", updateRect);
-      window.removeEventListener("resize", updateRect);
+    const t = setTimeout(() => setVisible(true), 1600);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Subtle parallax on desktop
+  useEffect(() => {
+    const handle = (e: MouseEvent) => {
+      mouseX.set(((e.clientX - window.innerWidth  / 2) / window.innerWidth)  * 6);
+      mouseY.set(((e.clientY - window.innerHeight / 2) / window.innerHeight) * 6);
     };
-  }, [updateRect]);
+    window.addEventListener("mousemove", handle, { passive: true });
+    return () => window.removeEventListener("mousemove", handle);
+  }, [mouseX, mouseY]);
 
-  if (!rect) return null;
+  // Close bubble on outside click
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
 
-  const PAD = 10;
-
-  return (
-    <>
-      {/* Dim overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.35 }}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 7900,
-          background: "rgba(3,5,7,0.44)",
-          pointerEvents: "none",
-        }}
-      />
-      {/* Highlight ring */}
-      <motion.div
-        key={`hl-${stop.id}`}
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          position: "fixed",
-          top: rect.top - PAD,
-          left: rect.left - PAD,
-          width: rect.width + PAD * 2,
-          height: rect.height + PAD * 2,
-          zIndex: 7950,
-          borderRadius: 14,
-          pointerEvents: "none",
-          boxShadow:
-            "0 0 0 2px rgba(155,93,229,0.5), 0 0 0 5px rgba(155,93,229,0.1), 0 0 80px rgba(155,93,229,0.18)",
-        }}
-      />
-    </>
-  );
-}
-
-// ── Speech Bubble ─────────────────────────────────────────────────────────────
-function SpeechBubble({
-  stop,
-  open,
-  isMobile,
-  onNext,
-  onSkip,
-}: {
-  stop: TourStop;
-  open: boolean;
-  isMobile: boolean;
-  onNext: () => void;
-  onSkip: () => void;
-}) {
-  const { displayed } = useTypewriter(stop.text, 18, open);
-  const isLast = stop.id === TOUR_STOPS.length - 1;
-
-  const bubbleStyle: React.CSSProperties = isMobile
-    ? { position: "fixed", bottom: 88, left: 14, right: 14, zIndex: 8001 }
-    : { position: "absolute", bottom: "calc(100% + 14px)", right: 0, width: 284 };
+  const scrollToContact = () => {
+    setOpen(false);
+    const el = document.getElementById("contact");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
-    <AnimatePresence mode="wait">
-      {open && (
+    <AnimatePresence>
+      {visible && (
         <motion.div
-          key={`bubble-${stop.id}`}
-          initial={{ opacity: 0, scale: 0.85, rotateX: -12, y: 16 }}
-          animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
-          exit={{ opacity: 0, scale: 0.88, rotateX: 8, y: 10 }}
-          transition={{ type: "spring", stiffness: 340, damping: 26 }}
+          key="levi-root"
+          ref={wrapRef}
+          initial={{ y: 60, opacity: 0, scale: 0.8 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={{ y: 40, opacity: 0, scale: 0.85 }}
+          transition={{ type: "spring", stiffness: 300, damping: 26 }}
           style={{
-            transformPerspective: 800,
-            transformOrigin: "bottom center",
-            ...bubbleStyle,
+            position: "fixed",
+            bottom: 24,
+            right: 22,
+            zIndex: 8000,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: 10,
+            x: px,
+            y: py,
           }}
         >
-          <div
+
+          {/* ── Speech bubble ── */}
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                key="levi-bubble"
+                initial={{ opacity: 0, scale: 0.88, y: 12, originX: 1, originY: 1 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.88, y: 8 }}
+                transition={{ type: "spring", stiffness: 340, damping: 26 }}
+                style={{
+                  width: 272,
+                  background: "rgba(6,9,14,0.97)",
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  border: "1px solid rgba(155,93,229,0.28)",
+                  borderRadius: 16,
+                  boxShadow:
+                    "0 0 0 1px rgba(255,255,255,0.04), 0 0 32px rgba(155,93,229,0.14), 0 16px 48px rgba(0,0,0,0.55)",
+                  padding: "18px 18px 16px",
+                  transformOrigin: "bottom right",
+                  position: "relative",
+                }}
+              >
+                {/* Close */}
+                <button
+                  onClick={() => setOpen(false)}
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    width: 22,
+                    height: 22,
+                    borderRadius: "50%",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "rgba(255,255,255,0.4)",
+                  }}
+                >
+                  <X size={11} />
+                </button>
+
+                {/* Avatar + name row */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                  <motion.div
+                    animate={{
+                      boxShadow: [
+                        "0 0 0px rgba(155,93,229,0.3)",
+                        "0 0 12px rgba(155,93,229,0.7)",
+                        "0 0 0px rgba(155,93,229,0.3)",
+                      ],
+                    }}
+                    transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #9B5DE5 0%, #14B8A6 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 13,
+                      fontWeight: 800,
+                      color: "#fff",
+                      fontFamily: "var(--font-syne)",
+                      flexShrink: 0,
+                      position: "relative",
+                    }}
+                  >
+                    L
+                    <motion.span
+                      animate={{ opacity: [1, 0.4, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        width: 9,
+                        height: 9,
+                        borderRadius: "50%",
+                        background: "#22C55E",
+                        border: "1.5px solid rgba(6,9,14,0.97)",
+                      }}
+                    />
+                  </motion.div>
+                  <div>
+                    <p
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: "rgba(240,244,248,0.9)",
+                        fontFamily: "var(--font-syne)",
+                        lineHeight: 1,
+                        marginBottom: 2,
+                      }}
+                    >
+                      Levi
+                    </p>
+                    <p
+                      style={{
+                        fontSize: 10,
+                        color: "#22C55E",
+                        fontFamily: "var(--font-inter)",
+                        lineHeight: 1,
+                      }}
+                    >
+                      Online
+                    </p>
+                  </div>
+                </div>
+
+                {/* Message */}
+                <p
+                  style={{
+                    fontSize: 13,
+                    lineHeight: 1.6,
+                    color: "rgba(203,213,225,0.88)",
+                    fontFamily: "var(--font-inter)",
+                    marginBottom: 14,
+                  }}
+                >
+                  Hey! I&apos;m Levi, your Baalot guide. Ready to run a tamper-proof election?{" "}
+                  <span style={{ color: "rgba(155,93,229,0.9)" }}>Your first one is free.</span>
+                </p>
+
+                {/* CTA button */}
+                <motion.button
+                  onClick={scrollToContact}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    padding: "9px 0",
+                    borderRadius: 10,
+                    background: "linear-gradient(135deg, rgba(155,93,229,0.9) 0%, rgba(107,45,185,0.9) 100%)",
+                    border: "1px solid rgba(155,93,229,0.4)",
+                    boxShadow: "0 0 16px rgba(155,93,229,0.25)",
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "#fff",
+                    fontFamily: "var(--font-syne)",
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  Get started free
+                  <ArrowUpRight size={13} strokeWidth={2.5} />
+                </motion.button>
+
+                {/* Tail */}
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: -5,
+                    right: 20,
+                    width: 9,
+                    height: 9,
+                    background: "rgba(6,9,14,0.97)",
+                    border: "1px solid rgba(155,93,229,0.28)",
+                    transform: "rotate(45deg)",
+                    borderTop: "none",
+                    borderLeft: "none",
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ── Floating pill ── */}
+          <motion.button
+            onClick={() => setOpen((v) => !v)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.96 }}
+            animate={open ? { boxShadow: "0 0 28px rgba(155,93,229,0.38), 0 8px 32px rgba(0,0,0,0.45)" } : {}}
             style={{
-              background: "rgba(8,12,16,0.95)",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              paddingLeft: 8,
+              paddingRight: 14,
+              height: 44,
+              borderRadius: 100,
+              background: "rgba(6,9,14,0.96)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(155,93,229,0.26)",
-              borderRadius: 18,
-              padding: "15px 17px 13px",
-              boxShadow:
-                "0 0 0 1px rgba(155,93,229,0.08), 0 20px 56px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)",
+              border: `1px solid ${open ? "rgba(155,93,229,0.55)" : "rgba(155,93,229,0.28)"}`,
+              boxShadow: "0 0 20px rgba(155,93,229,0.16), 0 8px 32px rgba(0,0,0,0.42), 0 0 0 1px rgba(255,255,255,0.04)",
+              cursor: "pointer",
+              outline: "none",
+              transition: "border-color 0.2s",
             }}
+            title="Levi — Baalot AI guide"
           >
-            {/* Label */}
-            <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
-              <div
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "#9B5DE5",
-                  boxShadow: "0 0 8px rgba(155,93,229,0.9)",
-                  animation: "purple-glow-pulse 2s ease-in-out infinite",
-                  flexShrink: 0,
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 10.5,
-                  fontWeight: 700,
-                  color: "#B27FF0",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.09em",
-                  fontFamily: "var(--font-inter)",
-                }}
-              >
-                Levi AI
-              </span>
-              <span
-                style={{
-                  marginLeft: "auto",
-                  fontSize: 10,
-                  color: "rgba(255,255,255,0.22)",
-                  fontFamily: "var(--font-inter)",
-                }}
-              >
-                {stop.id + 1} / {TOUR_STOPS.length}
-              </span>
-            </div>
-
-            {/* Typewriter text */}
-            <p
+            {/* Avatar */}
+            <motion.div
+              animate={{
+                boxShadow: open
+                  ? ["0 0 8px rgba(155,93,229,0.6)", "0 0 14px rgba(155,93,229,0.85)", "0 0 8px rgba(155,93,229,0.6)"]
+                  : ["0 0 0px rgba(155,93,229,0.3)", "0 0 8px rgba(155,93,229,0.5)", "0 0 0px rgba(155,93,229,0.3)"],
+              }}
+              transition={{ duration: open ? 1.6 : 2.6, repeat: Infinity, ease: "easeInOut" }}
               style={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #9B5DE5 0%, #14B8A6 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 fontSize: 13,
-                lineHeight: 1.65,
-                color: "rgba(255,255,255,0.85)",
-                margin: "0 0 13px",
-                fontFamily: "var(--font-inter)",
-                minHeight: 58,
+                fontWeight: 800,
+                color: "#fff",
+                fontFamily: "var(--font-syne)",
+                flexShrink: 0,
+                letterSpacing: "-0.02em",
+                position: "relative",
               }}
             >
-              {displayed}
-              <span
+              L
+              {/* Online dot */}
+              <motion.span
+                animate={{ opacity: [1, 0.45, 1], scale: [1, 1.25, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 style={{
-                  display: "inline-block",
-                  width: 2,
-                  height: "0.9em",
-                  background: "#9B5DE5",
-                  marginLeft: 2,
-                  verticalAlign: "text-bottom",
-                  animation: "blink-cursor 0.8s step-end infinite",
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "#22C55E",
+                  border: "1.5px solid rgba(6,9,14,0.96)",
                 }}
               />
-            </p>
+            </motion.div>
 
-            {/* Progress pills */}
-            <div style={{ display: "flex", gap: 4, marginBottom: 13, alignItems: "center" }}>
-              {TOUR_STOPS.map((s) => (
-                <motion.div
-                  key={s.id}
-                  animate={{
-                    width: s.id === stop.id ? 16 : 5,
-                    background:
-                      s.id === stop.id
-                        ? "#9B5DE5"
-                        : s.id < stop.id
-                        ? "rgba(155,93,229,0.42)"
-                        : "rgba(255,255,255,0.12)",
-                  }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  style={{ height: 5, borderRadius: 3 }}
-                />
-              ))}
-            </div>
-
-            {/* Actions */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <button
-                onClick={onSkip}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "rgba(255,255,255,0.32)",
-                  fontSize: 12,
-                  cursor: "pointer",
-                  padding: "4px 0",
-                  fontFamily: "var(--font-inter)",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.32)")}
-              >
-                Skip tour
-              </button>
-              <motion.button
-                onClick={onNext}
-                whileHover={{ scale: 1.05, boxShadow: "0 6px 22px rgba(155,93,229,0.5)" }}
-                whileTap={{ scale: 0.95 }}
-                style={{
-                  background: "linear-gradient(135deg, #9B5DE5 0%, #7B3DC9 100%)",
-                  border: "none",
-                  borderRadius: 9,
-                  padding: "7px 16px",
-                  color: "#fff",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  fontFamily: "var(--font-inter)",
-                  boxShadow: "0 4px 14px rgba(155,93,229,0.36)",
-                }}
-              >
-                {isLast ? "Got it ✓" : "Next →"}
-              </motion.button>
-            </div>
-          </div>
-
-          {/* Tail — desktop only */}
-          {!isMobile && (
-            <div
+            {/* Label */}
+            <span
               style={{
-                position: "absolute",
-                bottom: -6,
-                right: 22,
-                width: 12,
-                height: 12,
-                background: "rgba(8,12,16,0.95)",
-                border: "1px solid rgba(155,93,229,0.26)",
-                transform: "rotate(45deg)",
-                borderTop: "none",
-                borderLeft: "none",
-                zIndex: -1,
+                fontSize: 13,
+                fontWeight: 600,
+                color: "rgba(240,244,248,0.88)",
+                fontFamily: "var(--font-syne)",
+                letterSpacing: "-0.01em",
+                whiteSpace: "nowrap",
               }}
-            />
-          )}
+            >
+              Levi
+            </span>
+
+            {/* Idle bounce dots or close indicator */}
+            <AnimatePresence mode="wait">
+              {open ? (
+                <motion.span
+                  key="chevron"
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 0.5, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.15 }}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <X size={12} color="rgba(155,93,229,0.8)" strokeWidth={2.5} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="dots"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  style={{ display: "flex", gap: 2.5, alignItems: "center" }}
+                >
+                  {[0, 1, 2].map((i) => (
+                    <motion.span
+                      key={i}
+                      animate={{ y: [0, -3, 0], opacity: [0.4, 0.85, 0.4] }}
+                      transition={{ duration: 0.72, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+                      style={{
+                        display: "block",
+                        width: 3.5,
+                        height: 3.5,
+                        borderRadius: "50%",
+                        background: "#9B5DE5",
+                      }}
+                    />
+                  ))}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+
         </motion.div>
       )}
     </AnimatePresence>
-  );
-}
-
-// ── Levi Orb ──────────────────────────────────────────────────────────────────
-function LeviOrb({
-  speaking,
-  bubbleOpen,
-  isScrolling,
-  isMobile,
-  onClick,
-}: {
-  speaking: boolean;
-  bubbleOpen: boolean;
-  isScrolling: boolean;
-  isMobile: boolean;
-  onClick: () => void;
-}) {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const eyeX = useSpring(mouseX, { stiffness: 180, damping: 18 });
-  const eyeY = useSpring(mouseY, { stiffness: 180, damping: 18 });
-
-  useEffect(() => {
-    if (isMobile) return;
-    const handle = (e: MouseEvent) => {
-      const nx = ((e.clientX - window.innerWidth / 2) / (window.innerWidth / 2)) * 3;
-      const ny = ((e.clientY - window.innerHeight / 2) / (window.innerHeight / 2)) * 3;
-      mouseX.set(nx);
-      mouseY.set(ny);
-    };
-    window.addEventListener("mousemove", handle);
-    return () => window.removeEventListener("mousemove", handle);
-  }, [mouseX, mouseY, isMobile]);
-
-  // Reduced sizes — more compact and subtle
-  const outer = isMobile ? 44 : 52;
-  const mid   = isMobile ? 34 : 40;
-  const inner = isMobile ? 26 : 30;
-
-  return (
-    <div
-      className="animate-float-b"
-      style={{ position: "relative", width: outer, height: outer, cursor: "pointer", flexShrink: 0 }}
-      onClick={onClick}
-      title="Levi AI Guide"
-    >
-      {/* Scroll-active pulsing ring — appears when user is scrolling */}
-      <AnimatePresence>
-        {isScrolling && (
-          <motion.div
-            key="scroll-ring"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: [1, 1.45, 1.7], opacity: [0.7, 0.35, 0] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            style={{
-              position: "absolute",
-              inset: -10,
-              borderRadius: "50%",
-              border: "2px solid rgba(155,93,229,0.7)",
-              pointerEvents: "none",
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Outer dashed spinning ring — transparent */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: "50%",
-          border: "1px dashed rgba(155,93,229,0.22)",
-          transform: "rotateX(14deg)",
-          transformStyle: "preserve-3d",
-          animation: `iris-spin ${speaking ? "3.5s" : "10s"} linear infinite`,
-        }}
-      />
-
-      {/* Middle glow ring — low opacity baseline */}
-      <motion.div
-        animate={{
-          scale: speaking ? [1, 1.16, 1] : isScrolling ? [1, 1.1, 1] : [1, 1.04, 1],
-          opacity: speaking ? [0.6, 0.9, 0.6] : isScrolling ? [0.5, 0.8, 0.5] : [0.25, 0.45, 0.25],
-        }}
-        transition={{
-          duration: speaking ? 1.0 : isScrolling ? 0.8 : 3.0,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        style={{
-          position: "absolute",
-          top: (outer - mid) / 2,
-          left: (outer - mid) / 2,
-          width: mid,
-          height: mid,
-          borderRadius: "50%",
-          border: `1px solid rgba(155,93,229,${speaking ? "0.7" : isScrolling ? "0.6" : "0.3"})`,
-          boxShadow: speaking
-            ? "0 0 18px rgba(155,93,229,0.45), 0 0 36px rgba(155,93,229,0.2)"
-            : isScrolling
-            ? "0 0 14px rgba(155,93,229,0.4)"
-            : "0 0 8px rgba(155,93,229,0.15)",
-        }}
-      />
-
-      {/* Inner sphere — semi-transparent */}
-      <div
-        style={{
-          position: "absolute",
-          top: (outer - inner) / 2,
-          left: (outer - inner) / 2,
-          width: inner,
-          height: inner,
-          borderRadius: "50%",
-          // Transparent-leaning gradient — glass-like
-          background:
-            "radial-gradient(circle at 34% 34%, rgba(208,170,255,0.75), rgba(155,93,229,0.60) 48%, rgba(94,31,170,0.70) 88%)",
-          boxShadow:
-            "0 4px 18px rgba(155,93,229,0.45), inset 0 1px 2px rgba(255,255,255,0.22)",
-          overflow: "hidden",
-          backdropFilter: "blur(2px)",
-        }}
-      >
-        {/* Specular */}
-        <div
-          style={{
-            position: "absolute",
-            top: "10%",
-            left: "16%",
-            width: "35%",
-            height: "24%",
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.28)",
-            filter: "blur(2px)",
-          }}
-        />
-
-        {/* Eye — desktop only */}
-        {!isMobile && (
-          <motion.div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              x: eyeX,
-              y: eyeY,
-              translateX: "-50%",
-              translateY: "-50%",
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.9)",
-              boxShadow: "0 0 4px rgba(255,255,255,0.5)",
-            }}
-          />
-        )}
-      </div>
-
-      {/* Speaking bounce dots */}
-      <AnimatePresence>
-        {speaking && (
-          <motion.div
-            initial={{ opacity: 0, y: 3 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 3 }}
-            style={{
-              position: "absolute",
-              bottom: -14,
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              gap: 3,
-            }}
-          >
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                animate={{ y: [0, -3, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.13, ease: "easeInOut" }}
-                style={{
-                  width: 3,
-                  height: 3,
-                  borderRadius: "50%",
-                  background: "#9B5DE5",
-                  boxShadow: "0 0 4px rgba(155,93,229,0.7)",
-                }}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Notification badge when collapsed */}
-      <AnimatePresence>
-        {!bubbleOpen && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            style={{
-              position: "absolute",
-              top: -2,
-              right: -2,
-              width: 11,
-              height: 11,
-              borderRadius: "50%",
-              background: "#9B5DE5",
-              border: "1.5px solid #080C10",
-              pointerEvents: "none",
-            }}
-          />
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// ── Root LeviAgent ─────────────────────────────────────────────────────────────
-export default function LeviAgent() {
-  const [state, setState] = useState<AgentState>("hidden");
-  const [currentStop, setCurrentStop] = useState(0);
-  const [bubbleOpen, setBubbleOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const highestSeen = useRef(-1);
-  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Mobile detection
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  // Scroll pulse ring
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolling(true);
-      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
-      scrollTimerRef.current = setTimeout(() => setIsScrolling(false), 300);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
-    };
-  }, []);
-
-  // Init — check session dismissal, then schedule appearance
-  useEffect(() => {
-    if (sessionStorage.getItem("levi-tour-dismissed") === "1") {
-      setState("dismissed");
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      if (!document.querySelector("[data-levi-stop]")) return;
-      setState("speaking");
-      setBubbleOpen(true);
-    }, 2500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // IntersectionObserver — auto-advance on scroll
-  useEffect(() => {
-    if (state !== "speaking" && state !== "collapsed") return;
-
-    const observers: IntersectionObserver[] = [];
-
-    TOUR_STOPS.forEach((stop) => {
-      const el = document.querySelector(stop.selector);
-      if (!el) return;
-
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && stop.id > highestSeen.current) {
-              highestSeen.current = stop.id;
-              setCurrentStop(stop.id);
-              if (state === "collapsed") {
-                setState("speaking");
-                setBubbleOpen(true);
-              }
-            }
-          });
-        },
-        { threshold: 0.35 }
-      );
-
-      obs.observe(el);
-      observers.push(obs);
-    });
-
-    return () => observers.forEach((o) => o.disconnect());
-  }, [state]);
-
-  const handleNext = useCallback(() => {
-    if (currentStop < TOUR_STOPS.length - 1) {
-      setCurrentStop((p) => p + 1);
-    } else {
-      setState("collapsed");
-      setBubbleOpen(false);
-    }
-  }, [currentStop]);
-
-  const handleSkip = useCallback(() => {
-    sessionStorage.setItem("levi-tour-dismissed", "1");
-    setState("dismissed");
-  }, []);
-
-  const handleOrbClick = useCallback(() => {
-    if (state === "speaking" || state === "collapsed") {
-      setBubbleOpen((prev) => {
-        if (!prev && state === "collapsed") setState("speaking");
-        if (prev && state === "speaking") setState("collapsed");
-        return !prev;
-      });
-    }
-  }, [state]);
-
-  if (state === "dismissed") return null;
-
-  const showHighlight =
-    (state === "speaking" || state === "collapsed") && bubbleOpen && !isMobile;
-
-  return (
-    <>
-      {/* Section highlight — desktop only */}
-      <AnimatePresence>
-        {showHighlight && (
-          <SectionHighlight key={`hl-${currentStop}`} stop={TOUR_STOPS[currentStop]} />
-        )}
-      </AnimatePresence>
-
-      {/* Mobile bubble — full width, outside orb container */}
-      {isMobile && (
-        <SpeechBubble
-          stop={TOUR_STOPS[currentStop]}
-          open={bubbleOpen && state !== "hidden"}
-          isMobile={true}
-          onNext={handleNext}
-          onSkip={handleSkip}
-        />
-      )}
-
-      {/* Floating orb container */}
-      <AnimatePresence>
-        {state !== "hidden" && (
-          <motion.div
-            initial={{ y: 100, opacity: 0, scale: 0.5 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 70, opacity: 0, scale: 0.6 }}
-            transition={{ type: "spring", stiffness: 280, damping: 22 }}
-            style={{
-              position: "fixed",
-              bottom: isMobile ? 22 : 28,
-              right: isMobile ? 18 : 28,
-              zIndex: 8000,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-            }}
-          >
-            {/* Desktop bubble (positioned above orb) */}
-            {!isMobile && (
-              <div style={{ position: "relative" }}>
-                <SpeechBubble
-                  stop={TOUR_STOPS[currentStop]}
-                  open={bubbleOpen}
-                  isMobile={false}
-                  onNext={handleNext}
-                  onSkip={handleSkip}
-                />
-              </div>
-            )}
-
-            {/* Orb */}
-            <LeviOrb
-              speaking={state === "speaking" && bubbleOpen}
-              bubbleOpen={bubbleOpen}
-              isScrolling={isScrolling}
-              isMobile={isMobile}
-              onClick={handleOrbClick}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
   );
 }

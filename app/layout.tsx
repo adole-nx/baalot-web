@@ -1,3 +1,4 @@
+// v2
 import type { Metadata } from "next";
 import { Syne, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -64,8 +65,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CustomCursor />
         <LeviAgent />
         <Navbar />
-        <SovereigntyStrip />
         {children}
+        <SovereigntyStrip />
         <Footer />
       </body>
     </html>

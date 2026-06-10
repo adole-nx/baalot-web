@@ -153,10 +153,10 @@ export default function HowItWorks() {
       {/* Sticky frame */}
       <div className="sticky top-0 h-screen flex flex-col overflow-hidden">
 
-        {/* Section header */}
+        {/* Section header — sits above the step content in normal flow */}
         <motion.div
           style={{ opacity: headerOpacity, y: headerY }}
-          className="absolute top-0 inset-x-0 z-20 pt-24 pb-4 flex flex-col items-center text-center pointer-events-none"
+          className="w-full z-20 pt-24 pb-6 flex flex-col items-center text-center pointer-events-none shrink-0"
         >
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -179,7 +179,7 @@ export default function HowItWorks() {
         </motion.div>
 
         {/* Main layout */}
-        <div className="flex-1 flex items-center justify-center px-5 md:px-10">
+        <div className="flex-1 flex items-center justify-center px-5 md:px-10 pb-12">
           <div className="w-full max-w-5xl grid md:grid-cols-[200px_1fr] gap-8 lg:gap-16 items-center">
 
             {/* Step indicators with connector */}

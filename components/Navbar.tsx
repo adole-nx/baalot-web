@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, X, Menu, ArrowUpRight, ExternalLink } from "lucide-react";
 import { EASE } from "@/lib/animations";
 import Logo from "./Logo";
@@ -65,9 +65,6 @@ export default function Navbar() {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll();
-  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -97,15 +94,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Amber scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 h-[2px] z-[60] origin-left"
-        style={{
-          width: progressWidth,
-          background: "linear-gradient(90deg, #9B5DE5, #B27FF0)",
-        }}
-      />
-
       {/* Floating pill navbar */}
       <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 pointer-events-none px-4">
         <motion.div

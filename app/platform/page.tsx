@@ -141,10 +141,10 @@ function StatCounter({ value, suffix, prefix, label, index }: typeof platformSta
       {index > 0 && (
         <div className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 h-10 w-px bg-border" />
       )}
-      <span className="font-syne font-extrabold text-5xl md:text-6xl text-white tabular-nums">
+      <span className="font-syne font-extrabold text-[1.75rem] sm:text-4xl lg:text-5xl text-white tabular-nums leading-none">
         {prefix}{display}{suffix}
       </span>
-      <span className="text-xs uppercase tracking-widest text-muted max-w-[140px]">{label}</span>
+      <span className="text-[10px] sm:text-xs uppercase tracking-widest text-muted max-w-[120px]">{label}</span>
     </motion.div>
   );
 }
@@ -154,7 +154,7 @@ function StatsSection() {
     <section className="section-pad bg-bg">
       <div className="max-w-site mx-auto">
         <motion.div
-          className="p-10 rounded-2xl"
+          className="p-5 sm:p-8 lg:p-10 rounded-2xl"
           style={{
             background: "rgba(255,255,255,0.04)",
             backdropFilter: "blur(20px)",
@@ -166,7 +166,7 @@ function StatsSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: EASE }}
         >
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-0">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-0">
             {platformStats.map((s, i) => (
               <StatCounter key={s.label} {...s} index={i} />
             ))}
