@@ -856,7 +856,8 @@ export default function Hero() {
 
   // Responsive globe size
   useEffect(() => {
-    const calc = () => setGlobeSize(Math.min(460, window.innerWidth - 48));
+    // Floor keeps the canvas radius positive — ctx.arc() throws below ~48px viewports
+    const calc = () => setGlobeSize(Math.max(120, Math.min(460, window.innerWidth - 48)));
     calc();
     window.addEventListener("resize", calc);
     return () => window.removeEventListener("resize", calc);
