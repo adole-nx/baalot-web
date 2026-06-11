@@ -299,20 +299,78 @@ const CONTINENT_SHAPES: [number,number][][] = [
 
 const ARC_PAIRS = [[0,1],[1,4],[0,2],[2,7],[4,5],[0,11],[7,11]];
 
+// ── Per-city election data ──────────────────────────────────────
+const ELECTION_DATA: Record<string, { name: string; type: string; live: boolean; progress: number }[]> = {
+  Lagos: [
+    { name: "Lagos State House of Assembly — By-election", type: "Legislative", live: true, progress: 67 },
+    { name: "UNILAG Student Union 2025", type: "Student Union", live: true, progress: 43 },
+  ],
+  Abuja: [
+    { name: "FCT Area Council Supplementary Poll", type: "Municipal", live: true, progress: 82 },
+    { name: "Bwari Area Council Referendum", type: "Referendum", live: true, progress: 55 },
+  ],
+  Nairobi: [
+    { name: "University of Nairobi SRC Election", type: "Student Union", live: true, progress: 71 },
+    { name: "Westlands Ward Election", type: "Local", live: true, progress: 38 },
+  ],
+  Accra: [
+    { name: "KNUST Student Representative Council", type: "Student Union", live: true, progress: 59 },
+  ],
+  Kano: [
+    { name: "Kano State Electoral Recount — Round 2", type: "Legislative", live: true, progress: 91 },
+  ],
+  Cairo: [
+    { name: "Cairo University Union Elections", type: "Student Union", live: false, progress: 0 },
+  ],
+  Dakar: [
+    { name: "UCAD Student Council Vote", type: "Student Union", live: true, progress: 29 },
+  ],
+  Joburg: [
+    { name: "Wits University SRC Election", type: "Student Union", live: true, progress: 64 },
+    { name: "Soweto Ward Council Vote", type: "Municipal", live: true, progress: 47 },
+  ],
+  Mumbai: [
+    { name: "IIT Bombay Student Body Election", type: "Student Union", live: true, progress: 78 },
+    { name: "Municipal Corporation Ward Poll", type: "Local", live: true, progress: 31 },
+  ],
+  Singapore: [
+    { name: "NUS Students' Union Election", type: "Student Union", live: true, progress: 86 },
+  ],
+  "São Paulo": [
+    { name: "USP Student Assembly Election", type: "Student Union", live: true, progress: 53 },
+    { name: "Campinas Municipal Council", type: "Municipal", live: true, progress: 22 },
+  ],
+  "New York": [
+    { name: "Columbia University Student Senate", type: "Student Union", live: false, progress: 0 },
+  ],
+  London: [],
+  Paris: [],
+};
+
+// ── Globe Visual ────────────────────────────────────────────────
 function GlobeVisual({ size = 460 }: { size?: number }) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const liveCountRef = useRef<HTMLSpanElement>(null);
   const tooltipRef   = useRef<HTMLDivElement>(null);
 
   // Interaction state — all refs, zero re-renders
-  const dragging = useRef(false);
-  const lastPt   = useRef({ x: 0, y: 0 });
-  const lonOff   = useRef(0);   // user-driven longitude offset (degrees)
-  const latOff   = useRef(0);   // user-driven latitude offset (degrees)
-  const velLon   = useRef(0);   // inertia
-  const velLat   = useRef(0);
-  const hoverIdx = useRef(-1);
-  const mousePt  = useRef({ x: -1, y: -1 });
+  const dragging  = useRef(false);
+  const lastPt    = useRef({ x: 0, y: 0 });
+  const lonOff    = useRef(0);
+  const latOff    = useRef(0);
+  const velLon    = useRef(0);
+  const velLat    = useRef(0);
+  const hoverIdx  = useRef(-1);
+  const mousePt   = useRef({ x: -1, y: -1 });
+  const dragMoved = useRef(false);   // distinguishes tap from drag
+  // Zoom state
+  const isZoomed    = useRef(false);
+  const zoomLevel   = useRef(1);     // current animated zoom
+  const zoomTarget  = useRef(1);     // target zoom
+  const lon0Ref     = useRef(0);     // last computed lon0 (for unproject)
+  const lat0Ref     = useRef(8);     // last computed lat0
+  // Zoom overlay React state
+  const [zoomedCity, setZoomedCity] = useState<typeof LIVE_VOTERS[0] | null>(null);
 
   useEffect(() => {
     const canvas  = canvasRef.current;
@@ -342,7 +400,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
     const project = (lat: number, lon: number, lon0: number) => {
       const φ  = lat  * DEG;
       const λ  = lon  * DEG;
-      const φ0 = lat0 * DEG;   // ← uses closure variable
+      const φ0 = lat0 * DEG;
       const λ0 = lon0 * DEG;
       const cosC =
         Math.sin(φ0) * Math.sin(φ) +
@@ -350,6 +408,57 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       const x = R * Math.cos(φ) * Math.sin(λ - λ0);
       const y = R * (Math.cos(φ0) * Math.sin(φ) - Math.sin(φ0) * Math.cos(φ) * Math.cos(λ - λ0));
       return { x: CX + x, y: CY - y, visible: cosC >= 0 };
+    };
+
+    // Inverse orthographic — canvas pixel → {lat, lon} (null if outside globe)
+    const unproject = (px: number, py: number) => {
+      const zz = Math.max(zoomLevel.current, 1);
+      const nx = (px - CX) / (R * zz);
+      const ny = -(py - CY) / (R * zz);
+      const rho = Math.sqrt(nx * nx + ny * ny);
+      if (rho > 1) return null;
+      const sinC = rho;
+      const cosC = Math.sqrt(1 - rho * rho);
+      const phi0 = lat0Ref.current * DEG;
+      const phi = Math.asin(cosC * Math.sin(phi0) + (rho > 1e-6 ? (ny / rho) * sinC * Math.cos(phi0) : 0));
+      const lam0 = lon0Ref.current * DEG;
+      const lam  = lam0 + Math.atan2(nx * sinC, rho * Math.cos(phi0) * cosC - ny * Math.sin(phi0) * sinC);
+      return { lat: phi / DEG, lon: ((lam / DEG + 540) % 360) - 180 };
+    };
+
+    // Snap globe rotation to center a lat/lon
+    const snapTo = (targetLat: number, targetLonRaw: number) => {
+      const targetLon = ((targetLonRaw + 360) % 360);
+      const currLon0  = lon0Ref.current;
+      let diff = targetLon - currLon0;
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+      lonOff.current += diff;
+      latOff.current  = Math.max(-55, Math.min(55, targetLat - 8));
+      velLon.current  = 0;
+      velLat.current  = 0;
+    };
+
+    // Click handler — tap = zoom in/out
+    const handleClick = (px: number, py: number) => {
+      if (isZoomed.current) {
+        isZoomed.current = false;
+        zoomTarget.current = 1;
+        setZoomedCity(null);
+        return;
+      }
+      const geo = unproject(px, py);
+      if (!geo) return;
+      // Find nearest LIVE city
+      let nearest = LIVE_VOTERS[0], minD = Infinity;
+      for (const city of LIVE_VOTERS) {
+        const d = Math.hypot(city.lat - geo.lat, city.lon - geo.lon);
+        if (d < minD) { minD = d; nearest = city; }
+      }
+      snapTo(nearest.lat, nearest.lon);
+      isZoomed.current = true;
+      zoomTarget.current = 5.5;
+      setZoomedCity(nearest);
     };
 
     // ── Pointer helpers ─────────────────────────────────────────
@@ -362,18 +471,22 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
     };
 
     const onMouseDown = (e: MouseEvent) => {
-      dragging.current = true;
-      lastPt.current   = canvasPt(e.clientX, e.clientY);
-      velLon.current   = 0;
-      velLat.current   = 0;
+      dragging.current  = true;
+      dragMoved.current = false;
+      lastPt.current    = canvasPt(e.clientX, e.clientY);
+      velLon.current    = 0;
+      velLat.current    = 0;
       canvas.style.cursor = "grabbing";
     };
     const onMouseMove = (e: MouseEvent) => {
       const pt = canvasPt(e.clientX, e.clientY);
-      mousePt.current  = pt;
+      mousePt.current = pt;
       if (dragging.current) {
-        const dLon = -(pt.x - lastPt.current.x) / SIZE * 220;
-        const dLat =  (pt.y - lastPt.current.y) / SIZE * 130;
+        const dx = pt.x - lastPt.current.x;
+        const dy = pt.y - lastPt.current.y;
+        if (Math.hypot(dx, dy) > 3) dragMoved.current = true;
+        const dLon = -(dx) / SIZE * 220;
+        const dLat =  (dy) / SIZE * 130;
         lonOff.current += dLon;
         latOff.current  = Math.max(-55, Math.min(55, latOff.current + dLat));
         velLon.current  = dLon * 0.75;
@@ -381,10 +494,19 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
         lastPt.current  = pt;
       }
     };
-    const onMouseUp    = () => { dragging.current = false; canvas.style.cursor = "grab"; };
-    const onMouseLeave = () => {
+    const onMouseUp = (e: MouseEvent) => {
+      const wasDrag = dragMoved.current;
       dragging.current = false;
-      mousePt.current  = { x: -1, y: -1 };
+      canvas.style.cursor = "grab";
+      if (!wasDrag) {
+        const pt = canvasPt(e.clientX, e.clientY);
+        handleClick(pt.x, pt.y);
+      }
+    };
+    const onMouseLeave = () => {
+      dragging.current  = false;
+      dragMoved.current = false;
+      mousePt.current   = { x: -1, y: -1 };
       canvas.style.cursor = "grab";
       tooltip.style.opacity = "0";
       hoverIdx.current = -1;
@@ -392,7 +514,8 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
 
     const onTouchStart = (e: TouchEvent) => {
       e.preventDefault();
-      dragging.current = true;
+      dragging.current  = true;
+      dragMoved.current = false;
       const t0 = e.touches[0];
       lastPt.current = canvasPt(t0.clientX, t0.clientY);
       velLon.current = 0;
@@ -400,6 +523,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
     };
     const onTouchMove = (e: TouchEvent) => {
       e.preventDefault();
+      dragMoved.current = true;
       const t0 = e.touches[0];
       const pt = canvasPt(t0.clientX, t0.clientY);
       if (dragging.current) {
@@ -412,7 +536,14 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
         lastPt.current  = pt;
       }
     };
-    const onTouchEnd = () => { dragging.current = false; };
+    const onTouchEnd = (e: TouchEvent) => {
+      dragging.current = false;
+      if (!dragMoved.current && e.changedTouches.length > 0) {
+        const t0 = e.changedTouches[0];
+        const pt = canvasPt(t0.clientX, t0.clientY);
+        handleClick(pt.x, pt.y);
+      }
+    };
 
     canvas.addEventListener("mousedown",  onMouseDown);
     canvas.addEventListener("mousemove",  onMouseMove);
@@ -475,29 +606,36 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       ctx.fill();
 
       // Primary edge stroke
-      ctx.strokeStyle = "rgba(178,127,240,0.72)";
-      ctx.lineWidth = 1.1;
+      ctx.strokeStyle = "rgba(178,127,240,0.32)";
+      ctx.lineWidth = 0.6;
       ctx.stroke();
 
       // Soft inner glow along the edge
-      ctx.strokeStyle = "rgba(200,160,255,0.22)";
-      ctx.lineWidth = 2.8;
+      ctx.strokeStyle = "rgba(200,160,255,0.07)";
+      ctx.lineWidth = 1.8;
       ctx.stroke();
 
       ctx.restore();
     };
 
     const draw = () => {
-      // Physics — inertia decays, auto-rotate resumes
+      // Physics — inertia decays; auto-rotate pauses while zoomed
       if (!dragging.current) {
         lonOff.current += velLon.current;
         latOff.current  = Math.max(-55, Math.min(55, latOff.current + velLat.current));
         velLon.current *= 0.93;
         velLat.current *= 0.93;
-        t += 0.012;
+        if (!isZoomed.current) t += 0.012;
       }
       const lon0 = ((t * 5) + lonOff.current + 3600) % 360;
       lat0 = 8 + latOff.current;
+      lon0Ref.current = lon0;
+      lat0Ref.current = lat0;
+
+      // Smooth zoom interpolation
+      const zDiff = zoomTarget.current - zoomLevel.current;
+      if (Math.abs(zDiff) > 0.003) zoomLevel.current += zDiff * 0.055;
+      else zoomLevel.current = zoomTarget.current;
 
       ctx.clearRect(0, 0, SIZE, SIZE);
 
@@ -506,6 +644,14 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       ctx.beginPath();
       ctx.arc(CX, CY, R, 0, Math.PI * 2);
       ctx.clip();
+
+      // Apply zoom scale transform (everything inside clip is zoomed)
+      ctx.save();
+      if (zoomLevel.current > 1.002) {
+        ctx.translate(CX, CY);
+        ctx.scale(zoomLevel.current, zoomLevel.current);
+        ctx.translate(-CX, -CY);
+      }
 
       // Deep ocean base
       ctx.fillStyle = "rgba(2,3,8,1)";
@@ -565,6 +711,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
         ctx.restore();
       }
 
+      ctx.restore(); // end zoom transform
       ctx.restore(); // end globe clip
 
       // Atmosphere rim — soft outer glow (no clip, drawn after restore)
@@ -673,14 +820,18 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // ── Hover detection ──────────────────────────────────────
+      // ── Hover detection (adjust mouse for zoom) ─────────────
       let newHover = -1;
       if (mousePt.current.x >= 0 && !dragging.current) {
+        const zz = Math.max(zoomLevel.current, 1);
+        const mx = (mousePt.current.x - CX) / zz + CX;
+        const my = (mousePt.current.y - CY) / zz + CY;
+        const hitR = 14 / zz;
         for (let i = 0; i < LIVE_VOTERS.length; i++) {
           const city = LIVE_VOTERS[i];
           const p = project(city.lat, city.lon, lon0);
           if (!p.visible) continue;
-          if (Math.hypot(p.x - mousePt.current.x, p.y - mousePt.current.y) < 14) {
+          if (Math.hypot(p.x - mx, p.y - my) < hitR) {
             newHover = i;
             break;
           }
@@ -781,20 +932,146 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
         <p className="font-mono text-[8px] mt-0.5" style={{ color: "#475569" }}>voters casting now</p>
       </div>
 
-      {/* Elections live — bottom-left */}
-      <div className="absolute bottom-4 left-4 pointer-events-none">
-        <div className="flex items-center gap-1.5">
-          <motion.span
-            className="w-1.5 h-1.5 rounded-full bg-teal-400"
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.8, repeat: Infinity, delay: 0.6 }}
-          />
-          <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "#14B8A6" }}>
-            {LIVE_VOTERS.filter(c => c.hot).length} elections active
-          </p>
-        </div>
-        <p className="font-mono text-[8px] mt-0.5" style={{ color: "#475569" }}>14 cities · 9 countries</p>
-      </div>
+      {/* Elections live — bottom-left (hidden when zoomed) */}
+      <AnimatePresence>
+        {!zoomedCity && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-4 left-4 pointer-events-none"
+          >
+            <div className="flex items-center gap-1.5">
+              <motion.span
+                className="w-1.5 h-1.5 rounded-full bg-teal-400"
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1.8, repeat: Infinity, delay: 0.6 }}
+              />
+              <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "#14B8A6" }}>
+                {LIVE_VOTERS.filter(c => c.hot).length} elections active
+              </p>
+            </div>
+            <p className="font-mono text-[8px] mt-0.5" style={{ color: "#475569" }}>14 cities · 9 countries</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Zoom info card ───────────────────────────────────────── */}
+      <AnimatePresence>
+        {zoomedCity && (() => {
+          const elections = ELECTION_DATA[zoomedCity.label] ?? [];
+          const liveCount = elections.filter(e => e.live).length;
+          return (
+            <motion.div
+              key="zoom-card"
+              initial={{ opacity: 0, y: 18, scale: 0.93 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              style={{
+                position: "absolute",
+                bottom: "6%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: Math.min(size * 0.84, 320),
+                background: "rgba(4,6,14,0.97)",
+                backdropFilter: "blur(28px)",
+                WebkitBackdropFilter: "blur(28px)",
+                border: "1px solid rgba(155,93,229,0.32)",
+                borderRadius: 14,
+                padding: "14px 16px 12px",
+                zIndex: 30,
+                boxShadow: "0 0 0 1px rgba(255,255,255,0.04), 0 0 40px rgba(155,93,229,0.18), 0 20px 60px rgba(0,0,0,0.7)",
+                pointerEvents: "none",
+              }}
+            >
+              {/* City header */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{
+                    width: 26, height: 26, borderRadius: "50%",
+                    background: "linear-gradient(135deg, #9B5DE5 0%, #14B8A6 100%)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 11, fontWeight: 900, color: "#fff", fontFamily: "var(--font-syne)",
+                  }}>
+                    {zoomedCity.label.charAt(0)}
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 800, color: "#EDE9FE", fontFamily: "var(--font-syne)", lineHeight: 1 }}>
+                      {zoomedCity.label}
+                    </p>
+                    <p style={{ fontSize: 10, color: liveCount > 0 ? "#22C55E" : "#64748B", marginTop: 2, lineHeight: 1, fontWeight: 600 }}>
+                      {liveCount > 0 ? `${liveCount} election${liveCount > 1 ? "s" : ""} live` : "No active elections"}
+                    </p>
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <p style={{ fontSize: 15, fontWeight: 800, color: "#E2D4F8", fontFamily: "var(--font-syne)", lineHeight: 1 }}>
+                    {zoomedCity.count.toLocaleString()}
+                  </p>
+                  <p style={{ fontSize: 9, color: "#475569", marginTop: 2 }}>live voters</p>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div style={{ height: 1, background: "rgba(155,93,229,0.14)", marginBottom: 10 }} />
+
+              {/* Elections list */}
+              {elections.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                  {elections.slice(0, 3).map((el, i) => (
+                    <div key={i} style={{
+                      padding: "8px 10px",
+                      background: el.live ? "rgba(155,93,229,0.08)" : "rgba(255,255,255,0.02)",
+                      border: `1px solid ${el.live ? "rgba(155,93,229,0.18)" : "rgba(255,255,255,0.06)"}`,
+                      borderRadius: 9,
+                    }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: el.live ? 6 : 0 }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: "#CBD5E1", lineHeight: 1.35, flex: 1 }}>
+                          {el.name}
+                        </p>
+                        <span style={{
+                          fontSize: 9, fontWeight: 700, flexShrink: 0,
+                          color: el.live ? "#22C55E" : "#64748B",
+                          background: el.live ? "rgba(34,197,94,0.12)" : "rgba(100,116,139,0.08)",
+                          border: `1px solid ${el.live ? "rgba(34,197,94,0.25)" : "rgba(100,116,139,0.18)"}`,
+                          borderRadius: 4, padding: "2px 5px",
+                        }}>
+                          {el.live ? "● LIVE" : "UPCOMING"}
+                        </span>
+                      </div>
+                      {el.live && (
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.07)", borderRadius: 2, overflow: "hidden" }}>
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${el.progress}%` }}
+                              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 }}
+                              style={{ height: "100%", background: "linear-gradient(90deg, #9B5DE5, #14B8A6)", borderRadius: 2 }}
+                            />
+                          </div>
+                          <span style={{ fontSize: 9, color: "#9B5DE5", fontWeight: 700, whiteSpace: "nowrap" }}>
+                            {el.progress}% tallied
+                          </span>
+                        </div>
+                      )}
+                      <p style={{ fontSize: 9, color: "#475569", marginTop: el.live ? 4 : 2 }}>{el.type}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ padding: "10px", textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: 9, border: "1px dashed rgba(255,255,255,0.07)" }}>
+                  <p style={{ fontSize: 11, color: "#475569" }}>No active elections in this region</p>
+                  <p style={{ fontSize: 10, color: "#9B5DE5", marginTop: 4, fontWeight: 600 }}>Launch yours free →</p>
+                </div>
+              )}
+
+              <p style={{ fontSize: 9, color: "#334155", textAlign: "center", marginTop: 10 }}>
+                Tap globe to zoom out
+              </p>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
     </div>
   );
 }
@@ -863,12 +1140,12 @@ export default function Hero() {
     return () => window.removeEventListener("resize", calc);
   }, []);
 
-  // Auto-advance phase every 5.5s — slow enough to read, fast enough to feel alive
+  // Auto-advance phase every 7.5s — plenty of time to read each word
   useEffect(() => {
     const id = setInterval(() => {
       hasCycledRef.current = true;
       setPhase((p) => (p + 1) % PHASES.length);
-    }, 5500);
+    }, 7500);
     return () => clearInterval(id);
   }, []);
 
@@ -953,16 +1230,16 @@ export default function Hero() {
           animate="visible"
           className="font-syne font-bold text-primary"
           style={{
-            fontSize: "clamp(2.8rem, 7vw, 6rem)",
-            letterSpacing: "-0.035em",
-            lineHeight: 0.92,
+            fontSize: "clamp(2.1rem, 8vw, 6rem)",
+            letterSpacing: "-0.03em",
+            lineHeight: 0.94,
             textWrap: "balance",
           }}
         >
           <motion.span variants={fadeUp} className="block">The Future of</motion.span>
 
           {/* Cycling word — slot-machine slide */}
-          <motion.div variants={fadeUp} style={{ display: "block", overflow: "hidden" }}>
+          <motion.div variants={fadeUp} style={{ display: "block", clipPath: "inset(-4px -200px)" }}>
             <AnimatePresence mode="popLayout">
               <motion.span
                 key={phase}
