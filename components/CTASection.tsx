@@ -3,18 +3,29 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import SplitHeading from "./SplitHeading";
+import { submitContact } from "@/lib/contact";
 
 export default function CTASection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    window.location.href = `mailto:hello@baalot.site?subject=Early Access Request&body=Email: ${email}`;
-    setSubmitted(true);
+    if (!email || loading) return;
+    setLoading(true);
+    setError("");
+    try {
+      await submitContact({ source: "early-access", email });
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,12 +100,17 @@ export default function CTASection() {
               />
               <button
                 type="submit"
-                className="group relative px-6 py-4 rounded-xl bg-gold text-base font-semibold text-sm whitespace-nowrap overflow-hidden"
+                disabled={loading}
+                className="group relative px-6 py-4 rounded-xl bg-gold text-base font-semibold text-sm whitespace-nowrap overflow-hidden disabled:opacity-70"
               >
                 <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                <span className="relative">Request Early Access</span>
+                <span className="relative">{loading ? "Sending…" : "Request Early Access"}</span>
               </button>
             </form>
+          )}
+
+          {error && !submitted && (
+            <p className="text-red-400 text-sm mt-4" role="alert">{error}</p>
           )}
 
           <p className="text-muted text-xs mt-5">

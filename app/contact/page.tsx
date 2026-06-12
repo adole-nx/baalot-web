@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import SectionReveal from "@/components/SectionReveal";
+import { submitContact } from "@/lib/contact";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -21,15 +22,25 @@ const inputCls =
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", institution: "", role: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const body = `Name: ${form.name}%0AEmail: ${form.email}%0AInstitution: ${form.institution}%0ARole: ${form.role}%0A%0A${form.message}`;
-    window.location.href = `mailto:hello@baalot.site?subject=Demo Request — ${form.institution}&body=${body}`;
-    setSubmitted(true);
+    if (loading) return;
+    setLoading(true);
+    setError("");
+    try {
+      await submitContact({ source: "demo-request", ...form });
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,7 +76,7 @@ export default function ContactPage() {
           >
             <p className="text-4xl mb-4">✅</p>
             <h2 className="font-syne font-bold text-2xl text-white mb-2">Message sent!</h2>
-            <p className="text-muted">Your email client should open. We&apos;ll reply within 24 hours.</p>
+            <p className="text-muted">We&apos;ve received your request and will reply within 24 hours.</p>
           </motion.div>
           </SectionReveal>
         ) : (
@@ -111,11 +122,16 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="group relative w-full py-4 rounded-xl bg-accent font-semibold text-sm overflow-hidden"
+              disabled={loading}
+              className="group relative w-full py-4 rounded-xl bg-accent font-semibold text-sm overflow-hidden disabled:opacity-70"
             >
               <span className="absolute inset-0 bg-white/15 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-              <span className="relative">Send Message</span>
+              <span className="relative">{loading ? "Sending…" : "Send Message"}</span>
             </button>
+
+            {error && (
+              <p className="text-red-400 text-sm text-center" role="alert">{error}</p>
+            )}
 
             <p className="text-muted text-xs text-center">
               Or email us directly at{" "}

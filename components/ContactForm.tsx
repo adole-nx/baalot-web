@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { CheckCircle, ArrowUpRight, Mail, MessageCircle } from "lucide-react";
 import { EASE, EASE_SPRING } from "@/lib/animations";
+import { submitContact } from "@/lib/contact";
 
 const inputCls =
   "w-full bg-[#070B10] border border-white/[0.07] rounded-xl px-4 py-3 text-[14px] text-primary placeholder:text-[#334155] focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all font-inter";
@@ -10,19 +11,28 @@ const inputCls =
 export default function ContactForm() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const [form, setForm] = useState({ name: "", institution: "", type: "", voters: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", institution: "", type: "", voters: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [key]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1400));
-    setLoading(false);
-    setSubmitted(true);
+    setError("");
+    try {
+      const { type, ...rest } = form;
+      await submitContact({ source: "early-access", electionType: type, ...rest });
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -118,8 +128,9 @@ export default function ContactForm() {
                   >
                     <div className="grid sm:grid-cols-2 gap-3">
                       <input required name="name" placeholder="Your name" value={form.name} onChange={set("name")} className={inputCls} />
-                      <input required name="institution" placeholder="Institution / Organization" value={form.institution} onChange={set("institution")} className={inputCls} />
+                      <input required name="email" type="email" placeholder="Your email" value={form.email} onChange={set("email")} className={inputCls} />
                     </div>
+                    <input required name="institution" placeholder="Institution / Organization" value={form.institution} onChange={set("institution")} className={inputCls} />
                     <div className="grid sm:grid-cols-2 gap-3">
                       <select required name="type" value={form.type} onChange={set("type")} className={`${inputCls} appearance-none`}>
                         <option value="" disabled>Election type</option>
@@ -161,6 +172,9 @@ export default function ContactForm() {
                         <>Request Early Access <ArrowUpRight size={15} strokeWidth={2.5} /></>
                       )}
                     </button>
+                    {error && (
+                      <p className="text-[13px] text-center" style={{ color: "#f87171" }} role="alert">{error}</p>
+                    )}
                   </motion.form>
                 )}
               </AnimatePresence>
