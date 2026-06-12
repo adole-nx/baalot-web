@@ -8,6 +8,7 @@ import CustomCursor from "@/components/CustomCursor";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import LeviAgent from "@/components/LeviAgent";
 import SovereigntyStrip from "@/components/SovereigntyStrip";
+import EventBanner from "@/components/EventBanner";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProgressBar />
         <CustomCursor />
         <LeviAgent />
+        <EventBanner />
         <Navbar />
         {children}
         <SovereigntyStrip />
