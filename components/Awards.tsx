@@ -2,15 +2,15 @@
 
 import { motion } from "framer-motion";
 
-// TODO: replace with real award logos when available
-const awards = [
-  { icon: "🏆", name: "Top EdTech Startup", platform: "TechPoint Africa 2024" },
-  { icon: "🥇", name: "Best Civic Tech Tool", platform: "Google for Startups Nigeria" },
-  { icon: "⭐", name: "Featured Product", platform: "Product Hunt" },
-  { icon: "🎓", name: "University Innovation Award", platform: "Nile University 2024" },
-  { icon: "🌍", name: "Africa Tech Rising", platform: "Techcabal 2024" },
-  { icon: "🛡️", name: "Blockchain Integrity Award", platform: "Web3Africa Summit" },
-  { icon: "📱", name: "Best Mobile Civic App", platform: "DevFest Lagos 2024" },
+// Honest product capabilities (all shipped), not awards. Swap for real
+// recognition here once Baalot actually earns it.
+const highlights = [
+  { icon: "🔒", name: "Anonymous ballots", platform: "Your choice stays secret" },
+  { icon: "🛡️", name: "Server-verified votes", platform: "No client-side ballot writes" },
+  { icon: "🪪", name: "One vote per student ID", platform: "Institution-identity dedupe" },
+  { icon: "🗳️", name: "Live results", platform: "Real-time tally as votes land" },
+  { icon: "🏛️", name: "110+ institutions", platform: "Ready in the directory" },
+  { icon: "📱", name: "Android, iOS & web", platform: "One account, every device" },
 ];
 
 export default function Awards() {
@@ -21,7 +21,7 @@ export default function Awards() {
           className="label-tag-ink text-center mb-10"
           initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
         >
-          Recognition
+          Built for trust
         </motion.p>
 
         <div className="relative overflow-hidden">
@@ -32,7 +32,7 @@ export default function Awards() {
             style={{ background: "linear-gradient(to left, #FFFFFF, transparent)" }} />
 
           <div className="flex animate-marquee">
-            {[...awards, ...awards].map((a, i) => (
+            {[...highlights, ...highlights].map((a, i) => (
               <div
                 key={i}
                 className="flex-shrink-0 flex items-center gap-4 mx-8 py-4"
