@@ -14,7 +14,6 @@ const links = {
     { label: "Security",     href: "/security" },
     { label: "API Docs",     href: "/docs" },
     { label: "Blog",         href: "/blog" },
-    { label: "Case Studies", href: "/blog" },
   ],
   "Use Cases": [
     { label: "Universities",   href: "/platform" },

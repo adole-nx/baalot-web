@@ -5,62 +5,40 @@ import { motion, useInView } from "framer-motion";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-const cases = [
-  {
-    tags: ["#Blockchain Voting", "#University Election", "#Mobile"],
-    title: "NUESA Nile University — Nigeria's First Blockchain Student Election",
-    client: "Nile University NUESA · Abuja, Nigeria",
-    stack: ["React", "Solidity", "Ethereum", "Firebase"],
-    timeline: "2 weeks setup, 1 day election",
-    results: ["847 votes recorded", "99.9% on-chain", "Zero disputes", "Results in 4 min"],
-    accent: "#3B6EF8",
-    chartData: [
-      { candidate: "Candidate A", pct: 47, color: "#3B6EF8" },
-      { candidate: "Candidate B", pct: 31, color: "#6B7280" },
-      { candidate: "Candidate C", pct: 22, color: "#4B5563" },
-    ],
-    turnout: 84,
-    totalVoters: "1,008",
-  },
-  {
-    tags: ["#Voter Verification", "#Large Scale", "#Audit Trail"],
-    title: "Federal Polytechnic Bida SUG — 2,400 Students, Zero Chaos",
-    client: "Fed Poly Bida · Niger State, Nigeria",
-    stack: ["Next.js", "Node.js", "ZK Proofs", "PostgreSQL"],
-    timeline: "3 weeks setup",
-    results: ["2,400 registered voters", "91.2% turnout", "Full audit log", "No contested results"],
-    accent: "#F5C518",
-    chartData: [
-      { candidate: "Candidate A", pct: 54, color: "#F5C518" },
-      { candidate: "Candidate B", pct: 28, color: "#6B7280" },
-      { candidate: "Candidate C", pct: 18, color: "#4B5563" },
-    ],
-    turnout: 91,
-    totalVoters: "2,400",
-  },
-  {
-    tags: ["#Professional Body", "#Anonymity", "#Remote Voting"],
-    title: "CFA Nigeria — Secure Online Ballot for 800 Members",
-    client: "CFA Society Nigeria · Lagos, Nigeria",
-    stack: ["React", "Firebase", "Blockchain"],
-    timeline: "1 week setup",
-    results: ["800 members verified", "6 cities covered", "Results in 60s", "Zero disputes"],
-    accent: "#10B981",
-    chartData: [
-      { candidate: "Candidate A", pct: 62, color: "#10B981" },
-      { candidate: "Candidate B", pct: 38, color: "#6B7280" },
-    ],
-    turnout: 77,
-    totalVoters: "800",
-  },
-];
+export type CaseStudy = {
+  tags: string[];
+  title: string;
+  client: string;
+  stack: string[];
+  timeline: string;
+  results: string[];
+  accent: string;
+  chartData: { candidate: string; pct: number; color: string }[];
+  turnout: number;
+  totalVoters: string;
+};
+
+// Deliberately empty.
+//
+// This section used to carry three case studies that never happened - invented
+// vote counts, turnout figures and "zero disputes" claims attributed to Nile
+// University NUESA, Federal Polytechnic Bida SUG and CFA Society Nigeria, none
+// of which have run an election on Baalot. It also carried a testimonial signed
+// by a named real office holder who never said it.
+//
+// The card, chart and turnout components below are real and stay. Add an entry
+// here only when an institution has actually run an election on Baalot AND has
+// agreed in writing to be named, with numbers taken from that election's own
+// results - not estimated, not rounded up. Until then the section renders
+// nothing.
+const cases: CaseStudy[] = [];
 
 // ── Mini horizontal bar chart ──────────────────────────────────────────────────
 function ResultChart({
   data,
   active,
 }: {
-  data: typeof cases[0]["chartData"];
+  data: CaseStudy["chartData"];
   active: boolean;
 }) {
   return (
@@ -125,7 +103,7 @@ function TurnoutDonut({ pct, color, active, totalVoters }: {
 }
 
 // ── Single case card ───────────────────────────────────────────────────────────
-function CaseCard({ c, index }: { c: typeof cases[0]; index: number }) {
+function CaseCard({ c, index }: { c: CaseStudy; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
@@ -218,6 +196,9 @@ function CaseCard({ c, index }: { c: typeof cases[0]; index: number }) {
 
 // ── Main export ────────────────────────────────────────────────────────────────
 export default function CaseStudies() {
+  // No real case studies yet - render nothing rather than invent them.
+  if (cases.length === 0) return null;
+
   return (
     <section id="case-studies" className="section-pad bg-paper border-b border-light-border">
       <div className="max-w-site mx-auto">
@@ -233,44 +214,24 @@ export default function CaseStudies() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Real elections. Real results.
+            Elections run on Baalot.
           </motion.h2>
           <motion.p
             className="text-muted max-w-lg"
             initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
-            Every metric you see below is on-chain verifiable.
+            Published with each institution&apos;s permission. Every figure comes from
+            that election&apos;s own results, and every voter in it holds a receipt they
+            can check against the ballot chain.
           </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-6">
           {cases.map((c, i) => (
             <CaseCard key={c.client} c={c} index={i} />
           ))}
         </div>
-
-        {/* Featured quote */}
-        <motion.blockquote
-          className="bg-ink border border-white/[0.06] rounded-2xl p-8 md:p-10 text-center max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-        >
-          <p className="text-xl md:text-2xl font-syne text-white/80 leading-relaxed mb-6">
-            &ldquo;Baalot gave our election instant credibility. Students who never trusted the process before were checking the blockchain themselves.&rdquo;
-          </p>
-          <footer className="flex items-center justify-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-xs font-bold text-accent">
-              NP
-            </div>
-            <div className="text-left">
-              <p className="text-white text-sm font-semibold">NUESA President</p>
-              <p className="text-muted text-xs">Nile University, Abuja</p>
-            </div>
-          </footer>
-        </motion.blockquote>
       </div>
     </section>
   );
