@@ -19,14 +19,15 @@ const SCREEN_ACCENT_COLORS = ["#3B6EF8", "#F5C518", "#10B981", "#3B6EF8"];
 // ─── Screen 1: Cast Your Vote ─────────────────────────────────────────────────
 function VoteScreen({ active }: { active: boolean }) {
   const candidates = [
-    { initials: "AO", color: "#3B6EF8", name: "Amara Okafor",  party: "Progressive Alliance", selected: true  },
-    { initials: "DA", color: "#F5C518", name: "Dele Adeyemi",   party: "Student First",         selected: false },
-    { initials: "CN", color: "#10B981", name: "Chioma Nwosu",  party: "Reform Movement",       selected: false },
+    // Placeholder ballot. Real institutions are never named in these mockups.
+    { initials: "A", color: "#3B6EF8", name: "Candidate A", party: "Sample ticket", selected: true  },
+    { initials: "B", color: "#F5C518", name: "Candidate B", party: "Sample ticket", selected: false },
+    { initials: "C", color: "#10B981", name: "Candidate C", party: "Sample ticket", selected: false },
   ];
   return (
     <div className="flex flex-col h-full bg-bg text-white px-4 pt-3 pb-4 gap-3">
       <div>
-        <p className="font-syne font-bold text-sm">NUESA Election 2025</p>
+        <p className="font-syne font-bold text-sm">Sample Election</p>
         <p className="text-muted text-[10px]">Presidential Candidates</p>
       </div>
       <div className="flex flex-col gap-2 flex-1">
@@ -116,8 +117,8 @@ function ResultsScreen({ active }: { active: boolean }) {
       </div>
       <div className="pt-2 border-t border-border">
         <p className="text-[9px] text-muted text-center">
-          1,247 / 2,400 votes ·{" "}
-          <span className="text-green-400">On-chain ✓</span>
+          Sample data ·{" "}
+          <span className="text-green-400">Chain-sealed ✓</span>
         </p>
       </div>
     </div>
@@ -177,9 +178,9 @@ function IdentityScreen({ active }: { active: boolean }) {
 // ─── Screen 4: Admin Dashboard ────────────────────────────────────────────────
 function AdminScreen({ active }: { active: boolean }) {
   const elections = [
-    { dot: "bg-green-400", name: "NUESA Pres. Election", status: "Live" },
-    { dot: "bg-gold",      name: "FUTO SUG",             status: "3 days to go" },
-    { dot: "bg-accent",    name: "Fed Poly Bida",         status: "Results published" },
+    { dot: "bg-green-400", name: "Presidential Election", status: "Live" },
+    { dot: "bg-gold",      name: "Faculty Rep Election",  status: "3 days to go" },
+    { dot: "bg-accent",    name: "Welfare Officer",       status: "Results published" },
   ];
   return (
     <div className="flex flex-col h-full bg-bg text-white px-4 pt-3 pb-4 gap-3">
@@ -235,14 +236,14 @@ function AdminScreen({ active }: { active: boolean }) {
 // ─── Callout pills ────────────────────────────────────────────────────────────
 const screenPills: { side: "left" | "right"; label: string; color: string }[][] = [
   [
-    { side: "left",  label: "ZK Anonymity",    color: "#3B6EF8" },
+    { side: "left",  label: "Anonymous ballots", color: "#3B6EF8" },
     { side: "left",  label: "< 2 min to vote", color: "#F5C518" },
-    { side: "left",  label: "On-chain record",  color: "#10B981" },
+    { side: "left",  label: "Voter receipt",     color: "#10B981" },
   ],
   [
     { side: "right", label: "Live updates",      color: "#3B6EF8" },
     { side: "right", label: "Tamper-proof",       color: "#F5C518" },
-    { side: "right", label: "Public verifiable",  color: "#10B981" },
+    { side: "right", label: "Receipt-verifiable", color: "#10B981" },
   ],
   [
     { side: "left",  label: "NIN/BVN Auth",     color: "#3B6EF8" },
@@ -375,7 +376,7 @@ export default function AppShowcase() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            From voter registration to blockchain-verified results — all in one app built for Africa.
+            From voter registration to chain-sealed results — all in one app built for Africa.
           </motion.p>
         </div>
 

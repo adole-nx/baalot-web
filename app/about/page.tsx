@@ -76,10 +76,12 @@ export default function AboutPage() {
             transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
           >
             {[
-              { value: "10K+", label: "Votes Cast",      accent: "#9B5DE5" },
-              { value: "6",    label: "Pilot Elections", accent: "#B27FF0" },
-              { value: "91%",  label: "Avg. Turnout",    accent: "#14B8A6" },
-              { value: "0",    label: "Tampering Cases", accent: "#9B5DE5" },
+              // Verifiable facts only. Baalot has run no customer elections yet, so
+              // there are no vote totals, turnout averages or incident counts to show.
+              { value: "110+", label: "Institutions Listed", accent: "#9B5DE5" },
+              { value: "28",   label: "States Covered",      accent: "#B27FF0" },
+              { value: "3",    label: "Platforms",           accent: "#14B8A6" },
+              { value: "1",    label: "Vote Per Identity",   accent: "#9B5DE5" },
             ].map((s) => (
               <div
                 key={s.label}

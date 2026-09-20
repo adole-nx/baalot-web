@@ -7,14 +7,14 @@ import SplitHeading from "./SplitHeading";
 const features = [
   {
     icon: "🔐",
-    title: "Blockchain Vote Recording",
-    desc: "Every ballot is immutably stored on Ethereum. No deletion, no alteration, no exceptions.",
+    title: "Chain-Sealed Ballots",
+    desc: "Every ballot is sealed into a server-side hash chain in the same transaction that records it. Altering one entry breaks every entry after it.",
     num: "01",
   },
   {
     icon: "🕵️",
-    title: "Voter Anonymity via ZK Proofs",
-    desc: "Zero-Knowledge cryptography ensures votes are verified without exposing voter identity.",
+    title: "Anonymous Ballots",
+    desc: "Ballots are stored unreadable and carry no voter identity. No administrator can link a ballot to the person who cast it.",
     num: "02",
   },
   {
@@ -38,7 +38,7 @@ const features = [
   {
     icon: "🌍",
     title: "Scalable to National Elections",
-    desc: "The same architecture that handles 500 voters can handle 5 million — with no redesign.",
+    desc: "Built on managed infrastructure that scales horizontally, so the same design serves a faculty vote or a national one.",
     num: "06",
   },
 ];

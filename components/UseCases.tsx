@@ -21,7 +21,7 @@ const tabs = [
       "Server-verified votes, tallied live",
       "Anonymous ballots — votes stored unreadable",
       "Instant published results",
-      "Downloadable results log",
+      "Live results dashboard",
     ],
     cta: "Run Your University Election →",
   },
@@ -78,11 +78,13 @@ const tabs = [
       "INEC-compatible reporting",
       "Zero single point of failure",
     ],
+    // Badged "Roadmap" above: NIN/BVN verification is live today, the rest of
+    // this column is what government-scale work would require and is not built.
     solutions: [
-      "NIN/BVN API integration",
-      "USSD fallback voting",
-      "Exportable INEC-compatible reports",
-      "Distributed node architecture",
+      "NIN/BVN API integration (live today)",
+      "Feature phone access (roadmap)",
+      "Electoral-commission report formats (roadmap)",
+      "Sharded, horizontally scaled vote intake",
     ],
     cta: "Talk to Our Team →",
   },

@@ -24,7 +24,7 @@ const steps = [
   {
     number: "02",
     title: "Vote",
-    desc: "Voters authenticate via NIN/BVN or institution ID and cast their ballot from any device — phone, laptop, or USSD. One vote per verified identity.",
+    desc: "Voters authenticate via NIN/BVN or institution ID and cast their ballot from any device — phone, tablet or laptop. One vote per verified identity.",
     icon: "🗳️",
   },
   {
@@ -95,7 +95,7 @@ function ProcessSection() {
 
 // ─── Stats Counter ────────────────────────────────────────────────────────────
 const platformStats = [
-  { value: 110, suffix: "+", prefix: "", label: "Institutions" },
+  { value: 110, suffix: "+", prefix: "", label: "Institutions in the directory" },
   { value: 1,   suffix: "",  prefix: "", label: "Vote per verified identity" },
   { value: 3,   suffix: "",  prefix: "", label: "Platforms — iOS, Android, Web" },
 ];
@@ -222,7 +222,7 @@ function CTASection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            From setup to results in under two weeks. Trusted by universities and organisations across Nigeria.
+            From setup to results in under two weeks. Built for universities, student unions and member organisations across Nigeria.
           </motion.p>
 
           <motion.div

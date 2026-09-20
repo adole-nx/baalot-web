@@ -20,7 +20,7 @@ const team = [
     role: "Founder & CEO",
     initials: "AD",
     color: "#3B6EF8",
-    photo: "https://images.unsplash.com/photo-29pFbI_D1Sc?w=300&h=300&q=85&fit=crop&auto=format",
+    photo: "", // real headshot pending - initials render until then
     linkedin: "https://linkedin.com/in/adole-daniel-inalegwu",
   },
   {
@@ -28,7 +28,7 @@ const team = [
     role: "Team Member",
     initials: "EL",
     color: "#10B981",
-    photo: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop",
+    photo: "", // real headshot pending - initials render until then
     linkedin: "/contact",
   },
 ];
@@ -40,7 +40,7 @@ function Avatar({ member }: { member: typeof team[0] }) {
       className="relative w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-2"
       style={{ borderColor: `${member.color}50` }}
     >
-      {!error ? (
+      {!error && member.photo ? (
         <Image
           src={member.photo}
           alt={member.name}

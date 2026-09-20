@@ -20,8 +20,8 @@ const team = [
     id: "adole",
     name: "Adole Daniel Inalegwu",
     role: "Founder & CEO",
-    bio: "Adole built Baalot from a single conviction: African institutions deserve election infrastructure that cannot be corrupted. He leads product vision, investor relations, and institutional partnerships — driving Baalot from a university pilot to a pan-African platform.",
-    photo: "https://images.unsplash.com/photo-29pFbI_D1Sc?w=700&h=875&q=88&fit=crop&auto=format",
+    bio: "Adole built Baalot from a single conviction: African institutions deserve election infrastructure that cannot be corrupted. He leads product vision, investor relations, and institutional partnerships — building Baalot toward a pan-African platform.",
+    photo: "", // real headshot pending - initials render until then
     linkedin: "https://linkedin.com/in/adole-daniel-inalegwu",
     accent: "#9B5DE5",
     tag: "Leadership",
@@ -32,7 +32,7 @@ const team = [
     name: "Elie",
     role: "Team Member",
     bio: "Elie is a core member of the Baalot team, helping build election infrastructure that African institutions can trust. Committed to the mission of transparent, verifiable democracy across the continent.",
-    photo: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=700&h=875&fit=crop",
+    photo: "", // real headshot pending - initials render until then
     linkedin: "/contact",
     accent: "#14B8A6",
     tag: "Team",
@@ -48,7 +48,7 @@ function PhotoCard({ member, priority = false }: { member: typeof team[0]; prior
       className="relative w-full h-full overflow-hidden rounded-2xl"
       style={{ border: `1px solid ${member.accent}25` }}
     >
-      {!error ? (
+      {!error && member.photo ? (
         <>
           <Image
             src={member.photo}
@@ -233,15 +233,24 @@ export default function TeamPage() {
                   className="relative w-20 h-20 rounded-2xl overflow-hidden"
                   style={{ border: `1.5px solid ${member.accent}35` }}
                 >
-                  <Image
-                    src={member.photo}
-                    alt={member.name}
-                    fill
-                    sizes="80px"
-                    className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
-                    onError={() => {}}
-                    unoptimized
-                  />
+                  {member.photo ? (
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="80px"
+                      className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
+                      onError={() => {}}
+                      unoptimized
+                    />
+                  ) : (
+                    <div
+                      className="w-full h-full flex items-center justify-center font-syne font-bold text-lg"
+                      style={{ background: `${member.accent}12`, color: member.accent }}
+                    >
+                      {member.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                    </div>
+                  )}
                 </div>
                 <p className="text-[9px] text-muted text-center mt-1.5 max-w-[80px] truncate">{member.role}</p>
               </motion.a>

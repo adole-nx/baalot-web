@@ -4,51 +4,31 @@ import { motion, useInView, useMotionValue } from "framer-motion";
 import { EASE } from "@/lib/animations";
 import { Quote } from "lucide-react";
 
-const testimonials = [
-  {
-    quote: "Baalot transformed our SUG election. 3,200 students voted in under 4 hours. Zero complaints, zero disputes. It felt like the future.",
-    name: "Chukwuemeka Obi",
-    role: "SUG President",
-    org: "Nile University of Abuja",
-    initial: "CO",
-    accent: "#9B5DE5",
-  },
-  {
-    quote: "The ZK proof audit report gave our board complete confidence. Every vote verified, every voter anonymous. This is what transparent governance looks like.",
-    name: "Dr. Amaka Okonkwo",
-    role: "Vice Chancellor",
-    org: "Covenant University, Ota",
-    initial: "AO",
-    accent: "#14B8A6",
-  },
-  {
-    quote: "We ran a national NGO election across 6 countries on Baalot. The real-time dashboard let our board follow every region simultaneously. Remarkable product.",
-    name: "Adekunle Fashola",
-    role: "Executive Director",
-    org: "Pan-African Youth Alliance",
-    initial: "AF",
-    accent: "#9B5DE5",
-  },
-  {
-    quote: "For the first time in our university's history, not a single student challenged the result. The blockchain receipt made everything verifiable. Students trusted it.",
-    name: "Prof. Ibrahim Sule",
-    role: "Dean of Student Affairs",
-    org: "Bayero University, Kano",
-    initial: "IS",
-    accent: "#14B8A6",
-  },
-  {
-    quote: "NIN verification meant we had absolute confidence in our voter list. Baalot handled 8,000 verified voters seamlessly. Setup took less than an afternoon.",
-    name: "Ngozi Eze",
-    role: "Electoral Committee Chair",
-    org: "University of Lagos",
-    initial: "NE",
-    accent: "#9B5DE5",
-  },
-];
+export type Testimonial = {
+  quote: string;
+  name: string;
+  role: string;
+  org: string;
+  initial: string;
+  accent: string;
+};
+
+// Deliberately empty.
+//
+// This carousel used to carry five quotes that nobody ever said, attributed to
+// named individuals at Nile University of Abuja, Covenant University, Bayero
+// University Kano, the University of Lagos and a "Pan-African Youth Alliance" -
+// complete with invented vote counts, an imaginary ZK proof audit report and a
+// six-country election that never happened.
+//
+// The card and carousel below are real and stay. Add an entry here only when a
+// real person has actually said the words, at an institution that has actually
+// run an election on Baalot, and has agreed in writing to be quoted by name.
+// Until then the section renders nothing.
+const testimonials: Testimonial[] = [];
 
 // ─── Single testimonial card ───────────────────────────────────
-function TestimonialCard({ t, active }: { t: typeof testimonials[0]; active: boolean }) {
+function TestimonialCard({ t, active }: { t: Testimonial; active: boolean }) {
   return (
     <div
       className="relative rounded-2xl p-[1px] flex-shrink-0 transition-all duration-500"
@@ -108,6 +88,9 @@ export default function Testimonials() {
   const x = useMotionValue(0);
   const CARD_W = 460;
 
+  // No real testimonials yet - render nothing rather than invent them.
+  if (testimonials.length === 0) return null;
+
   const handleDragEnd = (_: unknown, info: { offset: { x: number } }) => {
     const dir = info.offset.x < -60 ? 1 : info.offset.x > 60 ? -1 : 0;
     const next = Math.max(0, Math.min(testimonials.length - 1, activeIndex + dir));
@@ -136,7 +119,7 @@ export default function Testimonials() {
             className="font-syne font-bold text-primary"
             style={{ fontSize: "clamp(2rem, 4vw, 3rem)", letterSpacing: "-0.025em" }}
           >
-            Trusted by people who can&apos;t afford to be wrong.
+            In their own words.
           </h2>
         </motion.div>
       </div>

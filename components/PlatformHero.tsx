@@ -91,11 +91,13 @@ function Orb({ color, opacity, size, blur, top, bottom, left, right, animClass }
 }
 
 // ─── Glass stat strip ─────────────────────────────────────────────────────────
+// Verifiable facts only. Baalot has run no customer elections yet, so there are
+// no vote totals, timing averages or incident counts to put here.
 const heroStats = [
-  { value: "10K+",   label: "Votes Cast" },
-  { value: "100%",   label: "Audit Trail" },
-  { value: "< 2 min", label: "To Vote" },
-  { value: "0",      label: "Tampering Cases" },
+  { value: "110+", label: "Institutions Listed" },
+  { value: "28",   label: "States Covered" },
+  { value: "3",    label: "Platforms" },
+  { value: "1",    label: "Vote Per Identity" },
 ];
 
 export default function PlatformHero() {

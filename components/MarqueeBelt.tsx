@@ -3,16 +3,16 @@
 import Marquee from "./Marquee";
 
 const items = [
-  "Blockchain-Verified Votes",
-  "ZK-Proof Anonymity",
+  "Chain-Sealed Ballots",
+  "Anonymous Voting",
   "Real-Time Results",
-  "Distributed Node Network",
+  "Voter Receipts",
   "Built for Africa",
   "University Elections",
-  "Tamper-Proof Tallying",
+  "Tamper-Evident Tallying",
   "Mobile Voting Interface",
-  "Ethereum-Secured",
-  "Zero Central Failure",
+  "NIN/BVN Verified",
+  "One Vote Per Identity",
 ];
 
 export default function MarqueeBelt() {

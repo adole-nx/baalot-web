@@ -37,7 +37,7 @@ const pillars = [
   {
     icon: "📋",
     title: "Full Audit Trail",
-    body: "Every admin action, voter check-in, and ballot submission is time-stamped and logged, and every ballot is sealed into the tamper-evident chain the moment it's cast. Any observer can download a complete PDF audit report at any time.",
+    body: "Every admin action, voter check-in, and ballot submission is time-stamped and logged, and every ballot is sealed into the tamper-evident chain the moment it's cast. The full chain can be replayed and verified through the public API at any time.",
     accent: "#F97316",
   },
   {
@@ -210,7 +210,7 @@ export default function SecurityPage() {
               Want a full security briefing?
             </h2>
             <p className="text-muted mb-8">
-              We&apos;ll walk your IT team through the full architecture, smart contract audits, and data handling procedures.
+              We&apos;ll walk your IT team through the full architecture, our threat model, and data handling procedures.
             </p>
             <Link
               href="/contact"

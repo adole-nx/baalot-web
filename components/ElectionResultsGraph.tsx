@@ -5,10 +5,15 @@ import { motion, useInView } from "framer-motion";
 import SplitHeading from "./SplitHeading";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
+// Illustration only. This section used to present the same numbers as a real
+// "NUESA Presidential Election - SUG 2025", complete with an Ethereum Sepolia
+// block number and a ZK proof count. No such election ran, and Baalot does not
+// anchor to a public chain. Everything below is placeholder data shown to
+// demonstrate the results screen, and it is labelled as such on the card.
 const CANDIDATES = [
-  { name: "Amara Okafor",  pct: 47.3, color: "#3B6EF8", party: "Progressive Alliance", initials: "AO" },
-  { name: "Dele Adeyemi",  pct: 31.2, color: "#F5C518", party: "Student First",         initials: "DA" },
-  { name: "Chioma Nwosu",  pct: 21.5, color: "#10B981", party: "Reform Movement",       initials: "CN" },
+  { name: "Candidate A", pct: 47.3, color: "#3B6EF8", party: "Sample ticket", initials: "A" },
+  { name: "Candidate B", pct: 31.2, color: "#F5C518", party: "Sample ticket", initials: "B" },
+  { name: "Candidate C", pct: 21.5, color: "#10B981", party: "Sample ticket", initials: "C" },
 ];
 
 const ELIGIBLE  = 2400;
@@ -90,6 +95,7 @@ function Sparkline() {
 }
 
 // ── Blockchain hash ticker ────────────────────────────────────────────────────
+// Sample ballot-chain digests, not blockchain transactions.
 const HASHES = [
   "0x8f3a...d219",
   "0x1c4e...a87f",
@@ -137,7 +143,7 @@ export default function ElectionResultsGraph() {
             Live Results
           </motion.p>
           <h2 className="font-syne font-extrabold text-4xl md:text-5xl text-white">
-            <SplitHeading text="Democracy, Verified On-Chain" />
+            <SplitHeading text="Democracy, Verified" />
           </h2>
           <motion.p
             className="text-muted mt-4 text-lg max-w-xl mx-auto"
@@ -145,8 +151,8 @@ export default function ElectionResultsGraph() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            Every vote cryptographically committed to the Ethereum blockchain. Results are
-            mathematically verifiable — not just auditable.
+            Every ballot is sealed into Baalot&apos;s hash chain as it is cast, and every
+            voter keeps a receipt they can check against it. Sample data shown.
           </motion.p>
         </div>
 
@@ -162,13 +168,13 @@ export default function ElectionResultsGraph() {
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-xs text-green-400 font-semibold uppercase tracking-wider">Live</span>
+                <span className="text-xs text-green-400 font-semibold uppercase tracking-wider">Demo</span>
               </span>
               <span className="w-px h-4 bg-border" />
-              <span className="text-xs text-muted">NUESA Presidential Election — SUG 2025</span>
+              <span className="text-xs text-muted">Sample election · illustration only</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted">
-              <span>Tx:</span>
+              <span>Chain:</span>
               <HashTicker />
             </div>
           </div>
@@ -313,8 +319,7 @@ export default function ElectionResultsGraph() {
               <div className="flex items-center gap-2 bg-green-500/8 border border-green-500/20 rounded-xl px-4 py-3">
                 <span className="w-2 h-2 rounded-full bg-green-400 flex-shrink-0" />
                 <p className="text-green-400 text-xs font-semibold">
-                  Results anchored to Ethereum Sepolia ·{" "}
-                  <span className="font-mono">Block #8,247,391</span>
+                  Every ballot sealed into the Baalot ballot chain as it is cast
                 </p>
               </div>
             </div>
@@ -324,10 +329,10 @@ export default function ElectionResultsGraph() {
         {/* Bottom row — secondary stats */}
         <div className="grid md:grid-cols-4 gap-4 mt-8">
           {[
-            { label: "Smart contract verified", val: "100%", color: "#3B6EF8" },
-            { label: "ZK proofs generated",     val: "2,311", color: "#10B981" },
-            { label: "Avg. vote time",           val: "1m 47s", color: "#F5C518" },
-            { label: "Ballot hash collisions",   val: "0",      color: "#EF4444" },
+            { label: "Ballots chained",              val: "Every one",  color: "#3B6EF8" },
+            { label: "Receipts issued",              val: "1 per vote", color: "#10B981" },
+            { label: "Votes per verified identity",  val: "1",          color: "#F5C518" },
+            { label: "Admins who can read a ballot", val: "0",          color: "#EF4444" },
           ].map((s, i) => (
             <motion.div
               key={s.label}

@@ -22,8 +22,8 @@ const SECURITY_LAYERS = [
     "Each accepted ballot is sealed into a per-election hash chain in the same transaction that records it. Altering any past ballot breaks every hash after it — including for Baalot. Anchoring chain heads to a public blockchain is on our roadmap.",
   ],
   [
-    "Zero-knowledge anonymity",
-    "Your vote choice never leaves your device in plaintext. A cryptographic commitment proves your participation and validity without revealing your selection.",
+    "Anonymous ballots",
+    "Ballots are stored unreadable, and the chain publishes only a salted commitment of each one — enough to prove your ballot was counted, never enough to show what it said. Zero-knowledge proofs that verify validity without revealing the choice are on our roadmap.",
   ],
   [
     "NIN / BVN identity verification",
@@ -254,7 +254,7 @@ export default function DocsPage() {
               </div>
             ))}
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
-              For a full security brief — including smart contract audit reports and penetration test results — contact us at{" "}
+              For a full security brief — including our threat model and data-handling procedures — contact us at{" "}
               <a href="mailto:security@baalot.site" className="text-accent hover:underline">
                 security@baalot.site
               </a>.

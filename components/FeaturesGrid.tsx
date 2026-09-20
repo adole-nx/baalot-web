@@ -40,13 +40,13 @@ const featureTabs: Record<string, Feature[]> = {
     },
     {
       num: "02", title: "Anonymous Voting",
-      desc: "ZK proof-based anonymity — no one can link vote to voter.",
+      desc: "Ballots stored unreadable and unlinked — no one can tie a vote to a voter.",
       // "What Is Zero Knowledge Proof? (ZKP) - Explainer With Animation"
       youtubeId: "qMeNNjCQJG8",
     },
     {
       num: "03", title: "Audit Trail",
-      desc: "Every action logged on-chain and downloadable as PDF.",
+      desc: "Every ballot sealed into a tamper-evident hash chain you can replay.",
       // "Real World Blockchain Applications - Voting"
       youtubeId: "0BrKt26OwW8",
     },
@@ -57,7 +57,7 @@ const featureTabs: Record<string, Feature[]> = {
     },
     {
       num: "05", title: "Dispute Resolution",
-      desc: "On-chain evidence for any challenge or recount request.",
+      desc: "Voter receipts and a replayable chain for any challenge or recount.",
       // "What is Blockchain? How Elections on Blockchain work?" — Dhruv Rathee
       youtubeId: "ENrjn-lD1e8",
     },
@@ -70,19 +70,19 @@ const featureTabs: Record<string, Feature[]> = {
       youtubeId: "v7inQSORNl4",
     },
     {
-      num: "02", title: "USSD Fallback",
-      desc: "Voters without smartphones can vote via *384#-style USSD.",
+      num: "02", title: "Works on Any Phone",
+      desc: "Android, iOS and a mobile web ballot, so no voter needs a specific device.",
       // "How Does Mobile Voting Work? - Animated Explainer"
       youtubeId: "-cuJ8lIp2BQ",
     },
     {
-      num: "03", title: "INEC-Compatible Reports",
-      desc: "Export results in formats compatible with electoral commission requirements.",
+      num: "03", title: "Position-Level Results",
+      desc: "Every position tallied separately, with per-ballot receipts behind each number.",
       youtubeId: "v7inQSORNl4",
     },
     {
       num: "04", title: "Scalable Node Network",
-      desc: "Voters as distributed nodes — no central attack surface.",
+      desc: "Sharded write paths so a national-scale poll does not bottleneck on one counter.",
       // "What is Blockchain? How Elections on Blockchain work?"
       youtubeId: "ENrjn-lD1e8",
     },

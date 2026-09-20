@@ -12,10 +12,10 @@ const problems = [
 ];
 
 const solutions = [
-  { icon: "⛓️", title: "Immutable Vote Records", desc: "Every ballot is hashed and recorded on-chain. Nothing can be altered after submission — by anyone." },
-  { icon: "🌐", title: "Public Verifiability", desc: "Any stakeholder can audit the final tally against the blockchain ledger in real time." },
-  { icon: "🤖", title: "Automated On-Chain Tallying", desc: "Smart contracts count votes with zero human intervention. No overnight counting sessions, no disputes." },
-  { icon: "🛡️", title: "ZK-Proof Voter Anonymity", desc: "Voters prove eligibility without revealing identity. Confidence in the process is restored by design." },
+  { icon: "⛓️", title: "Tamper-Evident Records", desc: "Every ballot is hashed into a chain as it is cast. Alter one entry and every entry after it stops verifying." },
+  { icon: "🌐", title: "Verifiable Results", desc: "Every voter holds a receipt they can check against the ballot chain, and the chain can be replayed end to end." },
+  { icon: "🤖", title: "Automated Tallying", desc: "Votes are counted by the server as they arrive, with no human intervention. No overnight counting sessions." },
+  { icon: "🛡️", title: "Voter Anonymity", desc: "Eligibility is checked at registration, not at the ballot. The ballot itself is stored unreadable and carries no identity." },
 ];
 
 function Card({

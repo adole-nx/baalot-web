@@ -441,7 +441,7 @@ export default function BentoFeatures() {
             </p>
           </GlassCard>
 
-          {/* Card D — USSD */}
+          {/* Card D — Any device */}
           <GlassCard className="col-span-2 lg:col-span-4" index={3}>
             <motion.div
               whileHover={{ scale: 1.1, y: -4 }}
@@ -450,9 +450,9 @@ export default function BentoFeatures() {
             >
               <Smartphone size={32} className="text-accent" />
             </motion.div>
-            <h3 className="font-syne font-bold text-white mb-2">USSD Fallback</h3>
+            <h3 className="font-syne font-bold text-white mb-2">Vote From Any Device</h3>
             <p className="text-xs leading-relaxed" style={{ color: "#64748B" }}>
-              No smartphone required. Vote via *384# — every eligible voter in Nigeria can participate.
+              Android, iOS and a mobile web ballot — no voter needs a particular phone to take part.
             </p>
           </GlassCard>
 

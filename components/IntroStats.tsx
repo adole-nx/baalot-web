@@ -40,7 +40,7 @@ function Sparkline({ color = "#3B6EF8", animated }: { color?: string; animated: 
   );
 }
 
-// ── Radial progress (for 99.9%) ───────────────────────────────────────────────
+// ── Radial progress ────────────────────────────────────────────
 function RadialProgress({ pct, color, animated }: { pct: number; color: string; animated: boolean }) {
   const R = 20; const C = 2 * Math.PI * R;
   return (
@@ -129,39 +129,41 @@ function StatCard({
   active: boolean;
 }) {
   const configs = [
+    // Verifiable facts only. Baalot has run no customer elections yet, so there
+    // are no vote totals, timing averages or incident counts to show here.
     {
-      value:    12847,
-      display:  (v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)}K` : `${v}`,
-      suffix:   "",
-      label:    "votes cast across pilots",
-      sublabel: "↑ 34% from previous cycle",
-      sublabelColor: "text-green-500",
+      value:    110,
+      display:  (v: number) => `${v}`,
+      suffix:   "+",
+      label:    "institutions in the directory",
+      sublabel: "joinable from the app today",
+      sublabelColor: "text-muted",
       viz:      <Sparkline animated={active} />,
     },
     {
-      value:    99.9,
-      display:  () => "99.9",
-      suffix:   "%",
-      label:    "on-chain vote verification",
-      sublabel: "vs 0% traditional",
+      value:    28,
+      display:  (v: number) => `${v}`,
+      suffix:   "",
+      label:    "Nigerian states covered",
+      sublabel: "across the listed institutions",
       sublabelColor: "text-muted",
-      viz:      <RadialProgress pct={99.9} color="#3B6EF8" animated={active} />,
+      viz:      <RadialProgress pct={78} color="#3B6EF8" animated={active} />,
     },
     {
-      value:    2.3,
-      display:  () => "2.3",
-      suffix:   " min",
-      label:    "average time to cast a vote",
-      sublabel: "vs ~14 min in-person",
+      value:    3,
+      display:  () => "3",
+      suffix:   "",
+      label:    "platforms",
+      sublabel: "Android, iOS and web",
       sublabelColor: "text-muted",
       viz:      <MiniBarChart animated={active} />,
     },
     {
-      value:    0,
-      display:  () => "0",
+      value:    1,
+      display:  () => "1",
       suffix:   "",
-      label:    "verified tamper incidents",
-      sublabel: "across all elections run",
+      label:    "vote per verified identity",
+      sublabel: "enforced server-side",
       sublabelColor: "text-muted",
       viz:      <ShieldIcon animated={active} />,
     },
@@ -203,70 +205,6 @@ function StatCard({
   );
 }
 
-// ── Live activity chart (SVG line) ─────────────────────────────────────────────
-const voteTimeline = [0, 2, 8, 18, 35, 52, 68, 79, 85, 90, 92, 93, 94.5, 95.2, 96, 96.8, 97.3, 97.9, 98.4, 98.8];
-
-function LiveVoteChart({ active }: { active: boolean }) {
-  const W = 100; const H = 48;
-  const pad = 2;
-  const pts = voteTimeline
-    .map((v, i) => `${pad + (i / (voteTimeline.length - 1)) * (W - pad * 2)},${H - pad - (v / 100) * (H - pad * 2)}`)
-    .join(" ");
-
-  return (
-    <div className="relative">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-muted">Vote accumulation — NUESA 2024</span>
-        <span className="flex items-center gap-1 text-[10px] text-green-500 font-semibold">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          Live during election
-        </span>
-      </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 64 }} preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3B6EF8" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="#3B6EF8" stopOpacity="0.01" />
-          </linearGradient>
-        </defs>
-        {/* Grid lines */}
-        {[0.25, 0.5, 0.75].map((p) => (
-          <line key={p} x1={pad} y1={pad + (1 - p) * (H - pad * 2)} x2={W - pad} y2={pad + (1 - p) * (H - pad * 2)}
-            stroke="rgba(0,0,0,0.07)" strokeWidth="0.5" strokeDasharray="2 2" />
-        ))}
-        {/* Fill area */}
-        <polygon
-          points={`${pad},${H - pad} ${pts} ${W - pad},${H - pad}`}
-          fill="url(#chart-fill)"
-        />
-        {/* Line */}
-        <polyline
-          points={pts}
-          fill="none"
-          stroke="#3B6EF8"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeDasharray="300"
-          strokeDashoffset={active ? 0 : 300}
-          style={{ transition: active ? "stroke-dashoffset 2.2s cubic-bezier(0.16,1,0.3,1) 0.5s" : "none" }}
-        />
-        {/* Final dot */}
-        <motion.circle
-          cx={W - pad} cy={pad + (1 - 0.988) * (H - pad * 2)} r={2}
-          fill="#3B6EF8"
-          initial={{ scale: 0 }}
-          animate={active ? { scale: 1 } : { scale: 0 }}
-          transition={{ delay: 2.5 }}
-        />
-      </svg>
-      <div className="flex justify-between text-[9px] text-muted mt-1">
-        <span>8:00am</span><span>10:00am</span><span>12:00pm</span><span>2:00pm</span><span>4:00pm</span>
-      </div>
-    </div>
-  );
-}
-
 // ── Main export ────────────────────────────────────────────────────────────────
 export default function IntroStats() {
   const ref = useRef<HTMLElement>(null);
@@ -287,20 +225,9 @@ export default function IntroStats() {
           transparent, auditable elections end to end.
         </motion.p>
 
-        {/* Trust logos */}
-        <motion.div
-          className="flex items-center justify-center gap-4 mb-16 flex-wrap"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <span className="label-tag-ink">Trusted by</span>
-          {["Nile University", "Fed Poly Bida", "Google for Startups"].map((p) => (
-            <div key={p} className="h-7 px-4 rounded-full bg-paper-2 border border-light-border flex items-center">
-              <span className="text-xs font-medium text-ink-2">{p}</span>
-            </div>
-          ))}
-        </motion.div>
+        {/* The "Trusted by" logo row that used to sit here named Nile University,
+            Fed Poly Bida and Google for Startups. None of them is a Baalot
+            customer or partner, so the row is gone rather than re-labelled. */}
 
         {/* Stats grid */}
         <div className="bg-paper-2 border border-light-border rounded-2xl overflow-hidden mb-6">
@@ -310,10 +237,9 @@ export default function IntroStats() {
             ))}
           </div>
 
-          {/* Live chart strip */}
-          <div className="border-t border-light-border px-6 py-5 bg-paper">
-            <LiveVoteChart active={inView} />
-          </div>
+          {/* The live vote-accumulation strip that used to sit here plotted an
+              invented "NUESA 2024" election. It returns when a real election has
+              run and its own curve can be plotted. */}
         </div>
 
         {/* Caption */}
@@ -323,7 +249,7 @@ export default function IntroStats() {
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5, delay: 1 }}
         >
-          Data from Baalot pilot elections · 2023–2024 · All figures on-chain verifiable
+          Institution directory figures, current as of this build.
         </motion.p>
 
       </div>

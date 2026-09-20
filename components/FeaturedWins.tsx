@@ -3,64 +3,34 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-const wins = [
-  {
-    name: "NUESA Nile University",
-    short: "Nile University",
-    stat: "847",
-    statLabel: "votes on-chain",
-    desc: "Nigeria's first fully blockchain-recorded student election.",
-    tag: "University",
-    flag: "🇳🇬",
-  },
-  {
-    name: "Federal Poly Bida SUG",
-    short: "Fed Poly Bida",
-    stat: "2,400",
-    statLabel: "registered voters",
-    desc: "Zero disputes. Results published in under 4 minutes.",
-    tag: "Student Gov",
-    flag: "🇳🇬",
-  },
-  {
-    name: "TechFest Voting 2024",
-    short: "TechFest 2024",
-    stat: "60s",
-    statLabel: "to publish results",
-    desc: "Real-time results on-chain within 60 seconds of poll close.",
-    tag: "Event",
-    flag: "🇳🇬",
-  },
-  {
-    name: "CFA Nigeria Chapter",
-    short: "CFA Nigeria",
-    stat: "800",
-    statLabel: "members verified",
-    desc: "Secure online ballot for professional association members.",
-    tag: "Professional Body",
-    flag: "🇳🇬",
-  },
-  {
-    name: "University of Abuja SUG",
-    short: "UniAbuja SUG",
-    stat: "Q1 2025",
-    statLabel: "pilot launch",
-    desc: "Full blockchain integration — pilot currently in progress.",
-    tag: "University",
-    flag: "🇳🇬",
-  },
-  {
-    name: "Pan-African DAO Vote",
-    short: "Pan-African DAO",
-    stat: "6",
-    statLabel: "countries",
-    desc: "Cross-border governance vote spanning 6 African nations.",
-    tag: "Web3 / DAO",
-    flag: "🌍",
-  },
-];
+export type Win = {
+  name: string;
+  short: string;
+  stat: string;
+  statLabel: string;
+  desc: string;
+  tag: string;
+  flag: string;
+};
+
+// Deliberately empty.
+//
+// This grid used to list six "early wins" that never happened - invented vote
+// counts and launch dates attributed to Nile University NUESA, Federal
+// Polytechnic Bida SUG, CFA Society Nigeria, the University of Abuja SUG, a
+// "TechFest 2024" and a "Pan-African DAO" vote across six countries. None of
+// these institutions has run an election on Baalot.
+//
+// The grid below is real and stays. Add an entry only for an election that has
+// actually run on Baalot, with figures taken from that election's own results
+// and the institution's written permission to be named. Until then the section
+// renders nothing.
+const wins: Win[] = [];
 
 export default function FeaturedWins() {
+  // No real elections to show yet - render nothing rather than invent them.
+  if (wins.length === 0) return null;
+
   return (
     <section className="bg-paper overflow-hidden">
       {/* Header */}
@@ -83,7 +53,7 @@ export default function FeaturedWins() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              Pilot Elections &amp; Early Wins
+              Elections Run on Baalot
             </motion.h2>
           </div>
           <motion.div
