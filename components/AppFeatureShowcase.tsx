@@ -6,7 +6,7 @@ import { CheckCircle2, Vote, BarChart3, ShieldCheck, Zap } from "lucide-react";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-// ─── BBC Blockchain cube animation ───────────────────────────────────────────
+// ─── BBC ballot-chain cube animation ───────────────────────────────────────────
 function CubeViz() {
   const cubeColors = [
     ["#9B5DE5", "#B27FF0", "#7B3DC9", "#6B2DB9"],
@@ -56,7 +56,7 @@ function ElectionsScreen() {
     <div className="p-2 space-y-1.5 overflow-hidden h-full">
       <div className="flex items-center gap-1.5 mb-2">
         <div className="w-5 h-5 rounded-full flex items-center justify-center text-[8px]">🎓</div>
-        <span className="text-[9px] font-bold text-white">NILE</span>
+        <span className="text-[9px] font-bold text-white">DEMO</span>
         <span className="text-[7px] ml-auto px-1 py-0.5 rounded-full" style={{ background: "rgba(155,93,229,0.2)", color: "#9B5DE5" }}>Verified</span>
       </div>
       {elections.map((el, i) => (
@@ -90,7 +90,7 @@ function ElectionsScreen() {
   );
 }
 
-function BlockchainScreen() {
+function BallotChainScreen() {
   return (
     <div className="p-2 h-full flex flex-col">
       {/* Search bar */}
@@ -119,7 +119,7 @@ function BlockchainScreen() {
         </div>
         <CubeViz />
         <p className="text-[6.5px] text-center mt-1 leading-tight" style={{ color: "#64748B" }}>
-          Every vote anchored on the BBC chain.
+          Every vote sealed into the BBC chain.
         </p>
         <div className="mt-1.5 w-full py-1 rounded-full text-[6.5px] font-bold text-center text-white" style={{ background: "linear-gradient(135deg, #9B5DE5, #14B8A6)" }}>
           Get Started →
@@ -192,7 +192,7 @@ function ResultsScreen() {
 
       <div className="mt-2 p-1.5 rounded-lg flex items-center gap-1.5" style={{ background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.15)" }}>
         <ShieldCheck size={8} style={{ color: "#14B8A6" }} />
-        <span className="text-[6px]" style={{ color: "#14B8A6" }}>On-chain verified · BBC #4,821,093</span>
+        <span className="text-[6px]" style={{ color: "#14B8A6" }}>Chain verified · BBC #4,821,093</span>
       </div>
     </div>
   );
@@ -352,7 +352,7 @@ const features = [
   {
     icon: <ShieldCheck size={14} />,
     title: "BBC chain anchored",
-    desc: "Each result is an immutable transaction — no server can alter it.",
+    desc: "Every ballot is sealed into a hash chain as it is cast — tampering breaks the chain.",
     accent: "#14B8A6",
   },
   {
@@ -379,16 +379,16 @@ export default function AppFeatureShowcase() {
       isCenter: false,
     },
     {
-      title: "BBC Blockchain",
-      description: "Every vote anchored on-chain. Transparent and tamper-proof.",
+      title: "Ballot Chain",
+      description: "Every vote sealed into a hash chain, with a receipt you can check.",
       icon: <CheckCircle2 size={14} />,
       accent: "#14B8A6",
-      screen: <BlockchainScreen />,
+      screen: <BallotChainScreen />,
       isCenter: true,
     },
     {
       title: "Live Results",
-      description: "Real-time counts with on-chain verification badge.",
+      description: "Real-time counts with a chain-verification badge.",
       icon: <BarChart3 size={14} />,
       accent: "#B27FF0",
       screen: <ResultsScreen />,

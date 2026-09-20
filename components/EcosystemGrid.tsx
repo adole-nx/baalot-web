@@ -22,26 +22,6 @@ const INTEGRATIONS: Integration[] = [
     ),
   },
   {
-    name: "PostgreSQL",
-    category: "Database",
-    color: "#336791",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17.128 0a10.134 10.134 0 00-2.755.403l-.063.02A10.922 10.922 0 0012.6.258C11.423.258 10.373.538 9.555 1.1a.82.82 0 00-.082.06 10.13 10.13 0 00-2.755-.403C4.91.757 3.425 1.426 2.427 2.721c-2.171 2.862-1.558 7.67 1.343 11.155l.027.033c.98 1.132 2.057 1.817 3.12 1.94.65.077 1.297-.073 1.884-.45l.007.005c.388.25.79.41 1.196.48C9.12 19.26 9.498 22 12 22s2.88-2.74 2.944-6.116c.406-.07.808-.23 1.196-.48l.007-.005c.587.377 1.234.527 1.884.45 1.063-.123 2.14-.808 3.12-1.94l.027-.033c2.9-3.484 3.514-8.293 1.343-11.155C21.525 1.426 20.04.757 18.232.757zM5.702 3.808c.383-.505.94-.77 1.725-.77.36 0 .74.065 1.13.186C7.28 4.238 6.46 5.05 5.914 6.008c-.24-.64-.377-1.352-.212-2.2zm12.602 0c.165.848.028 1.56-.212 2.2-.546-.957-1.366-1.77-2.643-2.784.39-.12.77-.186 1.13-.186.785 0 1.342.265 1.725.77z" />
-      </svg>
-    ),
-  },
-  {
-    name: "Ethereum",
-    category: "Blockchain",
-    color: "#627EEA",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" />
-      </svg>
-    ),
-  },
-  {
     name: "Vercel",
     category: "Deployment",
     color: "#FFFFFF",
@@ -82,16 +62,6 @@ const INTEGRATIONS: Integration[] = [
     ),
   },
   {
-    name: "Prisma",
-    category: "ORM",
-    color: "#2D3748",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M21.8054 17.6567L13.2868 .3936C13.0834 -.0468 12.5148 -.1232 12.205 .2416L1.28997 13.1283C1.03597 13.4268 1.05597 13.8704 1.33597 14.145L9.77197 22.3424C10.0256 22.5912 10.4022 22.6624 10.7286 22.5228L21.3054 18.1944C21.7464 18.0128 21.9702 17.5119 21.8054 17.6567ZM11.3006 20.5656L4.45597 13.9388L12.8274 3.4628L19.9892 17.0136L11.3006 20.5656Z" />
-      </svg>
-    ),
-  },
-  {
     name: "NIMC",
     category: "Identity Verification",
     color: "#008751",
@@ -124,16 +94,6 @@ const INTEGRATIONS: Integration[] = [
       </svg>
     ),
   },
-  {
-    name: "Alchemy",
-    category: "Web3 RPC",
-    color: "#363FF9",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-      </svg>
-    ),
-  },
 ];
 
 const DOUBLED = [...INTEGRATIONS, ...INTEGRATIONS];
@@ -160,7 +120,7 @@ export default function EcosystemGrid() {
           Built on infrastructure you already trust.
         </h2>
         <p className="mt-3 text-[15px] max-w-md mx-auto" style={{ color: "#64748B" }}>
-          Every layer of Baalot runs on battle-tested, enterprise-grade platforms.
+          Every layer of Baalot runs on battle-tested, enterprise-grade platforms — nothing home-rolled where it matters.
         </p>
       </motion.div>
 

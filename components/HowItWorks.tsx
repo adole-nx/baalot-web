@@ -11,14 +11,14 @@ const steps = [
     number: "01",
     label: "Create Election",
     eyebrow: "Setup",
-    command: "baalot init --name='SUG Presidential' --seats=5 --chain=bbc-mainnet",
-    output: `Deploying election contract to BBC Mainnet...
-Contract: 0x4a9f2b1e8c3d7f2a...b521
-Block: #2,041,002
-Election ID: SUG-2025-NILE-001
-Generating ZK ballot schema...
-Voter whitelist: pending import
-✓ Election ready. Share code: NILE-7X3K`,
+    command: "baalot init --name='SUG Presidential' --seats=5 --chain=ballot",
+    output: `Creating election...
+  Ballot chain:  initialised
+  Genesis hash:  0x4a9f2b1e8c3d7f2a...b521
+  Election ID:   SUG-2026-DEMO-001
+  Positions:     5
+  Voter roster:  pending import
+✓ Election ready. Share code: DEMO-7X3K`,
     successLines: [6],
   },
   {
@@ -30,8 +30,8 @@ Voter whitelist: pending import
   Total records:   2,847
   NIN verified:    2,801  ✓
   Pending review:     46  (duplicate NIN flag)
-Sealing anonymous Merkle tree...
-  Root hash: 0x8f2a9c...d31b
+Sealing anonymous voter registry...
+  Registry hash: 0x8f2a9c...d31b
 ✓ Voter registry sealed. Ready to open.`,
     successLines: [2, 6],
     warningLines: [3],
@@ -40,28 +40,28 @@ Sealing anonymous Merkle tree...
     number: "03",
     label: "Election Live",
     eyebrow: "Voting Open",
-    command: "baalot election open --id=SUG-2025-NILE-001 --duration=8h",
+    command: "baalot election open --id=SUG-2026-DEMO-001 --duration=8h",
     output: `● Election is LIVE
   Duration:   8 hours remaining
   Turnout:    1,203 / 2,801  (42.9%)
   Rate:       ▁▃▅▇█▇▅▃▂  votes/min
   Anomalies:  NONE DETECTED
-  ZK proofs:  generating...
-All votes anonymised. Chain is watching.`,
+  Ballot chain: sealing each vote
+All ballots stored anonymously. Each one sealed into the chain.`,
     successLines: [0, 4],
   },
   {
     number: "04",
     label: "Certify Results",
     eyebrow: "Complete",
-    command: "baalot results certify --publish --ipfs",
+    command: "baalot results certify --publish",
     output: `Closing ballot. Tallying 2,801 votes...
-  Winner:     Chukwuemeka Obi  (44.1%)
-Generating final ZK proof...
-  Proof:      ✓ VALID  (groth16, 142ms)
-Publishing immutable record...
-  IPFS CID:   QmXf9k2...23p
-✓ Results certified. 0 disputes. Permanent.`,
+  Winner:     Candidate A  (44.1%)
+Verifying ballot chain...
+  Chain:      ✓ INTACT  (2,801 links)
+Publishing results...
+  Receipts:   every voter can check their own
+✓ Results certified and published.`,
     successLines: [3, 6],
   },
 ];

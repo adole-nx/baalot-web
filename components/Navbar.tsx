@@ -28,9 +28,9 @@ const platformMenu = {
     {
       heading: "VERIFY",
       items: [
-        { label: "ZK Proof Audit",     desc: "Mathematical vote verification" },
-        { label: "Chain Explorer",     desc: "On-chain ballot records" },
-        { label: "Identity Verify",    desc: "NIN and biometric matching" },
+        { label: "Live Results",       desc: "Real-time, auditable tallies" },
+        { label: "Public Ledger",      desc: "On-chain records — on our roadmap" },
+        { label: "Identity Verify",    desc: "Verified one-person-one-vote" },
       ],
     },
   ],
@@ -316,7 +316,7 @@ function PlatformDropdown() {
               {col.items.map((item) => (
                 <li key={item.label}>
                   <Link
-                    href={item.label === "ZK Proof Audit" || item.label === "Chain Explorer" || item.label === "Identity Verify" ? "/security" : "/platform"}
+                    href={item.label === "Live Results" || item.label === "Public Ledger" || item.label === "Identity Verify" ? "/security" : "/platform"}
                     className="block px-3 py-2.5 rounded-lg hover:bg-white/[0.05] transition-all group"
                   >
                     <span className="block text-[13px] font-medium text-primary group-hover:text-[#B27FF0] transition-colors">
@@ -337,7 +337,7 @@ function PlatformDropdown() {
         style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
       >
         <span className="font-mono text-[11px]" style={{ color: "#334155" }}>
-          v2.1.0 — 99.97% uptime last 90d
+          110+ institutions in the directory
         </span>
         <Link
           href="/platform"

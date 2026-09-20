@@ -8,13 +8,14 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const sections = [
   {
     title: "What We Collect",
-    body: `When you use Baalot's platform, we collect only what is necessary to run a secure election. This includes:
+    body: `When you use Baalot, we collect only what is necessary to run a secure election. This includes:
 
-• Voter identity information (NIN/BVN reference, institutional ID) — used solely to verify eligibility and prevent duplicate voting.
-• Email address — used for credential delivery and election notifications.
-• Vote data — stored on-chain as an encrypted, anonymised transaction. Baalot cannot link a vote to a voter.
-• Usage logs — page visits and feature interactions, used to improve the platform (no personal identifiers attached).
-• Device metadata — browser type, OS version, screen size — collected anonymously for compatibility purposes.
+• Account information — name, email address, phone number, and a member or student ID where required, provided during registration.
+• Organisation data — the institution, organisation, or community you belong to (and details such as faculty, department, or group), used to assign you to the correct election.
+• Authentication data — we use Firebase Authentication (Google) to manage sign-in. We do not store passwords.
+• ID card images — when you scan an ID for membership verification, the image is processed for text extraction only and is not stored after processing.
+• Location data — optional approximate location shared only when you enable the live voter map. We do not track your location in the background.
+• Usage logs — app interactions and error reports used to improve the platform (via Sentry and Firebase Analytics).
 
 We do not collect payment card details. We do not build advertising profiles. We do not sell data.`,
   },
@@ -23,9 +24,11 @@ We do not collect payment card details. We do not build advertising profiles. We
     body: `We use the information we collect for one purpose: running trustworthy elections.
 
 Specifically:
-• To verify voter eligibility before a ballot is opened.
-• To deliver your unique voting credential securely.
-• To send election result notifications you have opted into.
+• To create and manage your account.
+• To verify your identity and enrol you in the elections you are eligible for.
+• To display real-time election results and voter maps.
+• To send election notifications you have opted into.
+• To detect fraud and maintain election integrity.
 • To diagnose technical issues and improve platform reliability.
 • To comply with legal obligations and respond to valid regulatory requests.
 
@@ -35,12 +38,13 @@ We will never use your information for marketing purposes without explicit opt-i
     title: "Third-Party Services",
     body: `Baalot is built on infrastructure from the following third-party providers:
 
-• Firebase (Google) — authentication and real-time database. Data is stored in the EU region.
-• Vercel — web hosting and serverless API functions. No personal data is logged by Vercel beyond standard HTTP access logs.
-• Ethereum blockchain — vote transactions are written to the public blockchain. These are anonymised and cannot be linked to your identity without your private voting credential.
-• Cloudflare — DDoS protection and CDN. Only anonymous traffic metadata is processed.
+• Firebase (Google) — authentication, Firestore database, and analytics.
+• Vercel — API hosting and serverless functions. No personal data is logged beyond standard access logs.
+• Sentry — error reporting. Error logs contain no personally identifiable information.
+• Prembly IdentityPass — ID card OCR processing for membership verification. Images are not retained after text extraction.
+• Google Sign-In — optional social login using your Google account (email and profile only).
 
-Each provider is GDPR-compliant. We maintain Data Processing Agreements (DPAs) with all processors.`,
+Each provider operates under standard data protection agreements.`,
   },
   {
     title: "Your Rights",
@@ -48,43 +52,37 @@ Each provider is GDPR-compliant. We maintain Data Processing Agreements (DPAs) w
 
 • Access — request a copy of all data we hold about you.
 • Rectification — request correction of inaccurate data.
-• Erasure — request deletion of your account and associated data (subject to legal retention requirements and on-chain immutability constraints).
+• Erasure — request deletion of your account and associated personal data within 30 days.
 • Portability — receive your data in a machine-readable format.
 • Objection — object to processing based on legitimate interests.
 • Restriction — request we limit how we process your data while a complaint is resolved.
 
-To exercise any of these rights, email us at privacy@baalot.site. We will respond within 30 days.`,
+To exercise any of these rights, email us at adoledaniel111@gmail.com. We will respond within 30 days.`,
   },
   {
     title: "Data Retention",
     body: `We retain personal data only as long as necessary:
 
+• Account data — retained while your account is active, then deleted within 30 days of a deletion request.
 • Voter identity records — retained for the duration of the election plus 90 days for dispute resolution, then deleted.
 • Election audit logs — retained for 7 years to comply with electoral record-keeping standards.
-• On-chain vote transactions — permanent (this is by design; the immutability is the security guarantee). On-chain records contain no personally identifiable information.
-• Account data — retained until you request deletion.`,
+• Aggregate election results — retained indefinitely as anonymised public records.`,
   },
   {
-    title: "Cookies",
-    body: `Baalot uses minimal cookies:
-
-• Session cookie — required to keep you logged in during a voting session. Expires when your browser closes.
-• Preference cookie — remembers your language and display settings. Expires after 1 year.
-• No third-party advertising or tracking cookies are used.
-
-You can clear cookies at any time via your browser settings. Clearing the session cookie will log you out.`,
+    title: "Children's Privacy",
+    body: `Baalot is intended for voters aged 16 and above. We do not knowingly collect personal data from children under 16. If you believe a child under 16 has created an account, please contact us and we will delete the account promptly.`,
   },
   {
     title: "Contact",
     body: `If you have any questions about this Privacy Policy or how we handle your data, please contact:
 
-Data Controller: Baalot Technologies Ltd
-Email: privacy@baalot.site
-Address: Abuja, Nigeria
+Developer: Adole Daniel
+Email: adoledaniel111@gmail.com
+Website: https://baalot.site
 
 If you are unhappy with our response, you have the right to lodge a complaint with the Nigeria Data Protection Bureau (NDPB) or your local supervisory authority.
 
-This policy was last updated: January 2025.`,
+This policy was last updated: June 19, 2026.`,
   },
 ];
 

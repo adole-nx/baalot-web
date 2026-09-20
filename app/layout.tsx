@@ -35,12 +35,12 @@ const DOMAIN = "https://baalot.site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(DOMAIN),
-  title: "Baalot — Blockchain Election Management for African Universities",
+  title: "Baalot — Secure Election Management for African Universities",
   description:
-    "Run transparent, tamper-proof elections at your university or organisation. Baalot uses blockchain and ZK proofs to make every vote count — and verifiable.",
+    "Run secure, anonymous, server-verified elections at your university or organisation. One vote per verified identity, live tallies, and every ballot sealed in a tamper-evident chain with voter-verifiable receipts.",
   openGraph: {
     title: "Baalot — Elections You Can Trust",
-    description: "Blockchain-powered election management for universities and organisations across Africa.",
+    description: "Secure, anonymous election management for universities and organisations across Africa.",
     url: DOMAIN,
     siteName: "Baalot",
     images: [{ url: `${DOMAIN}/og-image.png`, width: 1200, height: 630 }],
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Baalot — Elections You Can Trust",
-    description: "Blockchain-powered election management for Africa.",
+    description: "Secure, anonymous election management for Africa.",
     images: [`${DOMAIN}/og-image.png`],
   },
   alternates: { canonical: DOMAIN },

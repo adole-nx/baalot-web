@@ -12,20 +12,20 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const pillars = [
   {
     icon: "⛓️",
-    title: "Blockchain-Recorded Results",
-    body: "Every vote is a signed transaction on the Ethereum blockchain. Once written, results cannot be altered by anyone — not Baalot, not the election admin, not a court order. The ledger is permanent.",
+    title: "Tamper-Evident Ballot Chain (Live)",
+    body: "Every accepted ballot is sealed into a per-election hash-chain in the same transaction that records the vote — altering any past ballot breaks every hash after it. Voters get a cryptographic receipt, and anyone can replay and verify the full chain through our public API. Anchoring chain heads to a public blockchain is the next step on our roadmap.",
     accent: "#3B6EF8",
   },
   {
     icon: "🔐",
-    title: "Zero-Knowledge Anonymity",
-    body: "Baalot uses ZK proofs to verify a vote is valid (from an eligible voter, cast only once) without revealing who cast it. Your ballot is mathematically private.",
+    title: "Anonymous Ballots",
+    body: "Ballots are stored unreadable, so no one — not even Baalot — can tie a vote back to a voter. The chain publishes only a salted commitment of each ballot: the voter alone holds the salt that proves it's theirs. Zero-knowledge proofs that verify a vote is valid without revealing who cast it are on our roadmap.",
     accent: "#7C3AED",
   },
   {
     icon: "🆔",
     title: "NIN / BVN Identity Verification",
-    body: "Voters are verified against Nigeria's national identity infrastructure before any ballot is opened. Duplicate voting is cryptographically impossible — one person, one vote, guaranteed.",
+    body: "Voters are verified against Nigeria's national identity infrastructure before any ballot is opened. Voting is server-verified and de-duplicated — one person, one vote.",
     accent: "#F5C518",
   },
   {
@@ -37,13 +37,13 @@ const pillars = [
   {
     icon: "📋",
     title: "Full Audit Trail",
-    body: "Every admin action, voter check-in, and ballot submission is time-stamped and logged on-chain. Any observer can download a complete PDF audit report at any time.",
+    body: "Every admin action, voter check-in, and ballot submission is time-stamped and logged, and every ballot is sealed into the tamper-evident chain the moment it's cast. Any observer can download a complete PDF audit report at any time.",
     accent: "#F97316",
   },
   {
     icon: "🛡️",
-    title: "No Central Attack Surface",
-    body: "Baalot uses a distributed node architecture. There is no single server that, if compromised, could alter results. The blockchain IS the database.",
+    title: "Hardened Infrastructure",
+    body: "Votes are server-verified and stored unreadable on hardened, managed cloud infrastructure. A distributed node architecture, so that no single server can alter results, is on our roadmap.",
     accent: "#EC4899",
   },
 ];
@@ -190,7 +190,7 @@ export default function SecurityPage() {
               Verify any vote receipt yourself.
             </h2>
             <p className="mt-3 text-[15px] max-w-lg mx-auto" style={{ color: "#64748B" }}>
-              Every voter gets a blockchain receipt. Verify it independently with the Baalot CLI or any BBC node - no trust required.
+              Every ballot already comes with a cryptographic receipt, checkable against the public chain API today. A standalone Baalot CLI so you can verify from any machine — no trust in us required — is next; here&apos;s how it will feel.
             </p>
           </div>
           <VerifyTerminal className="max-w-2xl mx-auto" />

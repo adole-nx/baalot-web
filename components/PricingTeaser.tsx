@@ -14,7 +14,7 @@ const plans = [
     features: [
       "Up to 500 voters",
       "1 active election",
-      "Blockchain-recorded results",
+      "Chain-sealed results",
       "Web voting interface",
       "Basic audit trail",
       "Email support",
@@ -33,8 +33,8 @@ const plans = [
       "Unlimited voters",
       "Multiple concurrent elections",
       "NIN / BVN voter verification",
-      "ZK anonymity layer",
-      "Full on-chain audit trail",
+      "Anonymous ballots — stored unreadable",
+      "Full ballot-chain audit trail",
       "Live results dashboard",
       "PDF audit export",
       "Dedicated setup support",
@@ -196,7 +196,7 @@ export default function PricingTeaser() {
 
         {/* Footer note */}
         <p className="text-center mt-8 text-[12px]" style={{ color: "#334155" }}>
-          All plans include end-to-end encryption, ZK proof generation, and GDPR-compliant data handling.{" "}
+          All plans include encrypted transport, anonymous ballots and GDPR-compliant data handling.{" "}
           <Link href="/pricing" className="ml-1 underline underline-offset-2 hover:text-white transition-colors" style={{ color: "#64748B" }}>
             See full feature comparison →
           </Link>

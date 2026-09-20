@@ -24,13 +24,13 @@ const steps = [
   {
     number: "02",
     title: "Vote",
-    desc: "Voters authenticate via NIN/BVN or institution ID, cast their ballot in under 2 minutes from any device — phone, laptop, or USSD.",
+    desc: "Voters authenticate via NIN/BVN or institution ID and cast their ballot from any device — phone, laptop, or USSD. One vote per verified identity.",
     icon: "🗳️",
   },
   {
     number: "03",
     title: "Verify",
-    desc: "Results are tallied on-chain the moment voting closes. Anyone can verify the outcome — permanently, publicly, cryptographically.",
+    desc: "Results are tallied live the moment voting closes, with real-time tallies in the dashboard. Public, cryptographic verification on a block explorer is on our roadmap.",
     icon: "✅",
   },
 ];
@@ -95,10 +95,9 @@ function ProcessSection() {
 
 // ─── Stats Counter ────────────────────────────────────────────────────────────
 const platformStats = [
-  { value: 250000, suffix: "+", prefix: "",    label: "Votes Cast" },
-  { value: 99,     suffix: ".9%", prefix: "",  label: "Platform Uptime" },
-  { value: 2,      suffix: " Wks", prefix: "< ", label: "To Deploy" },
-  { value: 0,      suffix: "",    prefix: "",   label: "Security Breaches" },
+  { value: 110, suffix: "+", prefix: "", label: "Institutions" },
+  { value: 1,   suffix: "",  prefix: "", label: "Vote per verified identity" },
+  { value: 3,   suffix: "",  prefix: "", label: "Platforms — iOS, Android, Web" },
 ];
 
 function StatCounter({ value, suffix, prefix, label, index }: typeof platformStats[0] & { index: number }) {

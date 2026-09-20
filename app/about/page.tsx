@@ -8,18 +8,17 @@ import SectionReveal from "@/components/SectionReveal";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const milestones = [
-  { year: "2022", title: "The Problem", desc: "Adole Daniel witnesses a disputed student election at Nile University — manual counting, contested results, no audit trail." },
-  { year: "2023", title: "First Prototype", desc: "A blockchain-based voting interface built in six weeks. NUESA Nile University agrees to pilot it with 847 real voters." },
-  { year: "2024 Q1", title: "First Live Election", desc: "847 on-chain votes cast. Zero disputes. Results published in 45 seconds. The team knows it works." },
-  { year: "2024 Q2", title: "Scale Test", desc: "Federal Polytechnic Bida runs an election with 2,400 voters — 91% turnout, zero tampering cases, results in minutes." },
-  { year: "2024 Q3", title: "Recognition", desc: "TechPoint Africa Top EdTech Startup. Google for Startups Nigeria. Acceptance into three more university pilots." },
-  { year: "2025", title: "Platform Launch", desc: "Full platform launch: NIN/BVN integration, ZK anonymity, USSD fallback, INEC-compatible reports, and sub-2-week deployment." },
+  { year: "The problem", title: "A disputed election", desc: "Founder Adole Daniel sees a student election fall apart — manual counting, contested results, no audit trail — and asks why democratic institutions in Africa still run on paper and spreadsheets." },
+  { year: "The build", title: "Baalot takes shape", desc: "A mobile-first election platform: anonymous ballots stored unreadable, server-verified one-vote-per-identity, a voting PIN with optional biometrics, and live real-time tallies." },
+  { year: "The platform", title: "More than a ballot", desc: "Per-institution mini-apps and branding, multi-position ballots, elections that auto open and close, an admin dashboard, a community feed, campaign reels, a news feed, and the in-app Levi assistant — on Android, iOS, and web." },
+  { year: "Today", title: "In the field", desc: "Baalot's in-app directory now spans 110+ institutions across Nigeria, and every ballot cast is sealed into a tamper-evident hash-chain — with a cryptographic receipt for the voter and public verification for everyone else." },
+  { year: "Roadmap", title: "What we're building", desc: "Anchoring chain heads to a public blockchain and zero-knowledge vote proofs — so any result can be independently verified after polls close, without ever revealing a ballot." },
 ];
 
 const values = [
   { icon: "🗳️", title: "Every Vote Counts", body: "Not as a slogan — as an engineering requirement. We build systems where a single vote cannot be lost, changed, or ignored." },
   { icon: "🌍", title: "Built for Africa", body: "Africa's democracy deserves infrastructure designed for African realities: low bandwidth, feature phones, multiple languages, high trust stakes." },
-  { icon: "🔓", title: "Radical Transparency", body: "The only way to trust an election is to verify it yourself. Our blockchain audit trail is public, permanent, and verifiable by anyone." },
+  { icon: "🔓", title: "Radical Transparency", body: "The only way to trust an election is to verify it yourself. We're building a public, permanent audit trail that anyone can verify." },
   { icon: "⚡", title: "Speed Without Shortcuts", body: "We deploy in under two weeks — not by cutting corners, but by building reusable infrastructure that compounds with every election." },
 ];
 

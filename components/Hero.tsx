@@ -121,21 +121,25 @@ function AmbientParticles() {
 }
 
 // ─── Globe Visual ───────────────────────────────────────────────
-const LIVE_VOTERS = [
-  { lat:  6.5,  lon:  3.4,  label: "Lagos",     count: 12847, hot: true  },
-  { lat:  9.1,  lon:  7.4,  label: "Abuja",     count:  8923, hot: true  },
-  { lat: -1.3,  lon: 36.8,  label: "Nairobi",   count:  6210, hot: true  },
-  { lat:  5.6,  lon: -0.2,  label: "Accra",     count:  4102, hot: false },
-  { lat: 12.0,  lon:  8.5,  label: "Kano",      count:  3780, hot: true  },
-  { lat: 30.1,  lon: 31.2,  label: "Cairo",     count:  2940, hot: false },
-  { lat: 14.7,  lon:-17.4,  label: "Dakar",     count:  1830, hot: false },
-  { lat:-26.2,  lon: 28.0,  label: "Joburg",    count:  5100, hot: true  },
-  { lat: 51.5,  lon: -0.1,  label: "London",    count:  1240, hot: false },
-  { lat: 48.9,  lon:  2.3,  label: "Paris",     count:   980, hot: false },
-  { lat:  1.3,  lon:103.8,  label: "Singapore", count:  4560, hot: true  },
-  { lat: 19.1,  lon: 72.9,  label: "Mumbai",    count:  7280, hot: true  },
-  { lat: 40.7,  lon:-74.0,  label: "New York",  count:  1120, hot: false },
-  { lat:-23.5,  lon:-46.6,  label: "São Paulo", count:  3800, hot: true  },
+// Real data: the 14 Nigerian states with the most institutions listed in the
+// Baalot directory, derived from the seeded institution dataset (106 rows across
+// 28 states). `count` is institutions listed, not voters — the previous version
+// of this array carried invented live-voter totals for cities worldwide.
+const DIRECTORY_HUBS = [
+  { lat:   6.48, lon:   3.42, label: "Lagos",       count:  24, hot: true  },
+  { lat:   9.05, lon:   7.45, label: "FCT",         count:  16, hot: true  },
+  { lat:   6.91, lon:   3.45, label: "Ogun",        count:   7, hot: true  },
+  { lat:    7.6, lon:   3.97, label: "Oyo",         count:   6, hot: true  },
+  { lat:  10.71, lon:   7.51, label: "Kaduna",      count:   6, hot: true  },
+  { lat:   6.66, lon:    5.8, label: "Edo",         count:   5, hot: true  },
+  { lat:   7.74, lon:    4.4, label: "Osun",        count:   4, hot: true  },
+  { lat:   4.91, lon:   6.93, label: "Rivers",      count:   4, hot: true  },
+  { lat:   8.46, lon:    4.7, label: "Kwara",       count:   4, hot: true  },
+  { lat:   6.57, lon:   7.48, label: "Enugu",       count:   3, hot: false },
+  { lat:   5.44, lon:   7.02, label: "Imo",         count:   3, hot: false },
+  { lat:   6.19, lon:   7.03, label: "Anambra",     count:   3, hot: false },
+  { lat:   7.68, lon:   5.36, label: "Ekiti",       count:   3, hot: false },
+  { lat:   7.39, lon:   5.44, label: "Ondo",        count:   2, hot: false },
 ];
 
 // ── High-resolution continent polygons [lat°N, lon°E] ──────────
@@ -299,58 +303,29 @@ const CONTINENT_SHAPES: [number,number][][] = [
 
 const ARC_PAIRS = [[0,1],[1,4],[0,2],[2,7],[4,5],[0,11],[7,11]];
 
-// ── Per-city election data ──────────────────────────────────────
-const ELECTION_DATA: Record<string, { name: string; type: string; live: boolean; progress: number }[]> = {
-  Lagos: [
-    { name: "Lagos State House of Assembly — By-election", type: "Legislative", live: true, progress: 67 },
-    { name: "UNILAG Student Union 2025", type: "Student Union", live: true, progress: 43 },
-  ],
-  Abuja: [
-    { name: "FCT Area Council Supplementary Poll", type: "Municipal", live: true, progress: 82 },
-    { name: "Bwari Area Council Referendum", type: "Referendum", live: true, progress: 55 },
-  ],
-  Nairobi: [
-    { name: "University of Nairobi SRC Election", type: "Student Union", live: true, progress: 71 },
-    { name: "Westlands Ward Election", type: "Local", live: true, progress: 38 },
-  ],
-  Accra: [
-    { name: "KNUST Student Representative Council", type: "Student Union", live: true, progress: 59 },
-  ],
-  Kano: [
-    { name: "Kano State Electoral Recount — Round 2", type: "Legislative", live: true, progress: 91 },
-  ],
-  Cairo: [
-    { name: "Cairo University Union Elections", type: "Student Union", live: false, progress: 0 },
-  ],
-  Dakar: [
-    { name: "UCAD Student Council Vote", type: "Student Union", live: true, progress: 29 },
-  ],
-  Joburg: [
-    { name: "Wits University SRC Election", type: "Student Union", live: true, progress: 64 },
-    { name: "Soweto Ward Council Vote", type: "Municipal", live: true, progress: 47 },
-  ],
-  Mumbai: [
-    { name: "IIT Bombay Student Body Election", type: "Student Union", live: true, progress: 78 },
-    { name: "Municipal Corporation Ward Poll", type: "Local", live: true, progress: 31 },
-  ],
-  Singapore: [
-    { name: "NUS Students' Union Election", type: "Student Union", live: true, progress: 86 },
-  ],
-  "São Paulo": [
-    { name: "USP Student Assembly Election", type: "Student Union", live: true, progress: 53 },
-    { name: "Campinas Municipal Council", type: "Municipal", live: true, progress: 22 },
-  ],
-  "New York": [
-    { name: "Columbia University Student Senate", type: "Student Union", live: false, progress: 0 },
-  ],
-  London: [],
-  Paris: [],
+// ── Per-hub directory breakdown ─────────────────────────────────
+// What kinds of institutions are listed in each state. This replaced a table of
+// invented "live elections" at named real universities and government bodies.
+const HUB_BREAKDOWN: Record<string, { label: string; n: number }[]> = {
+  Lagos: [{ label: "Companies", n: 15 }, { label: "Universities & polytechnics", n: 5 }, { label: "Communities", n: 4 }],
+  FCT: [{ label: "Communities", n: 6 }, { label: "Universities & polytechnics", n: 5 }, { label: "Government bodies", n: 4 }, { label: "Companies", n: 1 }],
+  Ogun: [{ label: "Universities & polytechnics", n: 6 }, { label: "Government bodies", n: 1 }],
+  Oyo: [{ label: "Universities & polytechnics", n: 5 }, { label: "Government bodies", n: 1 }],
+  Kaduna: [{ label: "Universities & polytechnics", n: 5 }, { label: "Government bodies", n: 1 }],
+  Edo: [{ label: "Universities & polytechnics", n: 4 }, { label: "Government bodies", n: 1 }],
+  Osun: [{ label: "Universities & polytechnics", n: 4 }],
+  Rivers: [{ label: "Universities & polytechnics", n: 3 }, { label: "Government bodies", n: 1 }],
+  Kwara: [{ label: "Universities & polytechnics", n: 4 }],
+  Enugu: [{ label: "Universities & polytechnics", n: 2 }, { label: "Government bodies", n: 1 }],
+  Imo: [{ label: "Universities & polytechnics", n: 3 }],
+  Anambra: [{ label: "Universities & polytechnics", n: 2 }, { label: "Government bodies", n: 1 }],
+  Ekiti: [{ label: "Universities & polytechnics", n: 3 }],
+  Ondo: [{ label: "Universities & polytechnics", n: 2 }],
 };
 
 // ── Globe Visual ────────────────────────────────────────────────
 function GlobeVisual({ size = 460 }: { size?: number }) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
-  const liveCountRef = useRef<HTMLSpanElement>(null);
   const tooltipRef   = useRef<HTMLDivElement>(null);
 
   // Interaction state — all refs, zero re-renders
@@ -370,7 +345,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
   const lon0Ref     = useRef(0);     // last computed lon0 (for unproject)
   const lat0Ref     = useRef(8);     // last computed lat0
   // Zoom overlay React state
-  const [zoomedCity, setZoomedCity] = useState<typeof LIVE_VOTERS[0] | null>(null);
+  const [zoomedCity, setZoomedCity] = useState<typeof DIRECTORY_HUBS[0] | null>(null);
 
   useEffect(() => {
     const canvas  = canvasRef.current;
@@ -450,8 +425,8 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       const geo = unproject(px, py);
       if (!geo) return;
       // Find nearest LIVE city
-      let nearest = LIVE_VOTERS[0], minD = Infinity;
-      for (const city of LIVE_VOTERS) {
+      let nearest = DIRECTORY_HUBS[0], minD = Infinity;
+      for (const city of DIRECTORY_HUBS) {
         const d = Math.hypot(city.lat - geo.lat, city.lon - geo.lon);
         if (d < minD) { minD = d; nearest = city; }
       }
@@ -689,8 +664,8 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
 
       // Arcs between cities
       for (const [ai, bi] of ARC_PAIRS) {
-        const pA = project(LIVE_VOTERS[ai].lat, LIVE_VOTERS[ai].lon, lon0);
-        const pB = project(LIVE_VOTERS[bi].lat, LIVE_VOTERS[bi].lon, lon0);
+        const pA = project(DIRECTORY_HUBS[ai].lat, DIRECTORY_HUBS[ai].lon, lon0);
+        const pB = project(DIRECTORY_HUBS[bi].lat, DIRECTORY_HUBS[bi].lon, lon0);
         if (!pA.visible || !pB.visible) continue;
         ctx.save();
         ctx.setLineDash([3, 5]);
@@ -736,7 +711,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       ctx.stroke();
 
       // Voter city dots + labels
-      for (const city of LIVE_VOTERS) {
+      for (const city of DIRECTORY_HUBS) {
         const p = project(city.lat, city.lon, lon0);
         if (!p.visible) continue;
         if (Math.hypot(p.x - CX, p.y - CY) > R - 2) continue;
@@ -786,13 +761,6 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
         ctx.restore();
       }
 
-      // Update live count display
-      if (liveCountRef.current) {
-        const total = LIVE_VOTERS.reduce((s, c) => s + c.count, 0);
-        const live = Math.floor(total + t * 3.7) % 100000 + total;
-        liveCountRef.current.textContent = live.toLocaleString();
-      }
-
       // Rotating tick ring
       ctx.save();
       ctx.translate(CX, CY);
@@ -827,8 +795,8 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
         const mx = (mousePt.current.x - CX) / zz + CX;
         const my = (mousePt.current.y - CY) / zz + CY;
         const hitR = 14 / zz;
-        for (let i = 0; i < LIVE_VOTERS.length; i++) {
-          const city = LIVE_VOTERS[i];
+        for (let i = 0; i < DIRECTORY_HUBS.length; i++) {
+          const city = DIRECTORY_HUBS[i];
           const p = project(city.lat, city.lon, lon0);
           if (!p.visible) continue;
           if (Math.hypot(p.x - mx, p.y - my) < hitR) {
@@ -840,7 +808,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       if (newHover !== hoverIdx.current) {
         hoverIdx.current = newHover;
         if (newHover >= 0) {
-          const city = LIVE_VOTERS[newHover];
+          const city = DIRECTORY_HUBS[newHover];
           const p    = project(city.lat, city.lon, lon0);
           const rect = canvas.getBoundingClientRect();
           const sx   = rect.width  / SIZE;
@@ -848,7 +816,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
           tooltip.style.opacity = "1";
           tooltip.style.left    = `${p.x * sx}px`;
           tooltip.style.top     = `${(p.y - 14) * sy}px`;
-          tooltip.innerHTML     = `<div style="font-size:11px;font-weight:700;color:#E2D4F8;margin-bottom:2px">${city.label}</div><div style="font-size:10px;color:#B27FF0">${city.count.toLocaleString()} live voters</div>`;
+          tooltip.innerHTML     = `<div style="font-size:11px;font-weight:700;color:#E2D4F8;margin-bottom:2px">${city.label}</div><div style="font-size:10px;color:#B27FF0">${city.count} institution${city.count > 1 ? "s" : ""} listed</div>`;
           canvas.style.cursor   = "pointer";
         } else {
           tooltip.style.opacity = "0";
@@ -872,7 +840,7 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
     };
   }, [size]);
 
-  const totalVoters = LIVE_VOTERS.reduce((s, c) => s + c.count, 0);
+  const totalListed = DIRECTORY_HUBS.reduce((s, c) => s + c.count, 0);
 
   return (
     <div className="relative flex items-center justify-center select-none">
@@ -924,12 +892,12 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
             animate={{ opacity: [1, 0.25, 1], scale: [1, 1.4, 1] }}
             transition={{ duration: 1.4, repeat: Infinity }}
           />
-          <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "#B27FF0" }}>LIVE</span>
+          <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "#B27FF0" }}>DIRECTORY</span>
         </div>
         <p className="font-mono text-[11px] font-bold mt-0.5" style={{ color: "#E2D4F8" }}>
-          <span ref={liveCountRef}>{totalVoters.toLocaleString()}</span>
+          {totalListed.toLocaleString()}
         </p>
-        <p className="font-mono text-[8px] mt-0.5" style={{ color: "#475569" }}>voters casting now</p>
+        <p className="font-mono text-[8px] mt-0.5" style={{ color: "#475569" }}>institutions in these states</p>
       </div>
 
       {/* Elections live — bottom-left (hidden when zoomed) */}
@@ -947,10 +915,10 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
                 transition={{ duration: 1.8, repeat: Infinity, delay: 0.6 }}
               />
               <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: "#14B8A6" }}>
-                {LIVE_VOTERS.filter(c => c.hot).length} elections active
+                {DIRECTORY_HUBS.filter(c => c.hot).length} states with 4+ institutions
               </p>
             </div>
-            <p className="font-mono text-[8px] mt-0.5" style={{ color: "#475569" }}>14 cities · 9 countries</p>
+            <p className="font-mono text-[8px] mt-0.5" style={{ color: "#475569" }}>14 states · 28 covered nationwide</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -958,8 +926,8 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
       {/* ── Zoom info card ───────────────────────────────────────── */}
       <AnimatePresence>
         {zoomedCity && (() => {
-          const elections = ELECTION_DATA[zoomedCity.label] ?? [];
-          const liveCount = elections.filter(e => e.live).length;
+          const breakdown = HUB_BREAKDOWN[zoomedCity.label] ?? [];
+          const kinds = breakdown.length;
           return (
             <motion.div
               key="zoom-card"
@@ -999,8 +967,8 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
                     <p style={{ fontSize: 13, fontWeight: 800, color: "#EDE9FE", fontFamily: "var(--font-syne)", lineHeight: 1 }}>
                       {zoomedCity.label}
                     </p>
-                    <p style={{ fontSize: 10, color: liveCount > 0 ? "#22C55E" : "#64748B", marginTop: 2, lineHeight: 1, fontWeight: 600 }}>
-                      {liveCount > 0 ? `${liveCount} election${liveCount > 1 ? "s" : ""} live` : "No active elections"}
+                    <p style={{ fontSize: 10, color: kinds > 0 ? "#B27FF0" : "#64748B", marginTop: 2, lineHeight: 1, fontWeight: 600 }}>
+                      {kinds > 0 ? `${kinds} kind${kinds > 1 ? "s" : ""} of institution` : "Not yet in the directory"}
                     </p>
                   </div>
                 </div>
@@ -1008,60 +976,49 @@ function GlobeVisual({ size = 460 }: { size?: number }) {
                   <p style={{ fontSize: 15, fontWeight: 800, color: "#E2D4F8", fontFamily: "var(--font-syne)", lineHeight: 1 }}>
                     {zoomedCity.count.toLocaleString()}
                   </p>
-                  <p style={{ fontSize: 9, color: "#475569", marginTop: 2 }}>live voters</p>
+                  <p style={{ fontSize: 9, color: "#475569", marginTop: 2 }}>listed</p>
                 </div>
               </div>
 
               {/* Divider */}
               <div style={{ height: 1, background: "rgba(155,93,229,0.14)", marginBottom: 10 }} />
 
-              {/* Elections list */}
-              {elections.length > 0 ? (
+              {/* Directory breakdown */}
+              {breakdown.length > 0 ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  {elections.slice(0, 3).map((el, i) => (
+                  {breakdown.map((row, i) => (
                     <div key={i} style={{
                       padding: "8px 10px",
-                      background: el.live ? "rgba(155,93,229,0.08)" : "rgba(255,255,255,0.02)",
-                      border: `1px solid ${el.live ? "rgba(155,93,229,0.18)" : "rgba(255,255,255,0.06)"}`,
+                      background: "rgba(155,93,229,0.08)",
+                      border: "1px solid rgba(155,93,229,0.18)",
                       borderRadius: 9,
                     }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: el.live ? 6 : 0 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
                         <p style={{ fontSize: 11, fontWeight: 600, color: "#CBD5E1", lineHeight: 1.35, flex: 1 }}>
-                          {el.name}
+                          {row.label}
                         </p>
                         <span style={{
-                          fontSize: 9, fontWeight: 700, flexShrink: 0,
-                          color: el.live ? "#22C55E" : "#64748B",
-                          background: el.live ? "rgba(34,197,94,0.12)" : "rgba(100,116,139,0.08)",
-                          border: `1px solid ${el.live ? "rgba(34,197,94,0.25)" : "rgba(100,116,139,0.18)"}`,
-                          borderRadius: 4, padding: "2px 5px",
+                          fontSize: 10, fontWeight: 800, flexShrink: 0,
+                          color: "#B27FF0", fontFamily: "var(--font-syne)",
                         }}>
-                          {el.live ? "● LIVE" : "UPCOMING"}
+                          {row.n}
                         </span>
                       </div>
-                      {el.live && (
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.07)", borderRadius: 2, overflow: "hidden" }}>
-                            <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: `${el.progress}%` }}
-                              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 }}
-                              style={{ height: "100%", background: "linear-gradient(90deg, #9B5DE5, #14B8A6)", borderRadius: 2 }}
-                            />
-                          </div>
-                          <span style={{ fontSize: 9, color: "#9B5DE5", fontWeight: 700, whiteSpace: "nowrap" }}>
-                            {el.progress}% tallied
-                          </span>
-                        </div>
-                      )}
-                      <p style={{ fontSize: 9, color: "#475569", marginTop: el.live ? 4 : 2 }}>{el.type}</p>
+                      <div style={{ marginTop: 6, height: 3, background: "rgba(255,255,255,0.07)", borderRadius: 2, overflow: "hidden" }}>
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.round((row.n / zoomedCity.count) * 100)}%` }}
+                          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.12 }}
+                          style={{ height: "100%", background: "linear-gradient(90deg, #9B5DE5, #14B8A6)", borderRadius: 2 }}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div style={{ padding: "10px", textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: 9, border: "1px dashed rgba(255,255,255,0.07)" }}>
-                  <p style={{ fontSize: 11, color: "#475569" }}>No active elections in this region</p>
-                  <p style={{ fontSize: 10, color: "#9B5DE5", marginTop: 4, fontWeight: 600 }}>Launch yours free →</p>
+                  <p style={{ fontSize: 11, color: "#475569" }}>No institutions listed here yet</p>
+                  <p style={{ fontSize: 10, color: "#9B5DE5", marginTop: 4, fontWeight: 600 }}>Add yours free →</p>
                 </div>
               )}
 
@@ -1082,25 +1039,25 @@ const PHASES = [
     word: "Democratic",
     color: "#9B5DE5",
     hue: 0,
-    label: "ELECTIONS LIVE",
+    label: "BUILT FOR ELECTIONS",
     subtitle:
-      "Blockchain-secured. AI-verified. Run your next election on Baalot — the platform Africa's institutions trust when it matters most.",
+      "Anonymous ballots, verified voters, live tallies. Run your institution's next election on Baalot — free to start.",
   },
   {
-    word: "Transparent",
+    word: "Verifiable",
     color: "#14B8A6",
     hue: 260,
-    label: "FULLY AUDITABLE",
+    label: "TAMPER-EVIDENT",
     subtitle:
-      "Every vote is a public blockchain transaction. Every result is independently auditable by anyone. No black boxes, ever.",
+      "Every ballot is sealed into a hash chain as it is cast, and every voter keeps a receipt they can check afterwards.",
   },
   {
-    word: "Tamper-Proof",
+    word: "Private",
     color: "#F59E0B",
     hue: 120,
-    label: "ZK VERIFIED",
+    label: "ANONYMOUS BY DESIGN",
     subtitle:
-      "Zero-knowledge proofs mean no one — not even Baalot — can alter a single ballot after it has been cast.",
+      "Ballots are stored unreadable and unlinked from the voter. One verified identity, one vote — and no one can see how you cast it.",
   },
 ] as const;
 
@@ -1219,7 +1176,7 @@ export default function Hero() {
             transition={{ duration: 1.6, repeat: Infinity }}
           />
           <span className="text-[11px] font-semibold tracking-wide" style={{ color: "#9B5DE5" }}>
-            Trusted by 200,000+ voters across Africa
+            110+ institutions in the Baalot directory
           </span>
         </motion.div>
 
@@ -1426,9 +1383,9 @@ export default function Hero() {
           style={{ opacity: textOpacity, y: textY }}
           className="w-full max-w-3xl mx-auto px-5 pb-16 grid grid-cols-3 gap-3"
         >
-          <StatPill value="200K+" label="Votes secured"     icon={Shield} />
-          <StatPill value="1,200+" label="Elections run"    icon={Zap}    />
-          <StatPill value="0"      label="Disputed results" icon={Globe}  />
+          <StatPill value="110+"   label="Institutions listed" icon={Globe}  />
+          <StatPill value="Free"   label="To start"            icon={Zap}    />
+          <StatPill value="1 vote" label="Per verified identity" icon={Shield} />
         </motion.div>
       </motion.div>
 

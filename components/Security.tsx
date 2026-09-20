@@ -4,7 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { EASE, EASE_SPRING, staggerContainer } from "@/lib/animations";
 import SectionReveal from "./SectionReveal";
 
-// ─── ZK proof visualization ────────────────────────────────────
+// ─── Zero-knowledge (roadmap) visualization ────────────────────────
 function ZKProofViz() {
   return (
     <svg viewBox="0 0 120 80" className="w-full h-20" aria-hidden="true">
@@ -38,7 +38,7 @@ function ZKProofViz() {
   );
 }
 
-// ─── Blockchain node visualization ────────────────────────────
+// ─── Public-ledger (roadmap) visualization ──────────────────────
 function BlockchainViz() {
   const nodes = [[60,15],[20,45],[100,45],[10,75],[50,75],[70,75],[110,75]];
   const edges = [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
@@ -99,21 +99,23 @@ function BiometricViz() {
 const pillars = [
   {
     title: "Zero-Knowledge Proofs",
-    body: "We prove your vote was counted without revealing how you voted. Mathematical certainty, complete privacy. No government, no admin, no one — can link a ballot to its voter.",
+    badge: "Roadmap",
+    body: "We’re building zero-knowledge proofs so the system can prove a vote was counted without revealing how you voted. Today, ballots are already stored unreadable — no admin can link a ballot to its voter.",
     viz: <ZKProofViz />,
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.1)",
   },
   {
     title: "Blockchain Immutability",
-    body: "Every ballot becomes an immutable on-chain entry. No server administrator can alter results. The ledger is public. The identity is private. That's the design.",
+    badge: "Roadmap",
+    body: "Planned: anchoring every result as an immutable on-chain entry no administrator can alter — a public ledger with private identities. It’s on our roadmap, designed to make results independently verifiable.",
     viz: <BlockchainViz />,
     color: "#14B8A6",
     glow: "rgba(20,184,166,0.08)",
   },
   {
-    title: "Biometric Identity",
-    body: "NIN verification and optional facial matching ensure one person, one vote — verified at the moment of registration, anonymous at the moment of casting.",
+    title: "Verified Identity",
+    body: "Identity verification with a voting PIN and optional biometrics ensures one person, one vote — verified at registration, anonymous at the moment of casting.",
     viz: <BiometricViz />,
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.1)",
@@ -155,7 +157,7 @@ export default function Security() {
             Built to withstand scrutiny.
           </h2>
           <p className="mt-4 text-[15px] max-w-[480px] mx-auto" style={{ color: "#64748B" }}>
-            Three independent security layers. Each one would be enough. Together, they&apos;re unprecedented for African election infrastructure.
+            Anonymous ballots and verified identity protect every vote today. A public, tamper-evident ledger is on our roadmap.
           </p>
         </SectionReveal>
 
@@ -194,12 +196,22 @@ export default function Security() {
                 </div>
 
                 {/* Content */}
-                <h3
-                  className="font-syne font-bold text-primary text-[18px] mb-3"
-                  style={{ letterSpacing: "-0.015em" }}
-                >
-                  {pillar.title}
-                </h3>
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
+                  <h3
+                    className="font-syne font-bold text-primary text-[18px]"
+                    style={{ letterSpacing: "-0.015em" }}
+                  >
+                    {pillar.title}
+                  </h3>
+                  {pillar.badge && (
+                    <span
+                      className="text-[9px] font-bold tracking-[0.12em] uppercase px-2 py-0.5 rounded-full"
+                      style={{ color: "#F59E0B", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.25)" }}
+                    >
+                      {pillar.badge}
+                    </span>
+                  )}
+                </div>
                 <p className="text-[13px] leading-relaxed flex-1" style={{ color: "#64748B" }}>
                   {pillar.body}
                 </p>
@@ -232,7 +244,7 @@ export default function Security() {
           className="mt-12 text-center"
         >
           <p className="text-[13px]" style={{ color: "#64748B" }}>
-            Every election comes with a full ZK proof audit report. Your institution can verify every result, independently.{" "}
+            Independent, verifiable audit reports are on our roadmap. See how we&apos;re designing verification from the ground up.{" "}
             <a href="/security" className="underline underline-offset-2 hover:text-primary transition-colors" style={{ color: "#9B5DE5" }}>
               Read the security whitepaper →
             </a>

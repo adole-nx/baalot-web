@@ -20,15 +20,15 @@ const panels = [
   },
   {
     tag: "VERIFY",
-    headline: "Every vote is a\nblockchain entry.",
-    body: "Each ballot is hashed, timestamped, and written to an immutable smart contract. Anyone can audit the result. No administrator can alter it.",
+    headline: "Every vote is a\nsealed chain entry.",
+    body: "Each ballot is hashed and timestamped into the election’s chain as it is cast, and the voter keeps a receipt. Altering any past ballot breaks every hash after it — including for us.",
     icon: LinkIcon,
     color: "#14B8A6",
     glow: "rgba(20,184,166,0.12)",
     dir: "right" as const,
     // Nigeria e-voting experts discussing blockchain verification
     youtubeId: "v7inQSORNl4",
-    videoLabel: "Experts on blockchain election verification",
+    videoLabel: "Experts on verifiable election technology",
   },
   {
     tag: "MANAGE",

@@ -7,7 +7,7 @@ const links = {
     { label: "Voter Portal",     href: "/platform" },
     { label: "Live Results",     href: "/platform" },
     { label: "Analytics",        href: "/platform" },
-    { label: "ZK Proof Audit",   href: "/security" },
+    { label: "Ballot Chain",     href: "/security" },
   ],
   Product: [
     { label: "Pricing",      href: "/pricing" },
@@ -50,12 +50,12 @@ export default function Footer() {
               <Logo size="sm" href="/" />
             </div>
             <p className="text-[12px] leading-relaxed mb-5" style={{ color: "#334155" }}>
-              Blockchain-secured election management for African institutions.
+              Secure, anonymous election management for African institutions.
             </p>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 live-dot" />
               <span className="font-mono text-[10px]" style={{ color: "#64748B" }}>
-                99.97% uptime
+                110+ institutions in the directory
               </span>
             </div>
           </div>
@@ -119,7 +119,7 @@ export default function Footer() {
               className="px-2.5 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase"
               style={{ background: "rgba(20,184,166,0.08)", color: "#14B8A6", border: "1px solid rgba(20,184,166,0.15)" }}
             >
-              ZK Secured
+              Chain Sealed
             </span>
             <span
               className="px-2.5 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase"

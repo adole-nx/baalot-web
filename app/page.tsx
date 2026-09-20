@@ -8,7 +8,6 @@ import FeaturedVideo      from "@/components/FeaturedVideo";
 import UseCases           from "@/components/UseCases";
 import Security           from "@/components/Security";
 import AppFeatureShowcase from "@/components/AppFeatureShowcase";
-import TweetWall          from "@/components/TweetWall";
 import AudienceCTA        from "@/components/AudienceCTA";
 import PricingTeaser      from "@/components/PricingTeaser";
 import ContactForm        from "@/components/ContactForm";
@@ -26,7 +25,6 @@ export default function Home() {
       <UseCases />
       <Security />
       <AppFeatureShowcase />
-      <TweetWall />
       <PricingTeaser />
       <AudienceCTA />
       <ContactForm />

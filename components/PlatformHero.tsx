@@ -145,7 +145,7 @@ export default function PlatformHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.8 }}
         >
-          Baalot gives African institutions blockchain-verified, tamper-proof elections —
+          Baalot gives African institutions anonymous, server-verified, tamper-evident elections —
           deployable in under two weeks, usable on any device.
         </motion.p>
 

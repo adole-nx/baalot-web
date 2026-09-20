@@ -4,13 +4,17 @@ import { motion, useInView } from "framer-motion";
 import { useCounter } from "@/hooks/useCounter";
 import { EASE } from "@/lib/animations";
 
-// ─── Logos ─────────────────────────────────────────────────────
-const logos = [
-  "Nile University", "University of Lagos", "Covenant University",
-  "ABU Zaria", "OAU Ile-Ife", "UNN Nsukka", "UNILAG",
-  "LASU Lagos", "Bayero University", "Delta State Poly",
-  "Bowen University", "Caleb University", "Landmark University",
-  "Madonna University", "FUTA Akure", "UNIBEN Benin",
+// ─── Honest capability chips (real, present-tense features) ─────
+// These replaced a marquee of named universities that were never customers.
+const capabilities = [
+  "Anonymous ballots",
+  "Server-verified voting",
+  "One vote per verified identity",
+  "Voting PIN + optional biometrics",
+  "Live real-time tallies",
+  "Multi-position ballots",
+  "Admin dashboard",
+  "Institution mini-apps",
 ];
 
 // ─── Stat counter item ─────────────────────────────────────────
@@ -52,9 +56,9 @@ function StatItem({
   );
 }
 
-// ─── Logo marquee ───────────────────────────────────────────────
-function LogoTrack() {
-  const doubled = [...logos, ...logos];
+// ─── Capability marquee ─────────────────────────────────────────
+function CapabilityTrack() {
+  const doubled = [...capabilities, ...capabilities];
   return (
     <div className="overflow-hidden relative">
       {/* Fade masks */}
@@ -110,35 +114,18 @@ export default function TrustStrip() {
           className="text-center mb-5 text-[10px] font-semibold tracking-[0.18em] uppercase"
           style={{ color: "#334155" }}
         >
-          Trusted by institutions across Africa
+          What Baalot does today
         </p>
-        <LogoTrack />
+        <CapabilityTrack />
       </div>
 
-      {/* Stat counters */}
+      {/* Institutions counter — the one real, verifiable number we publish:
+          how many institutions are listed in the directory and joinable today. */}
       <div
-        className="flex items-stretch justify-center flex-wrap"
+        className="flex items-stretch justify-center flex-wrap pt-10"
         style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
       >
-        {[
-          { target: 200000, suffix: "+", label: "Voters served",       delay: 0 },
-          { target: 1200,   suffix: "+", label: "Elections completed",  delay: 150 },
-          { target: 0,      suffix: "",  label: "Disputed results",     delay: 300 },
-          { target: 99.97,  suffix: "%", label: "Platform uptime",      delay: 450 },
-        ].map((s, i) => (
-          <div
-            key={i}
-            className="pt-10"
-            style={{ borderRight: i < 3 ? "1px solid rgba(255,255,255,0.04)" : "none" }}
-          >
-            <StatItem
-              target={Math.floor(s.target)}
-              suffix={s.suffix}
-              label={s.label}
-              delay={s.delay}
-            />
-          </div>
-        ))}
+        <StatItem target={110} suffix="+" label="Institutions in the directory" delay={0} />
       </div>
     </section>
   );

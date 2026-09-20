@@ -1,22 +1,23 @@
 "use client";
 import { useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
-import { useCounter } from "@/hooks/useCounter";
 import { EASE } from "@/lib/animations";
 
 // ─── Africa SVG map with animated city dots ────────────────────
+// Filled dots are Nigeria, where the 110+ listed institutions actually are.
+// The rest of the continent is where Baalot is expanding — not where it already runs.
 const cities = [
-  { name: "Lagos, Nigeria",         x: 195, y: 256, voters: "120,000+" },
-  { name: "Abuja, Nigeria",         x: 208, y: 244, voters: "45,000+"  },
-  { name: "Accra, Ghana",           x: 185, y: 258, voters: "28,000+"  },
-  { name: "Nairobi, Kenya",         x: 288, y: 278, voters: "22,000+"  },
-  { name: "Cairo, Egypt",           x: 270, y: 155, voters: "8,000+"   },
-  { name: "Addis Ababa, Ethiopia",  x: 300, y: 254, voters: "5,500+"   },
-  { name: "Kampala, Uganda",        x: 282, y: 268, voters: "4,200+"   },
-  { name: "Dar es Salaam, Tanzania",x: 290, y: 296, voters: "3,800+"   },
-  { name: "Cape Town, S. Africa",   x: 234, y: 390, voters: "3,200+"   },
-  { name: "Dakar, Senegal",         x: 155, y: 228, voters: "2,900+"   },
-  { name: "Kigali, Rwanda",         x: 275, y: 274, voters: "2,100+"   },
+  { name: "Lagos, Nigeria",         x: 195, y: 256, major: true  },
+  { name: "Abuja, Nigeria",         x: 208, y: 244, major: true  },
+  { name: "Accra, Ghana",           x: 185, y: 258, major: false },
+  { name: "Nairobi, Kenya",         x: 288, y: 278, major: false },
+  { name: "Cairo, Egypt",           x: 270, y: 155, major: false },
+  { name: "Addis Ababa, Ethiopia",  x: 300, y: 254, major: false },
+  { name: "Kampala, Uganda",        x: 282, y: 268, major: false },
+  { name: "Dar es Salaam, Tanzania",x: 290, y: 296, major: false },
+  { name: "Cape Town, S. Africa",   x: 234, y: 390, major: false },
+  { name: "Dakar, Senegal",         x: 155, y: 228, major: false },
+  { name: "Kigali, Rwanda",         x: 275, y: 274, major: false },
 ];
 
 // Simplified Africa outline path (viewBox 0 0 400 450)
@@ -98,7 +99,7 @@ function AfricaMap() {
           {/* Core dot */}
           <circle
             cx={city.x} cy={city.y}
-            r={city.voters.includes("100") ? 3.5 : 2.5}
+            r={city.major ? 3.5 : 2.5}
             fill="#9B5DE5"
             filter="url(#glow)"
             style={{
@@ -109,43 +110,6 @@ function AfricaMap() {
         </g>
       ))}
     </svg>
-  );
-}
-
-// ─── Impact stat item ──────────────────────────────────────────
-function ImpactStat({
-  value, suffix, label, delay = 0,
-}: { value: number; suffix: string; label: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const { count, start } = useCounter(value, 2400);
-
-  useEffect(() => {
-    if (inView) setTimeout(start, delay);
-  }, [inView, start, delay]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, ease: EASE, delay: delay / 1000 }}
-      className="py-6 px-8"
-      style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-    >
-      <div
-        className="font-syne font-bold"
-        style={{
-          fontSize: "clamp(2.5rem, 5vw, 4rem)",
-          letterSpacing: "-0.035em",
-          lineHeight: 1,
-          color: "#9B5DE5",
-        }}
-      >
-        {count.toLocaleString()}{suffix}
-      </div>
-      <p className="text-[14px] mt-2" style={{ color: "#64748B" }}>{label}</p>
-    </motion.div>
   );
 }
 
@@ -166,17 +130,20 @@ export default function StatsImpact() {
           className="mb-16 text-center"
         >
           <p className="text-[10px] font-bold tracking-[0.18em] uppercase mb-3" style={{ color: "#9B5DE5" }}>
-            Real impact
+            Where Baalot runs
           </p>
           <h2
             className="font-syne font-bold text-primary"
             style={{ fontSize: "clamp(2rem, 4vw, 3rem)", letterSpacing: "-0.025em" }}
           >
-            Democracy, deployed at scale.
+            Built for elections across the continent.
           </h2>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[1fr_400px] gap-12 lg:gap-20 items-center">
+        {/* Single column. The old right-hand rail carried fabricated totals and a
+            fake "live vote stream" of invented hashes, so the map now carries the
+            section on its own. */}
+        <div className="max-w-xl mx-auto">
           {/* Africa map */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -198,8 +165,8 @@ export default function StatsImpact() {
             {/* Legend */}
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               {[
-                { label: "Active elections", color: "#9B5DE5" },
-                { label: "Institutional partner", color: "rgba(155,93,229,0.3)" },
+                { label: "Institutions listed today", color: "#9B5DE5" },
+                { label: "Where we’re expanding next", color: "rgba(155,93,229,0.3)" },
               ].map((l) => (
                 <div key={l.label} className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full" style={{ background: l.color }} />
@@ -209,39 +176,6 @@ export default function StatsImpact() {
             </div>
           </motion.div>
 
-          {/* Stats column */}
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{ border: "1px solid rgba(255,255,255,0.06)" }}
-          >
-            <ImpactStat value={200000} suffix="+" label="Votes cast securely"    delay={0}   />
-            <ImpactStat value={1200}   suffix="+" label="Elections completed"     delay={150} />
-            <ImpactStat value={0}      suffix=""  label="Disputed results"         delay={300} />
-            <div style={{ borderBottom: "none" }}>
-              <ImpactStat value={99}  suffix=".97%" label="Platform uptime"      delay={450} />
-            </div>
-
-            {/* Live ticker strip */}
-            <div
-              className="px-8 py-4 overflow-hidden"
-              style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(155,93,229,0.03)" }}
-            >
-              <p className="text-[10px] font-semibold tracking-[0.14em] uppercase mb-2" style={{ color: "#334155" }}>
-                Live vote stream
-              </p>
-              <div className="space-y-1">
-                {[
-                  "0x4a9f...3b21 → NUE-2025-001",
-                  "0xb2e1...9c04 → LASU-2025-007",
-                  "0xf817...2a9d → ABU-2025-003",
-                ].map((line, i) => (
-                  <p key={i} className="font-mono text-[9px]" style={{ color: "#1E2A3A" }}>
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

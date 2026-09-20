@@ -18,8 +18,8 @@ const NAV = [
 
 const SECURITY_LAYERS = [
   [
-    "Blockchain immutability",
-    "Vote commitments are written to Ethereum. Once confirmed, they cannot be edited, deleted, or reordered — by anyone, including Baalot.",
+    "Tamper-evident ballot chain",
+    "Each accepted ballot is sealed into a per-election hash chain in the same transaction that records it. Altering any past ballot breaks every hash after it — including for Baalot. Anchoring chain heads to a public blockchain is on our roadmap.",
   ],
   [
     "Zero-knowledge anonymity",
@@ -38,9 +38,9 @@ const SECURITY_LAYERS = [
 const API_ENDPOINTS = [
   ["POST /otp",             "Send or verify a phone OTP. Body: { action: send or verify, phone, code? }"],
   ["POST /verify-kyc",      "Verify a voter's NIN / BVN against the national registry."],
-  ["POST /bbc-register",    "Register a voter on the Baalot Blockchain Chain for a given election."],
+  ["POST /bbc-register",    "Register a voter on the Baalot Ballot Chain for a given election."],
   ["POST /notify-election", "Send push notifications to all eligible voters for an election."],
-  ["GET  /bbc-chain",       "Retrieve the full on-chain audit log for a given election ID."],
+  ["GET  /bbc-chain",       "Retrieve the full ballot-chain audit log for a given election ID."],
 ];
 
 const divider = (
@@ -145,14 +145,14 @@ export default function DocsPage() {
               {pill("#F97316", "Organizations")}
             </div>
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
-              Baalot is a blockchain-verified election platform built for African institutions. It lets administrators
-              create and manage elections, onboard verified voters, and publish results that anyone can audit
-              independently — without trusting a central server.
+              Baalot is a secure election platform built for African institutions. It lets administrators
+              create and manage elections, onboard verified voters, and publish results that voters and observers
+              can check for themselves.
             </p>
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
-              Every vote is anchored to the Ethereum blockchain via a zero-knowledge commitment. Voter identity is
-              verified against Nigerian national databases (NIN / BVN) before any ballot is cast. Results are
-              published on-chain the moment polls close.
+              Every accepted ballot is sealed into a per-election hash chain in the same transaction that records it,
+              and the voter keeps a cryptographic receipt. Voter identity is verified against Nigerian national
+              databases (NIN / BVN) before any ballot is cast. Results are published the moment polls close.
             </p>
             <div
               className="rounded-xl p-5 mb-6"
@@ -174,8 +174,8 @@ export default function DocsPage() {
               Every Baalot election follows the same three-phase lifecycle, regardless of size.
             </p>
             {step("1", "Admin Setup", "The institution admin creates the election on the dashboard — sets the name, positions, candidates, and voting window. The voter list (CSV or manual) is uploaded and matched against the national ID registry to produce a verified electorate.")}
-            {step("2", "Voter Authentication & Voting", "Eligible voters receive a credential link or download the Baalot app. They authenticate with their institutional ID and NIN/BVN. Once verified, they cast their ballot. The app generates a zero-knowledge commitment on-device and writes it to the blockchain. Median voting time is under 2 minutes.")}
-            {step("3", "Tally & Results", "When polls close, the smart contract tallies all commitments and publishes the result on-chain. The admin dashboard shows live results the instant counting completes. Every voter can verify their own commitment using a public block explorer — no trust required.")}
+            {step("2", "Voter Authentication & Voting", "Eligible voters receive a credential link or download the Baalot app. They authenticate with their institutional ID and NIN/BVN. Once verified, they cast their ballot. The ballot is stored unreadable and sealed into the election’s hash chain, and the voter keeps a receipt. Median voting time is under 2 minutes.")}
+            {step("3", "Tally & Results", "When polls close, the tally is finalised and published. The admin dashboard shows live results the instant counting completes, and every voter can check their own receipt against the election’s chain.")}
 
             <h3 className="font-syne font-bold text-lg text-white mb-2 mt-6">Election states</h3>
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
@@ -230,8 +230,8 @@ export default function DocsPage() {
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
               When an election is open, it appears on your Home tab. Tap it, review the candidates for each position,
               make your selections, and confirm. The app will show a brief &quot;Securing your vote&quot; state while
-              the zero-knowledge proof is generated on-device — this takes 1–2 seconds. You will receive a voter
-              receipt with a blockchain transaction ID you can verify independently.
+              your ballot is sealed into the election’s chain — this takes 1–2 seconds. You will receive a voter
+              receipt you can check against that chain afterwards.
             </p>
 
             {divider}
@@ -332,10 +332,10 @@ export default function DocsPage() {
               className="font-syne font-bold text-primary"
               style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)", letterSpacing: "-0.02em" }}
             >
-              Verify any ballot on-chain.
+              Verify any ballot receipt.
             </h2>
             <p className="mt-3 text-[15px] max-w-md mx-auto" style={{ color: "#64748B" }}>
-              Use the Baalot CLI or any BBC node to independently confirm a voter receipt - no Baalot server required.
+              Replay an election’s ballot chain through the public API and confirm your receipt is in it.
             </p>
           </div>
           <VerifyTerminal />

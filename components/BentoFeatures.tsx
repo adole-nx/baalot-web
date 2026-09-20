@@ -114,7 +114,7 @@ function GlassCard({ children, className = "", index = 0, tilt = true }: GlassCa
   );
 }
 
-// ─── BBC Blockchain cube (CSS isometric) ─────────────────────────────────────
+// ─── BBC ballot-chain cube (CSS isometric) ─────────────────────────────────────
 function BBCCube() {
   return (
     <div className="relative w-20 h-20 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none"
@@ -315,7 +315,7 @@ export default function BentoFeatures() {
           className="grid grid-cols-4 lg:grid-cols-12 gap-4"
           style={{ gridAutoRows: "minmax(220px, auto)" }}
         >
-          {/* Card A — Blockchain Results (large hero card) */}
+          {/* Card A — Chain-sealed results (large hero card) */}
           <GlassCard className="col-span-4 lg:col-span-8 row-span-1 lg:row-span-2" index={0}>
             <div className="flex flex-col h-full">
               <div className="flex items-center justify-between mb-4">
@@ -341,12 +341,12 @@ export default function BentoFeatures() {
                 className="font-syne font-bold text-2xl md:text-3xl text-white mb-3 leading-tight"
                 style={{ transform: "translateZ(20px)" }}
               >
-                Immutable<br />Blockchain Results
+                Chain-Sealed<br />Results
               </h3>
               <p className="text-sm leading-relaxed flex-1" style={{ color: "#64748B", transform: "translateZ(10px)" }}>
-                Every vote is a signed transaction on the BBC chain. Results are
-                final the moment voting closes — permanently verifiable by anyone,
-                forever. No tampering, no disputes.
+                Every ballot is sealed into a hash chain in the same transaction
+                that records it. Results are final the moment voting closes, and
+                every voter keeps a receipt they can check against the chain.
               </p>
 
               {/* Animated badge row */}
@@ -361,13 +361,13 @@ export default function BentoFeatures() {
                   className="text-[10px] px-2.5 py-1 rounded-full font-semibold"
                   style={{ background: "rgba(20,184,166,0.08)", color: "#14B8A6", border: "1px solid rgba(20,184,166,0.15)" }}
                 >
-                  Smart Contracts
+                  Voter Receipts
                 </span>
                 <span
                   className="text-[10px] px-2.5 py-1 rounded-full font-semibold"
                   style={{ background: "rgba(255,255,255,0.04)", color: "#334155", border: "1px solid rgba(255,255,255,0.07)" }}
                 >
-                  ZK Proof
+                  Tamper-Evident
                 </span>
               </div>
 
@@ -382,7 +382,7 @@ export default function BentoFeatures() {
             <span className="absolute bottom-4 right-6 font-syne font-extrabold text-[120px] leading-none pointer-events-none select-none" style={{ color: "rgba(255,255,255,0.02)" }}>01</span>
           </GlassCard>
 
-          {/* Card B — ZK Anonymity */}
+          {/* Card B — Anonymous ballots */}
           <GlassCard className="col-span-4 row-span-1 lg:row-span-2" index={1}>
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2 mb-4">
@@ -392,14 +392,15 @@ export default function BentoFeatures() {
                 <span className="text-[10px] font-bold tracking-wider uppercase" style={{ color: "#B27FF0" }}>Privacy</span>
               </div>
               <h3 className="font-syne font-bold text-xl text-white mb-3 leading-tight">
-                Zero-Knowledge Anonymity
+                Anonymous By Design
               </h3>
               <p className="text-sm leading-relaxed flex-1" style={{ color: "#64748B" }}>
-                Your vote is cryptographically proven valid without revealing
-                your identity. Not even Baalot can see who you voted for.
+                Ballots are stored unreadable and unlinked from the voter. Your
+                identity is verified before you vote, never alongside it — not even
+                Baalot can see who you voted for.
               </p>
 
-              {/* Animated ZK ring */}
+              {/* Animated privacy ring */}
               <div className="relative flex items-center justify-center mt-6 h-16">
                 <motion.div
                   className="absolute rounded-full"
@@ -482,7 +483,7 @@ export default function BentoFeatures() {
             </motion.div>
             <h3 className="font-syne font-bold text-white mb-2">100% Audit Trail</h3>
             <p className="text-xs leading-relaxed" style={{ color: "#64748B" }}>
-              Every action logged on-chain. Export a full PDF report for any observer or court.
+              Every action is logged and sealed into the chain. Export a full PDF report for any observer.
             </p>
             <AuditLogs />
           </GlassCard>
@@ -500,7 +501,7 @@ export default function BentoFeatures() {
                 </motion.div>
                 <h3 className="font-syne font-bold text-white mb-2">Live Results Dashboard</h3>
                 <p className="text-xs leading-relaxed max-w-xs" style={{ color: "#64748B" }}>
-                  Real-time vote tallying visible to all stakeholders — with on-chain verification badge.
+                  Real-time vote tallying visible to all stakeholders — with a chain-verification badge.
                 </p>
               </div>
               <div className="shrink-0 w-32">

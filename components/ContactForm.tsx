@@ -239,7 +239,7 @@ export default function ContactForm() {
               {[
                 "Free tier — no credit card required",
                 "Live within 48 hours of sign-up",
-                "Free ZK audit on your first election",
+                "Free setup support on your first election",
                 "Cancel or downgrade any time",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2.5 mb-2.5 last:mb-0">

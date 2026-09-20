@@ -72,8 +72,8 @@ export default function FeaturedVideo() {
           className="mt-8 grid grid-cols-3 gap-4"
         >
           {[
-            { value: "200K+", label: "Votes recorded on-chain" },
-            { value: "0",     label: "Disputed results" },
+            { value: "110+",  label: "Institutions in the directory" },
+            { value: "Free",  label: "To run your first election" },
             { value: "< 2wk", label: "From signup to first election" },
           ].map((s) => (
             <div

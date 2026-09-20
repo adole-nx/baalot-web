@@ -11,7 +11,7 @@ const frames = [
   {
     word: "Fraud.",
     color: "#EF4444",
-    body: "In 2023 alone, 47 Nigerian university elections were contested on grounds of manipulation. Paper trails don't scale. People lose faith.",
+    body: "Contested student and community elections are routine across Nigeria — disputed counts, missing ballots, no audit trail anyone can check. Paper trails don’t scale. People lose faith.",
     gradient: "radial-gradient(ellipse at 50% 80%, rgba(239,68,68,0.06) 0%, transparent 70%)",
   },
   {
