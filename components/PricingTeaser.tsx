@@ -194,7 +194,7 @@ export default function PricingTeaser() {
 
         {/* Footer note */}
         <p className="text-center mt-8 text-[12px]" style={{ color: "#334155" }}>
-          All plans include encrypted transport, anonymous ballots and GDPR-compliant data handling.{" "}
+          All plans include encrypted transport, anonymous ballots, and we collect only the data an election actually needs.{" "}
           <Link href="/pricing" className="ml-1 underline underline-offset-2 hover:text-white transition-colors" style={{ color: "#64748B" }}>
             See full feature comparison →
           </Link>

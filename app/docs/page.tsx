@@ -161,7 +161,7 @@ export default function DocsPage() {
               <p className="text-sm text-white/80 leading-relaxed">
                 <span className="font-semibold text-accent">Who is this for?</span>{" "}
                 University registrars, student union electoral committees, corporate secretaries, and any institution
-                that needs a defensible, tamper-proof election record.
+                that needs a defensible, tamper-evident election record.
               </p>
             </div>
 

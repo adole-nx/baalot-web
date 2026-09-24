@@ -18,7 +18,7 @@ const tabs = [
     id: "digital",
     tab: "Digital tools aren't built for elections",
     heading: "Google Forms isn't an election platform",
-    body: "Generic tools have no voter verification, no anonymity, and no tamper-proof record. One IT admin can change results with a spreadsheet edit.",
+    body: "Generic tools have no voter verification, no anonymity, and no tamper-evident record. One IT admin can change results with a spreadsheet edit.",
     cta: "See how Baalot secures the vote →",
     // "How can technology enable mobile voting? Blockchain Voting"
     youtubeId: "t_ZMHQkyysk",

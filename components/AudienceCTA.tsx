@@ -11,7 +11,7 @@ const AUDIENCES = [
     accent: "#9B5DE5",
     eyebrow: "For Institutions",
     headline: "Run your next election on Baalot",
-    body: "For universities, student unions, NGOs, and enterprises that need verifiable, tamper-proof results.",
+    body: "For universities, student unions, NGOs, and enterprises that need verifiable, tamper-evident results.",
     cta: "Book a Demo",
     href: "/contact",
     external: false,

@@ -131,9 +131,9 @@ function BallotChainScreen() {
 
 function ResultsScreen() {
   const bars = [
-    { name: "Aisha M.", pct: 78, color: "#9B5DE5" },
-    { name: "Emeka O.", pct: 52, color: "#14B8A6" },
-    { name: "Fatima B.", pct: 41, color: "#B27FF0" },
+    { name: "Candidate A", pct: 78, color: "#9B5DE5" },
+    { name: "Candidate B", pct: 52, color: "#14B8A6" },
+    { name: "Candidate C", pct: 41, color: "#B27FF0" },
   ];
 
   return (
@@ -192,7 +192,7 @@ function ResultsScreen() {
 
       <div className="mt-2 p-1.5 rounded-lg flex items-center gap-1.5" style={{ background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.15)" }}>
         <ShieldCheck size={8} style={{ color: "#14B8A6" }} />
-        <span className="text-[6px]" style={{ color: "#14B8A6" }}>Chain verified · BBC #4,821,093</span>
+        <span className="text-[6px]" style={{ color: "#14B8A6" }}>Chain verified · sample data</span>
       </div>
     </div>
   );

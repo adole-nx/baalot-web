@@ -75,7 +75,7 @@ export default function CTASection() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-muted text-lg mb-10 max-w-lg mx-auto"
         >
-          Baalot is in early access. Be among the first institutions to run a tamper-proof election.
+          Baalot is in early access. Be among the first institutions to run a tamper-evident election.
         </motion.p>
 
         <motion.div

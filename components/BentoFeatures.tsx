@@ -270,7 +270,7 @@ function DeployProgress() {
 function AuditLogs() {
   const logs = [
     "vote:0x8f3a…d2c1 recorded",
-    "block #4,821,093 confirmed",
+    "ballot sealed into chain",
     "audit hash: 0xa4b7…",
   ];
   return (

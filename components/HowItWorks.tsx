@@ -287,7 +287,7 @@ export default function HowItWorks() {
                 />
                 <span className="w-3 h-3 rounded-full" style={{ background: "#22c55e", opacity: 0.8 }} />
                 <span className="ml-3 font-mono text-[11px]" style={{ color: "#334155" }}>
-                  baalot-cli  v2.1.0
+                  baalot admin · illustration
                 </span>
                 <span className="ml-auto flex items-center gap-1.5">
                   <motion.span

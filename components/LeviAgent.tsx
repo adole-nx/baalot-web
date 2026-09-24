@@ -198,7 +198,7 @@ export default function LeviAgent() {
                     marginBottom: 14,
                   }}
                 >
-                  Hey! I&apos;m Levi, your Baalot guide. Ready to run a tamper-proof election?{" "}
+                  Hey! I&apos;m Levi, your Baalot guide. Ready to run a tamper-evident election?{" "}
                   <span style={{ color: "rgba(155,93,229,0.9)" }}>Your first one is free.</span>
                 </p>
 

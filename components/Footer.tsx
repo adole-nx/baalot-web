@@ -112,7 +112,7 @@ export default function Footer() {
               className="px-2.5 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase"
               style={{ background: "rgba(155,93,229,0.08)", color: "#9B5DE5", border: "1px solid rgba(155,93,229,0.15)" }}
             >
-              v2.1.0
+              Early Access
             </span>
             <span
               className="px-2.5 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase"
@@ -124,7 +124,7 @@ export default function Footer() {
               className="px-2.5 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase"
               style={{ background: "rgba(255,255,255,0.04)", color: "#334155", border: "1px solid rgba(255,255,255,0.06)" }}
             >
-              GDPR Ready
+              Encrypted In Transit
             </span>
           </div>
         </div>
