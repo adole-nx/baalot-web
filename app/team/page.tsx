@@ -205,7 +205,7 @@ export default function TeamPage() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.55 }}
           >
-            {[["2", "Team Members"], ["3", "Universities"], ["1", "Mission"]].map(([val, lbl]) => (
+            {[["2", "Team Members"], ["Nigeria", "Based In"], ["1", "Mission"]].map(([val, lbl]) => (
               <div key={lbl} className="text-center min-w-[80px]">
                 <p className="font-syne font-extrabold text-3xl text-white">{val}</p>
                 <p className="text-xs text-muted uppercase tracking-widest mt-1">{lbl}</p>

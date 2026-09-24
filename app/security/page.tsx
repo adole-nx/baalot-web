@@ -30,8 +30,8 @@ const pillars = [
   },
   {
     icon: "🔒",
-    title: "End-to-End Encryption",
-    body: "All data in transit is encrypted with TLS 1.3. Voter credentials use AES-256. Even if traffic were intercepted, it would be unreadable.",
+    title: "Encrypted In Transit And At Rest",
+    body: "All data in transit is encrypted with TLS 1.3. Ballots are encrypted at rest with AES-256-GCM, and voting PINs are hashed with scrypt — never stored. Even if traffic or storage were read, it would be unreadable.",
     accent: "#10B981",
   },
   {
@@ -70,7 +70,7 @@ export default function SecurityPage() {
               transition={{ duration: 0.6, delay: 0.35 }}
             >
               Baalot&apos;s security is not a feature — it&apos;s the architecture. From voter identity to final
-              result publication, every step is cryptographically secured and independently verifiable.
+              result publication, every step is logged — and the ballot chain can be replayed and verified by anyone.
             </motion.p>
           </div>
         </div>
@@ -89,7 +89,7 @@ export default function SecurityPage() {
             <NodeDiagram />
           </motion.div>
           <p className="text-center text-muted text-xs mt-4">
-            Distributed node architecture — no single point of failure
+            Sharded ballot chain — each shard commits its own blocks into one merkle root
           </p>
         </div>
       </section>

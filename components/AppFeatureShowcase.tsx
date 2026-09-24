@@ -351,7 +351,7 @@ const features = [
   },
   {
     icon: <ShieldCheck size={14} />,
-    title: "BBC chain anchored",
+    title: "Sealed into the chain",
     desc: "Every ballot is sealed into a hash chain as it is cast — tampering breaks the chain.",
     accent: "#14B8A6",
   },

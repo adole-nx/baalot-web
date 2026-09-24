@@ -62,7 +62,7 @@ const INTEGRATIONS: Integration[] = [
     ),
   },
   {
-    name: "NIMC",
+    name: "Prembly",
     category: "Identity Verification",
     color: "#008751",
     icon: (
@@ -74,8 +74,8 @@ const INTEGRATIONS: Integration[] = [
     ),
   },
   {
-    name: "CBN BVN",
-    category: "Bank Verification",
+    name: "Paystack",
+    category: "Payments",
     color: "#006B3F",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

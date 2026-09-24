@@ -467,7 +467,7 @@ export default function BentoFeatures() {
             </motion.div>
             <h3 className="font-syne font-bold text-white mb-2">&lt; 2 Week Deployment</h3>
             <p className="text-xs leading-relaxed" style={{ color: "#64748B" }}>
-              From first call to live election in under 14 days — for any institution size.
+              From first call to a live election in under 14 days.
             </p>
             <DeployProgress />
           </GlassCard>
@@ -481,9 +481,9 @@ export default function BentoFeatures() {
             >
               <FileCheck size={32} className="text-accent" />
             </motion.div>
-            <h3 className="font-syne font-bold text-white mb-2">100% Audit Trail</h3>
+            <h3 className="font-syne font-bold text-white mb-2">Complete Audit Trail</h3>
             <p className="text-xs leading-relaxed" style={{ color: "#64748B" }}>
-              Every action is logged and sealed into the chain. Export a full PDF report for any observer.
+              Every action is logged and every ballot is sealed into the chain. Any observer can replay and verify it through the public API.
             </p>
             <AuditLogs />
           </GlassCard>

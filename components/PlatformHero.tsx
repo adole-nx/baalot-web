@@ -136,7 +136,7 @@ export default function PlatformHero() {
             <KineticHeading text="Elections That" baseDelay={0.1} triggerOnMount />
           </div>
           <div>
-            <KineticHeading text="Can't Be Stolen." baseDelay={0.5} triggerOnMount accentLastWord />
+            <KineticHeading text="Prove Themselves." baseDelay={0.5} triggerOnMount accentLastWord />
           </div>
         </h1>
 
