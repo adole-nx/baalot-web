@@ -57,7 +57,7 @@ export default function ContactPage() {
           </h1>
           <p className="text-muted text-lg leading-relaxed">
             Tell us about your institution and what you&apos;re trying to achieve.
-            We&apos;ll get back to you within 24 hours.
+            We&apos;ll reply within one business day.
           </p>
         </motion.div>
 
@@ -76,7 +76,7 @@ export default function ContactPage() {
           >
             <p className="text-4xl mb-4">✅</p>
             <h2 className="font-syne font-bold text-2xl text-white mb-2">Message sent!</h2>
-            <p className="text-muted">We&apos;ve received your request and will reply within 24 hours.</p>
+            <p className="text-muted">We&apos;ve received your request and will reply within one business day.</p>
           </motion.div>
           </SectionReveal>
         ) : (

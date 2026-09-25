@@ -74,7 +74,7 @@ export default function FeaturedVideo() {
           {[
             { value: "110+",  label: "Institutions in the directory" },
             { value: "Free",  label: "To run your first election" },
-            { value: "< 2wk", label: "From signup to first election" },
+            { value: "3",     label: "Platforms: Android, iOS, web" },
           ].map((s) => (
             <div
               key={s.label}

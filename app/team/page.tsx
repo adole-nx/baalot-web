@@ -19,9 +19,10 @@ const team = [
   {
     id: "adole",
     name: "Adole Daniel Inalegwu",
+    initials: "AD",
     role: "Founder & CEO",
     bio: "Adole built Baalot from a single conviction: African institutions deserve election infrastructure that cannot be corrupted. He leads product vision, investor relations, and institutional partnerships — building Baalot toward a pan-African platform.",
-    photo: "", // real headshot pending - initials render until then
+    photo: "", // drop public/team/adole.jpg here and set the path; the monogram shows until then
     linkedin: "https://linkedin.com/in/adole-daniel-inalegwu",
     accent: "#9B5DE5",
     tag: "Leadership",
@@ -30,15 +31,60 @@ const team = [
   {
     id: "elie",
     name: "Elie",
+    initials: "E",
     role: "Team Member",
     bio: "Elie is a core member of the Baalot team, helping build election infrastructure that African institutions can trust. Committed to the mission of transparent, verifiable democracy across the continent.",
-    photo: "", // real headshot pending - initials render until then
+    photo: "", // drop public/team/elie.jpg here and set the path; the monogram shows until then
     linkedin: "/contact",
     accent: "#14B8A6",
     tag: "Team",
     skills: ["Operations", "Strategy", "Execution"],
   },
 ];
+
+// ─── Monogram ─────────────────────────────────────────────────────────────────
+// Stands in for a headshot: the member's accent as a lit gradient, their
+// initials set large, and a fine ring pattern so it reads as a designed card
+// rather than a missing image.
+function Monogram({ member, size }: { member: typeof team[0]; size: "lg" | "sm" }) {
+  const lg = size === "lg";
+  return (
+    <div
+      className="relative w-full h-full flex items-center justify-center overflow-hidden"
+      style={{
+        background: `radial-gradient(120% 90% at 30% 20%, ${member.accent}55 0%, ${member.accent}18 45%, #0B0B12 100%)`,
+      }}
+      aria-label={member.name}
+      role="img"
+    >
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 125" preserveAspectRatio="xMidYMid slice" aria-hidden>
+        {[18, 30, 42, 54, 66].map((r) => (
+          <circle key={r} cx="50" cy="58" r={r} fill="none" stroke={member.accent} strokeOpacity={0.12} strokeWidth="0.3" />
+        ))}
+      </svg>
+      <span
+        className={`relative font-syne font-extrabold tracking-tight leading-none ${lg ? "text-[7rem] md:text-[9rem]" : "text-2xl"}`}
+        style={{
+          color: "transparent",
+          backgroundImage: `linear-gradient(160deg, #FFFFFF 10%, ${member.accent} 90%)`,
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+        }}
+      >
+        {member.initials}
+      </span>
+      {lg && (
+        <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between">
+          <div>
+            <p className="font-syne font-bold text-white text-sm">{member.name}</p>
+            <p className="text-[11px] uppercase tracking-widest mt-0.5" style={{ color: member.accent }}>{member.role}</p>
+          </div>
+          <span className="font-mono text-[10px] text-white/40">BAALOT</span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ─── Photo card with fallback ─────────────────────────────────────────────────
 function PhotoCard({ member, priority = false }: { member: typeof team[0]; priority?: boolean }) {
@@ -68,12 +114,7 @@ function PhotoCard({ member, priority = false }: { member: typeof team[0]; prior
           />
         </>
       ) : (
-        <div
-          className="w-full h-full flex items-center justify-center font-syne font-bold text-6xl"
-          style={{ background: `${member.accent}12`, color: member.accent }}
-        >
-          {member.name.split(" ").map(w => w[0]).join("").slice(0, 2)}
-        </div>
+        <Monogram member={member} size="lg" />
       )}
 
       {/* Role tag on photo */}
@@ -88,6 +129,23 @@ function PhotoCard({ member, priority = false }: { member: typeof team[0]; prior
         {member.tag}
       </div>
     </div>
+  );
+}
+
+// ─── Rail thumbnail ───────────────────────────────────────────────────────────
+function Thumb({ member }: { member: typeof team[0] }) {
+  const [error, setError] = useState(false);
+  if (!member.photo || error) return <Monogram member={member} size="sm" />;
+  return (
+    <Image
+      src={member.photo}
+      alt={member.name}
+      fill
+      sizes="80px"
+      className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
+      onError={() => setError(true)}
+      unoptimized
+    />
   );
 }
 
@@ -215,7 +273,7 @@ export default function TeamPage() {
         </div>
       </section>
 
-      {/* Thumbnails strip — quick visual preview of all 6 */}
+      {/* Thumbnails strip — quick jump to each member */}
       <section className="py-10 overflow-hidden">
         <div className="max-w-site mx-auto px-5 md:px-10">
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none snap-x">
@@ -233,24 +291,7 @@ export default function TeamPage() {
                   className="relative w-20 h-20 rounded-2xl overflow-hidden"
                   style={{ border: `1.5px solid ${member.accent}35` }}
                 >
-                  {member.photo ? (
-                    <Image
-                      src={member.photo}
-                      alt={member.name}
-                      fill
-                      sizes="80px"
-                      className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
-                      onError={() => {}}
-                      unoptimized
-                    />
-                  ) : (
-                    <div
-                      className="w-full h-full flex items-center justify-center font-syne font-bold text-lg"
-                      style={{ background: `${member.accent}12`, color: member.accent }}
-                    >
-                      {member.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                    </div>
-                  )}
+                  <Thumb member={member} />
                 </div>
                 <p className="text-[9px] text-muted text-center mt-1.5 max-w-[80px] truncate">{member.role}</p>
               </motion.a>

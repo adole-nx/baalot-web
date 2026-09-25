@@ -19,7 +19,7 @@ const values = [
   { icon: "🗳️", title: "Every Vote Counts", body: "Not as a slogan — as an engineering requirement. We build systems where a single vote cannot be lost, changed, or ignored." },
   { icon: "🌍", title: "Built for Africa", body: "Africa's democracy deserves infrastructure designed for African realities: low bandwidth, feature phones, multiple languages, high trust stakes." },
   { icon: "🔓", title: "Radical Transparency", body: "The only way to trust an election is to verify it yourself. We're building a public, permanent audit trail that anyone can verify." },
-  { icon: "⚡", title: "Speed Without Shortcuts", body: "We deploy in under two weeks — not by cutting corners, but by building reusable infrastructure that compounds with every election." },
+  { icon: "⚡", title: "Speed Without Shortcuts", body: "Self-serve setup means you go live as soon as your voter list is ready — not by cutting corners, but by building reusable infrastructure that compounds with every election." },
 ];
 
 export default function AboutPage() {

@@ -1,95 +1,30 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, X, Menu, ArrowUpRight, ExternalLink } from "lucide-react";
+import { X, Menu, ArrowUpRight, ExternalLink } from "lucide-react";
 import { EASE } from "@/lib/animations";
 import Logo from "./Logo";
 
-// ─── Mega menu data ────────────────────────────────────────────
-const platformMenu = {
-  columns: [
-    {
-      heading: "VOTE",
-      items: [
-        { label: "Ballot Builder",   desc: "Design multi-position ballots" },
-        { label: "Voter Portal",     desc: "Remote voting from any device" },
-        { label: "Live Results",     desc: "Real-time count as it happens" },
-      ],
-    },
-    {
-      heading: "MANAGE",
-      items: [
-        { label: "Dashboard",        desc: "Election command center" },
-        { label: "Analytics",        desc: "Turnout and trend insights" },
-        { label: "Access Control",   desc: "Role-based permissions" },
-      ],
-    },
-    {
-      heading: "VERIFY",
-      items: [
-        { label: "Live Results",       desc: "Real-time, auditable tallies" },
-        { label: "Public Ledger",      desc: "On-chain records — on our roadmap" },
-        { label: "Identity Verify",    desc: "Verified one-person-one-vote" },
-      ],
-    },
-  ],
-};
-
-const useCasesMenu = [
-  { label: "Universities",   desc: "Student union elections",    href: "/platform" },
-  { label: "Student Unions", desc: "Campus governance",          href: "/platform" },
-  { label: "NGOs & Orgs",   desc: "International governance",   href: "/platform" },
-  { label: "Enterprise",     desc: "AGMs and board elections",   href: "/pricing" },
-  { label: "Government",     desc: "Public election oversight",  href: "/contact" },
-];
-
+// Six flat links. The old Platform mega-menu had nine entries that all led to
+// two pages (Live Results twice), and Use Cases led to the same pages again.
 const navLinks = [
-  { label: "Platform",  dropdown: "platform",  href: "/platform" },
-  { label: "Security",  dropdown: null,         href: "/security" },
-  { label: "Use Cases", dropdown: "usecases",  href: "/#use-cases" },
-  { label: "Pricing",   dropdown: null,         href: "/pricing" },
-  { label: "Blog",      dropdown: null,         href: "/blog" },
+  { label: "Platform", href: "/platform" },
+  { label: "Security", href: "/security" },
+  { label: "Pricing",  href: "/pricing" },
+  { label: "Docs",     href: "/docs" },
+  { label: "About",    href: "/about" },
+  { label: "Blog",     href: "/blog" },
 ];
-
-const dropIn = {
-  hidden:  { opacity: 0, y: -8, scale: 0.97 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.25, ease: EASE } },
-  exit:    { opacity: 0, y: -6, scale: 0.97, transition: { duration: 0.18 } },
-};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const openDropdown = (name: string) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setActiveDropdown(name);
-  };
-  const closeDropdown = () => {
-    timeoutRef.current = setTimeout(() => setActiveDropdown(null), 110);
-  };
-  const keepOpen = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-  };
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(e.target as Node)) {
-        setActiveDropdown(null);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   return (
@@ -113,7 +48,6 @@ export default function Navbar() {
           >
             {/* Inner core */}
             <nav
-              ref={navRef}
               className="rounded-full flex items-center justify-between px-4 md:px-5 h-14 transition-all duration-500"
               style={{
                 background: scrolled ? "rgba(8,12,16,0.94)" : "rgba(8,12,16,0.72)",
@@ -129,53 +63,15 @@ export default function Navbar() {
 
               {/* Desktop nav links */}
               <div className="hidden md:flex items-center gap-0.5">
-                {navLinks.map((link) =>
-                  link.dropdown ? (
-                    <div
-                      key={link.label}
-                      className="relative"
-                      onMouseEnter={() => openDropdown(link.dropdown!)}
-                      onMouseLeave={closeDropdown}
-                    >
-                      <button className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-secondary hover:text-primary rounded-full hover:bg-white/[0.05] transition-all">
-                        {link.label}
-                        <motion.span
-                          animate={{ rotate: activeDropdown === link.dropdown ? 180 : 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ChevronDown size={13} className="opacity-60" />
-                        </motion.span>
-                      </button>
-
-                      <AnimatePresence>
-                        {activeDropdown === link.dropdown && (
-                          <motion.div
-                            variants={dropIn}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            onMouseEnter={keepOpen}
-                            onMouseLeave={closeDropdown}
-                            className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50"
-                          >
-                            {link.dropdown === "platform"
-                              ? <PlatformDropdown />
-                              : <UseCasesDropdown />
-                            }
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  ) : (
-                    <Link
-                      key={link.label}
-                      href={link.href!}
-                      className="px-4 py-2 text-sm font-medium text-secondary hover:text-primary rounded-full hover:bg-white/[0.05] transition-all"
-                    >
-                      {link.label}
-                    </Link>
-                  )
-                )}
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="px-3.5 py-2 text-sm font-medium text-secondary hover:text-primary rounded-full hover:bg-white/[0.05] transition-all"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </div>
 
               {/* Right CTAs */}
@@ -246,7 +142,7 @@ export default function Navbar() {
                     transition={{ delay: i * 0.05, duration: 0.3, ease: EASE }}
                   >
                     <Link
-                      href={link.href ?? "#"}
+                      href={link.href}
                       className="flex items-center justify-between py-3 px-4 rounded-xl text-[15px] font-medium text-secondary hover:text-primary hover:bg-white/[0.05] transition-all"
                       onClick={() => setMobileOpen(false)}
                     >
@@ -291,98 +187,3 @@ export default function Navbar() {
     </>
   );
 }
-
-// ─── Platform mega-dropdown ────────────────────────────────────
-function PlatformDropdown() {
-  return (
-    <div
-      className="rounded-2xl p-5 w-[600px]"
-      style={{
-        background: "rgba(10,14,20,0.99)",
-        border: "1px solid rgba(155,93,229,0.12)",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.03) inset",
-      }}
-    >
-      <div className="grid grid-cols-3 gap-5">
-        {platformMenu.columns.map((col) => (
-          <div key={col.heading}>
-            <p
-              className="text-[10px] font-semibold tracking-[0.15em] uppercase mb-3"
-              style={{ color: "#9B5DE5" }}
-            >
-              {col.heading}
-            </p>
-            <ul className="space-y-0.5">
-              {col.items.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.label === "Live Results" || item.label === "Public Ledger" || item.label === "Identity Verify" ? "/security" : "/platform"}
-                    className="block px-3 py-2.5 rounded-lg hover:bg-white/[0.05] transition-all group"
-                  >
-                    <span className="block text-[13px] font-medium text-primary group-hover:text-[#B27FF0] transition-colors">
-                      {item.label}
-                    </span>
-                    <span className="block text-[11px] mt-0.5" style={{ color: "#334155" }}>
-                      {item.desc}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <div
-        className="mt-4 pt-3.5 flex items-center justify-between"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
-      >
-        <span className="font-mono text-[11px]" style={{ color: "#334155" }}>
-          110+ institutions in the directory
-        </span>
-        <Link
-          href="/platform"
-          className="text-[12px] font-semibold flex items-center gap-1 hover:opacity-80 transition-opacity"
-          style={{ color: "#9B5DE5" }}
-        >
-          Full overview <ArrowUpRight size={11} />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-// ─── Use cases dropdown ────────────────────────────────────────
-function UseCasesDropdown() {
-  return (
-    <div
-      className="rounded-2xl p-3 w-[260px]"
-      style={{
-        background: "rgba(10,14,20,0.99)",
-        border: "1px solid rgba(155,93,229,0.12)",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.8)",
-      }}
-    >
-      {useCasesMenu.map((item) => (
-        <Link
-          key={item.label}
-          href={item.href}
-          className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.05] transition-all group"
-        >
-          <span
-            className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 transition-colors"
-            style={{ background: "#9B5DE5", opacity: 0.6 }}
-          />
-          <div>
-            <span className="block text-[13px] font-medium text-primary group-hover:text-[#B27FF0] transition-colors">
-              {item.label}
-            </span>
-            <span className="block text-[11px] mt-0.5" style={{ color: "#334155" }}>
-              {item.desc}
-            </span>
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
-}
-

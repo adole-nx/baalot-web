@@ -41,8 +41,6 @@ const plans = [
       "Full audit trail",
       "Live results dashboard",
       "Voter receipts for every ballot",
-      "Dedicated setup support",
-      "< 2 week deployment",
     ],
     cta: "Get Started",
     ctaHref: "/contact",
@@ -145,11 +143,11 @@ export default function PricingPage() {
             className="text-center text-muted text-sm mt-12"
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           >
-            All plans include free setup assistance.{" "}
+            Questions about a plan?{" "}
             <Link href="/contact" className="text-accent hover:underline">
               Contact us
             </Link>{" "}
-            with questions.
+            — we&apos;ll reply within one business day.
           </motion.p>
         </div>
       </section>

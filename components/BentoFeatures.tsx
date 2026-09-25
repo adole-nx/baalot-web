@@ -238,31 +238,22 @@ function LiveBars() {
 }
 
 // ─── Deploy progress bar ──────────────────────────────────────────────────────
-function DeployProgress() {
-  const [hovered, setHovered] = useState(false);
+function SetupSteps() {
+  const steps = ["Create the election", "Upload your voter list", "Open voting"];
   return (
-    <div
-      className="mt-4"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[10px]" style={{ color: "#334155" }}>Election setup</span>
-        <span className="text-[10px] font-mono" style={{ color: "#9B5DE5" }}>
-          {hovered ? "85%" : "0%"}
-        </span>
-      </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-        <motion.div
-          className="h-full rounded-full"
-          style={{ background: "linear-gradient(90deg, #9B5DE5, #14B8A6)" }}
-          initial={{ width: "0%" }}
-          animate={{ width: hovered ? "85%" : "0%" }}
-          transition={{ duration: 1, ease: EASE }}
-        />
-      </div>
-      <p className="text-[10px] mt-1" style={{ color: "#334155" }}>Hover to simulate deploy</p>
-    </div>
+    <ol className="mt-4 space-y-1.5">
+      {steps.map((step, i) => (
+        <li key={step} className="flex items-center gap-2">
+          <span
+            className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-mono shrink-0"
+            style={{ background: "rgba(155,93,229,0.15)", color: "#9B5DE5" }}
+          >
+            {i + 1}
+          </span>
+          <span className="text-[11px]" style={{ color: "#94A3B8" }}>{step}</span>
+        </li>
+      ))}
+    </ol>
   );
 }
 
@@ -465,11 +456,11 @@ export default function BentoFeatures() {
             >
               <Rocket size={32} className="text-amber-500" />
             </motion.div>
-            <h3 className="font-syne font-bold text-white mb-2">&lt; 2 Week Deployment</h3>
+            <h3 className="font-syne font-bold text-white mb-2">Self-Serve Setup</h3>
             <p className="text-xs leading-relaxed" style={{ color: "#64748B" }}>
-              From first call to a live election in under 14 days.
+              Live as soon as your voter list is ready.
             </p>
-            <DeployProgress />
+            <SetupSteps />
           </GlassCard>
 
           {/* Card F — Audit Trail */}

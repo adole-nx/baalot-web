@@ -75,7 +75,7 @@ export default function ContactForm() {
             Ready to run your first election?
           </h2>
           <p className="mt-4 text-[15px]" style={{ color: "#64748B" }}>
-            Tell us about your election. We&apos;ll have you live within 48 hours.
+            Tell us about your election. You can go live as soon as your voter list is ready.
           </p>
         </motion.div>
 
@@ -108,7 +108,7 @@ export default function ContactForm() {
                     </div>
                     <h3 className="font-syne font-bold text-[22px] text-primary mb-2">You&apos;re on the list.</h3>
                     <p className="text-[14px]" style={{ color: "#64748B" }}>
-                      We&apos;ll reach out within 2 hours with your onboarding details.
+                      We&apos;ll reply within one business day with your onboarding details.
                     </p>
                     <p className="mt-3 text-[12px]" style={{ color: "#334155" }}>
                       Or email directly:{" "}
@@ -192,7 +192,7 @@ export default function ContactForm() {
               {
                 icon: Mail,
                 title: "Talk to Sales",
-                desc: "Ready to run an election? Our team responds within 2 hours on business days.",
+                desc: "Ready to run an election? We&apos;ll reply within one business day.",
                 cta: "hello@baalot.site",
                 href: "mailto:hello@baalot.site",
                 color: "#9B5DE5",
@@ -238,8 +238,7 @@ export default function ContactForm() {
               </p>
               {[
                 "Free tier — no credit card required",
-                "Live within 48 hours of sign-up",
-                "Free setup support on your first election",
+                "Live as soon as your voter list is ready",
                 "Cancel or downgrade any time",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2.5 mb-2.5 last:mb-0">

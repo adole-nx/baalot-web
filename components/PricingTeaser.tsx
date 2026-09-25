@@ -37,8 +37,6 @@ const plans = [
       "Full ballot-chain audit trail",
       "Live results dashboard",
       "Voter receipts for every ballot",
-      "Dedicated setup support",
-      "< 2 week deployment",
     ],
     cta: "Get Started",
     ctaHref: "/contact?plan=institution",

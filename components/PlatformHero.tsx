@@ -148,7 +148,7 @@ export default function PlatformHero() {
           transition={{ duration: 0.7, delay: 0.8 }}
         >
           Baalot gives African institutions anonymous, server-verified, tamper-evident elections —
-          deployable in under two weeks, usable on any device.
+          live as soon as your voter list is ready, usable on any device.
         </motion.p>
 
         {/* CTAs */}

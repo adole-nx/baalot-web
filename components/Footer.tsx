@@ -1,33 +1,22 @@
 import Link from "next/link";
 import Logo from "./Logo";
 
+// Every page once. The old Platform and Use Cases columns listed ten labels
+// that all pointed back at /platform, /pricing or /contact.
 const links = {
-  Platform: [
-    { label: "Ballot Builder",   href: "/platform" },
-    { label: "Voter Portal",     href: "/platform" },
-    { label: "Live Results",     href: "/platform" },
-    { label: "Analytics",        href: "/platform" },
-    { label: "Ballot Chain",     href: "/security" },
-  ],
   Product: [
-    { label: "Pricing",      href: "/pricing" },
+    { label: "Platform",     href: "/platform" },
     { label: "Security",     href: "/security" },
-    { label: "API Docs",     href: "/docs" },
+    { label: "Pricing",      href: "/pricing" },
+    { label: "Docs",         href: "/docs" },
     { label: "Blog",         href: "/blog" },
-  ],
-  "Use Cases": [
-    { label: "Universities",   href: "/platform" },
-    { label: "Student Unions", href: "/platform" },
-    { label: "NGOs & Orgs",   href: "/platform" },
-    { label: "Enterprise",     href: "/pricing" },
-    { label: "Government",     href: "/contact" },
   ],
   Company: [
     { label: "About",          href: "/about" },
     { label: "Team",           href: "/team" },
     { label: "Contact",        href: "/contact" },
-    { label: "Privacy Policy", href: "/privacy" },
     { label: "Request Demo",   href: "/contact?type=demo" },
+    { label: "Privacy Policy", href: "/privacy" },
   ],
 };
 
@@ -41,9 +30,9 @@ export default function Footer() {
     <footer style={{ background: "#030507", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
       <div className="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 pt-16 pb-10">
         {/* Top grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
           {/* Brand column */}
-          <div className="col-span-2 md:col-span-1 pr-4">
+          <div className="col-span-2 pr-4">
             {/* Logo — cursor-tracking eye logo */}
             <div className="mb-4">
               <Logo size="sm" href="/" />

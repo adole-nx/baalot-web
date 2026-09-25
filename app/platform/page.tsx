@@ -222,7 +222,7 @@ function CTASection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            From setup to results in under two weeks. Built for universities, student unions and member organisations across Nigeria.
+            Live as soon as your voter list is ready. Built for universities, student unions and member organisations across Nigeria.
           </motion.p>
 
           <motion.div
