@@ -24,8 +24,8 @@ const pillars = [
   },
   {
     icon: "🆔",
-    title: "NIN / BVN Identity Verification",
-    body: "Voters are verified against Nigeria's national identity infrastructure before any ballot is opened. Voting is server-verified and de-duplicated — one person, one vote.",
+    title: "Verified Membership, One Vote Each",
+    body: "A ballot opens only for a member matched to the institution's voter list, confirmed with their voting PIN, and the server accepts one vote per identity. Voters can add a verified-identity badge by checking a NIN or BVN with a liveness selfie through Prembly.",
     accent: "#F5C518",
   },
   {

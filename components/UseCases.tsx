@@ -78,10 +78,10 @@ const tabs = [
       "INEC-compatible reporting",
       "Zero single point of failure",
     ],
-    // Badged "Roadmap" above: NIN/BVN verification is live today, the rest of
-    // this column is what government-scale work would require and is not built.
+    // Badged "Roadmap" above: NIN/BVN checks exist today as an optional identity
+    // badge (via Prembly), not a voting gate; the rest is not built.
     solutions: [
-      "NIN/BVN API integration (live today)",
+      "NIN/BVN identity badge via Prembly",
       "Feature phone access (roadmap)",
       "Electoral-commission report formats (roadmap)",
       "Sharded, horizontally scaled vote intake",

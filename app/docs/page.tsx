@@ -26,18 +26,18 @@ const SECURITY_LAYERS = [
     "Ballots are stored unreadable, and the chain publishes only a salted commitment of each one — enough to prove your ballot was counted, never enough to show what it said. Zero-knowledge proofs that verify validity without revealing the choice are on our roadmap.",
   ],
   [
-    "NIN / BVN identity verification",
-    "Every voter is checked against the national identity database before they can access a ballot. Duplicate registrations are detected and blocked automatically.",
+    "Verified membership, one vote each",
+    "A ballot only opens for a member matched to the institution's voter list who enters their voting PIN, and the server accepts one vote per institution identity. Voters can also verify a government ID (NIN / BVN, with a liveness check) through Prembly for a verified-identity badge.",
   ],
   [
-    "End-to-end encryption",
-    "All data in transit is encrypted with TLS 1.3. Voter credentials are stored in device secure storage (iOS Keychain / Android Keystore), never on Baalot servers.",
+    "Encryption in transit and at rest",
+    "All data in transit is encrypted with TLS 1.3. Ballots are encrypted at rest with AES-256-GCM, and voting PINs are stored only as scrypt hashes.",
   ],
 ];
 
 const API_ENDPOINTS = [
   ["POST /otp",             "Send or verify a phone OTP. Body: { action: send or verify, phone, code? }"],
-  ["POST /verify-kyc",      "Verify a voter's NIN / BVN against the national registry."],
+  ["POST /verify-kyc",      "Verify a voter's NIN / BVN through Prembly for a verified-identity badge."],
   ["POST /bbc-register",    "Register a voter on the Baalot Ballot Chain for a given election."],
   ["POST /notify-election", "Send push notifications to all eligible voters for an election."],
   ["GET  /bbc-chain",       "Retrieve the full ballot-chain audit log for a given election ID."],
@@ -151,8 +151,8 @@ export default function DocsPage() {
             </p>
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
               Every accepted ballot is sealed into a per-election hash chain in the same transaction that records it,
-              and the voter keeps a cryptographic receipt. Voter identity is verified against Nigerian national
-              databases (NIN / BVN) before any ballot is cast. Results are published the moment polls close.
+              and the voter keeps a cryptographic receipt. Only members matched to the institution&apos;s voter list can
+              vote, once each, behind a voting PIN. Results are published the moment polls close.
             </p>
             <div
               className="rounded-xl p-5 mb-6"
@@ -173,8 +173,8 @@ export default function DocsPage() {
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
               Every Baalot election follows the same three-phase lifecycle, regardless of size.
             </p>
-            {step("1", "Admin Setup", "The institution admin creates the election on the dashboard — sets the name, positions, candidates, and voting window. The voter list (CSV or manual) is uploaded and matched against the national ID registry to produce a verified electorate.")}
-            {step("2", "Voter Authentication & Voting", "Eligible voters receive a credential link or download the Baalot app. They authenticate with their institutional ID and NIN/BVN. Once verified, they cast their ballot. The ballot is stored unreadable and sealed into the election’s hash chain, and the voter keeps a receipt. Median voting time is under 2 minutes.")}
+            {step("1", "Admin Setup", "The institution admin creates the election on the dashboard — sets the name, positions, candidates, and voting window. The voter list (CSV or manual) is uploaded, and only the people on it can join and vote.")}
+            {step("2", "Voter Authentication & Voting", "Eligible voters receive a credential link or download the Baalot app. They join with their matriculation or membership number, which must match the voter list, and confirm each ballot with their voting PIN. The ballot is stored unreadable and sealed into the election’s hash chain, and the voter keeps a receipt. Median voting time is under 2 minutes.")}
             {step("3", "Tally & Results", "When polls close, the tally is finalised and published. The admin dashboard shows live results the instant counting completes, and every voter can check their own receipt against the election’s chain.")}
 
             <h3 className="font-syne font-bold text-lg text-white mb-2 mt-6">Election states</h3>
@@ -202,7 +202,7 @@ export default function DocsPage() {
             {step("1", "New Election", "From the dashboard, click New Election. Enter the election name, institution, and voting window (start date/time to end date/time).")}
             {step("2", "Add positions & candidates", "Add each position (e.g. President, Secretary). For each position, add the candidate names. Candidates do not need a Baalot account — only their name appears on the ballot.")}
             {step("3", "Upload voter list", "Upload a CSV with columns: matric_number, full_name, email (optional). Baalot matches each entry against the school registry. Unmatched rows are flagged for review before the election goes live.")}
-            {step("4", "Go live", "Set the election to Open. Voters are notified automatically if email addresses were provided. The election runs until the end time you set, or until you manually close it.")}
+            {step("4", "Go live", "Set the election to Open. Members get a push notification when voting opens. The election runs until the end time you set, or until you manually close it.")}
 
             <h3 className="font-syne font-bold text-lg text-white mb-2 mt-6">Managing members</h3>
             <p className="text-white/70 leading-[1.8] mb-4 text-base">
@@ -223,7 +223,7 @@ export default function DocsPage() {
             <h3 className="font-syne font-bold text-lg text-white mb-2 mt-6">Registering</h3>
             {step("1", "Download the app", "Install Baalot from the App Store or Google Play. Create an account with your institutional email address.")}
             {step("2", "Complete your profile", "Enter your name, nationality, phone number, and date of birth. These details are used to match your record against the voter list.")}
-            {step("3", "Verify your identity", "Enter your NIN or BVN. Baalot checks it against the national identity database via Prembly IdentityPass. Verification typically completes in under 30 seconds.")}
+            {step("3", "Verify your identity (optional)", "Enter your NIN or BVN and take a quick selfie. Baalot checks both through Prembly IdentityPass and adds a verified-identity badge to your profile. It is not required to vote.")}
             {step("4", "Join your institution", "Go to the Explore tab, search for your institution, and enter your matriculation or membership number. If it matches the voter list, you are added instantly as an active voter.")}
 
             <h3 className="font-syne font-bold text-lg text-white mb-2 mt-6">Casting a vote</h3>
@@ -277,7 +277,7 @@ export default function DocsPage() {
               <p className="text-sm text-white/80 leading-relaxed">
                 <span className="font-semibold" style={{ color: "#F5C518" }}>Full API reference is in progress.</span>{" "}
                 If you need API access now — for an integration, a student portal, or a custom voting workflow —
-                reach out directly and we will give you early access with dedicated support.
+                reach out directly and we will set you up with early access.
               </p>
             </div>
 
@@ -287,7 +287,7 @@ export default function DocsPage() {
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
             >
               <span className="text-white/40">POST / GET </span>
-              <span className="text-accent">https://baalot.vercel.app/api/</span>
+              <span className="text-accent">https://api.baalot.site/api/</span>
             </div>
 
             <h3 className="font-syne font-bold text-lg text-white mb-2 mt-6">Key endpoints</h3>

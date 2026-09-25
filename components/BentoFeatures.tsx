@@ -428,7 +428,7 @@ export default function BentoFeatures() {
             </motion.div>
             <h3 className="font-syne font-bold text-white mb-2">NIN / BVN Verification</h3>
             <p className="text-xs leading-relaxed" style={{ color: "#64748B" }}>
-              Nigeria&apos;s national identity infrastructure built right in — no external SSO needed.
+              An optional verified-identity badge: government ID plus a liveness selfie, checked through Prembly.
             </p>
           </GlassCard>
 

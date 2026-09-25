@@ -24,7 +24,7 @@ const steps = [
   {
     number: "02",
     title: "Vote",
-    desc: "Voters authenticate via NIN/BVN or institution ID and cast their ballot from any device — phone, tablet or laptop. One vote per verified identity.",
+    desc: "Voters join with their institution ID, which must match the voter list, and confirm their ballot with a voting PIN from any device — phone, tablet or laptop. One vote per identity.",
     icon: "🗳️",
   },
   {

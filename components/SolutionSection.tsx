@@ -9,7 +9,7 @@ const panels = [
   {
     tag: "VOTE",
     headline: "One-tap voting.\nNo compromise.",
-    body: "Voters authenticate with NIN or student ID, cast their ballot in under 30 seconds, and receive a cryptographic receipt — all from any device, anywhere on the continent.",
+    body: "Voters sign in with their student or member ID, confirm their ballot with a voting PIN, and receive a cryptographic receipt — all from any device, anywhere on the continent.",
     icon: Shield,
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.12)",

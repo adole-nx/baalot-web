@@ -32,7 +32,7 @@ const plans = [
     features: [
       "Unlimited voters",
       "Multiple concurrent elections",
-      "NIN / BVN voter verification",
+      "Optional NIN / BVN ID badge (via Prembly)",
       "Anonymous ballots — stored unreadable",
       "Full ballot-chain audit trail",
       "Live results dashboard",

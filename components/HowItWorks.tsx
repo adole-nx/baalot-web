@@ -25,11 +25,11 @@ const steps = [
     number: "02",
     label: "Register Voters",
     eyebrow: "Verification",
-    command: "baalot voters add --verify=NIN --source=roster.csv",
+    command: "baalot voters add --source=roster.csv",
     output: `Importing voter roster...
   Total records:   2,847
-  NIN verified:    2,801  ✓
-  Pending review:     46  (duplicate NIN flag)
+  Imported:        2,801  ✓
+  Pending review:     46  (duplicate matric number)
 Sealing anonymous voter registry...
   Registry hash: 0x8f2a9c...d31b
 ✓ Voter registry sealed. Ready to open.`,
