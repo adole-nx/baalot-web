@@ -21,7 +21,7 @@ function Eye({ size, pupilSize, offset, intro }: EyeProps) {
       style={{ width: size, height: size, verticalAlign: "middle" }}
     >
       <span
-        className={`pupil absolute rounded-full bg-accent flex-shrink-0${intro ? " logo-intro" : ""}`}
+        className={`pupil absolute rounded-full bg-white flex-shrink-0${intro ? " logo-intro" : ""}`}
         style={{
           width: pupilSize,
           height: pupilSize,
