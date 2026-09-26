@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Hero               from "@/components/Hero";
 import TrustStrip         from "@/components/TrustStrip";
 import ProblemSection     from "@/components/ProblemSection";
@@ -11,6 +12,8 @@ import AppFeatureShowcase from "@/components/AppFeatureShowcase";
 import AudienceCTA        from "@/components/AudienceCTA";
 import PricingTeaser      from "@/components/PricingTeaser";
 import ContactForm        from "@/components/ContactForm";
+
+export const metadata: Metadata = { alternates: { canonical: "https://baalot.site/" } };
 
 export default function Home() {
   return (

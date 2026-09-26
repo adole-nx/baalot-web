@@ -90,7 +90,6 @@ export const metadata: Metadata = {
     description: "Secure, anonymous election management for Africa.",
     images: [`${DOMAIN}/og-image.png`],
   },
-  alternates: { canonical: DOMAIN },
   robots: {
     index: true,
     follow: true,

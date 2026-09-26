@@ -1,0 +1,38 @@
+# Baalot
+
+> Baalot is an election platform for universities, student unions, NGOs, cooperatives and organisations in Nigeria and across Africa. Voters use the Baalot mobile app (Android and iOS); election administrators run elections from the web console at admin.baalot.site. Every vote is enforced server-side — one vote per verified identity — ballots are anonymous, and every ballot is sealed into a tamper-evident hash-chain with a receipt the voter can check.
+
+## What Baalot does
+
+- Runs institutional elections end to end: eligibility rules, positions, candidates, scheduled open/close, live tallies and final results.
+- Enforces one person, one vote on the server. A member must belong to the institution (and the right sub-group, e.g. faculty or department) to vote or run.
+- Keeps ballots anonymous: results are tallied server-side and the voter's choice is never shown to admins or other members.
+- Seals each ballot into a hash-linked, tamper-evident chain. Voters get a cryptographic receipt, and anyone can verify the chain through Baalot's public verification endpoint. The chain is operated by Baalot; it is not a public blockchain.
+- Optional identity badge: NIN / BVN document check, registry lookup, liveness and face match, provided through Prembly.
+- Community features inside each institution: campaign video reels, a discussion feed, news and candidate profiles.
+- Levi, an in-app AI assistant that answers questions about elections and navigates the app by voice or text.
+- An in-app directory of 110+ Nigerian institutions.
+
+## What Baalot does not do (yet)
+
+- It does not record votes on a public blockchain. Anchoring chain checkpoints to Base (an Ethereum L2) is built but not live.
+- It does not use zero-knowledge proofs today.
+- It does not connect directly to NIMC or CBN; identity checks go through Prembly.
+
+## Pricing
+
+- Starter — free: up to 500 voters, 1 active election, anonymous server-verified results.
+- Institution — ₦150,000 per election: unlimited voters, multiple concurrent elections, optional NIN/BVN ID badge, voter receipts, full audit trail, live results dashboard.
+- Enterprise — custom: multi-election management, custom branding, dedicated account manager, on-site training.
+
+## Pages
+
+- [Home](https://baalot.site/): overview of the platform
+- [Platform](https://baalot.site/platform/): how an election runs on Baalot
+- [Security](https://baalot.site/security/): vote enforcement, anonymity, the ballot chain and receipts
+- [Pricing](https://baalot.site/pricing/): plans and what each includes
+- [Docs](https://baalot.site/docs/): setting up an institution and running an election
+- [About](https://baalot.site/about/): why Baalot exists
+- [Blog](https://baalot.site/blog/): engineering and election-integrity writing
+- [Request a demo](https://baalot.site/contact/)
+- [Privacy policy](https://baalot.site/privacy/)
