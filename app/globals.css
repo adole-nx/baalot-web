@@ -518,3 +518,18 @@ a, button {
     scroll-behavior: auto !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   REVEAL FALLBACK
+   framer-motion server-renders entrance states as inline
+   `opacity:0`. If the client bundle never hydrates (an old
+   browser, a blocked script), nothing animates them in and
+   the page looks blank. Reveal them after 3s unless
+   HydrationMark has run. An animation outranks inline style.
+═══════════════════════════════════════════════════════ */
+@keyframes baalot-reveal {
+  to { opacity: 1; transform: none; }
+}
+html:not(.hydrated) [style*="opacity:0"] {
+  animation: baalot-reveal 0.6s ease 3s forwards;
+}

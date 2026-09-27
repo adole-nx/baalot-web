@@ -26,6 +26,13 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
+  "browserslist": [
+    "chrome >= 64",
+    "edge >= 79",
+    "firefox >= 67",
+    "safari >= 12",
+    "ios_saf >= 12"
+  ],
   "overrides": {
     "next": {
       "postcss": "^8.5.10"
