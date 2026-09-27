@@ -33,28 +33,57 @@ const jetbrainsMono = JetBrains_Mono({
 
 const DOMAIN = "https://baalot.site";
 
+// One linked entity graph so search and AI engines resolve "Baalot" (often
+// auto-corrected to "ballot") to this organisation, site and app.
+const ORG_ID = `${DOMAIN}/#organization`;
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "Baalot",
-  url: DOMAIN,
-  description:
-    "Secure, anonymous election management platform for African universities and organisations. One vote per verified identity, live tallies, and tamper-evident ballot chain.",
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "Web, Android, iOS",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "NGN",
-  },
-  provider: {
-    "@type": "Organization",
-    name: "Baalot",
-    url: DOMAIN,
-    logo: `${DOMAIN}/icon.png`,
-    sameAs: [],
-    areaServed: "NG",
-  },
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: "Baalot",
+      alternateName: ["Baalot Elections", "Baalot app", "baalot.site"],
+      url: DOMAIN,
+      logo: `${DOMAIN}/icon.png`,
+      description:
+        "Baalot is a Nigerian election platform for universities, student unions, NGOs and organisations across Africa: server-enforced one-person-one-vote, anonymous ballots, and a tamper-evident ballot chain with voter receipts.",
+      foundingLocation: { "@type": "Country", name: "Nigeria" },
+      areaServed: [{ "@type": "Country", name: "Nigeria" }, { "@type": "Place", name: "Africa" }],
+      founder: {
+        "@type": "Person",
+        name: "Adole Daniel Inalegwu",
+        jobTitle: "Founder & CEO",
+        sameAs: ["https://linkedin.com/in/adole-daniel-inalegwu"],
+      },
+      email: "hello@baalot.site",
+      knowsAbout: ["Election management", "Online voting", "Student union elections", "Election integrity"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${DOMAIN}/#website`,
+      name: "Baalot",
+      alternateName: "Baalot — Secure Election Management",
+      url: DOMAIN,
+      inLanguage: "en-NG",
+      publisher: { "@id": ORG_ID },
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${DOMAIN}/#app`,
+      name: "Baalot",
+      url: DOMAIN,
+      description:
+        "Secure, anonymous election management for African universities and organisations. One vote per verified identity, live tallies, and a tamper-evident ballot chain.",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Android, iOS, Web",
+      publisher: { "@id": ORG_ID },
+      offers: [
+        { "@type": "Offer", name: "Starter", price: "0", priceCurrency: "NGN", description: "Up to 500 voters, 1 active election" },
+        { "@type": "Offer", name: "Institution", price: "150000", priceCurrency: "NGN", description: "Per election, unlimited voters" },
+      ],
+    },
+  ],
 };
 
 export const metadata: Metadata = {
