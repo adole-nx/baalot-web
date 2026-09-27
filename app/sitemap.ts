@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/contact/", 0.6, "yearly"],
     ["/team/", 0.5, "monthly"],
     ["/privacy/", 0.3, "yearly"],
+    ["/delete-account/", 0.3, "yearly"],
   ];
   return [
     ...pages.map(([path, priority, changeFrequency]) => ({ url: `${DOMAIN}${path}`, priority, changeFrequency })),
