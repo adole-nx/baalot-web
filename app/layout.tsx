@@ -9,6 +9,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import LeviAgent from "@/components/LeviAgent";
 import SovereigntyStrip from "@/components/SovereigntyStrip";
 import EventBanner from "@/components/EventBanner";
+import HydrationMark from "@/components/HydrationMark";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -134,10 +135,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <noscript>
+          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
       </head>
       <body
         className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable} font-inter bg-bg text-primary antialiased`}
       >
+        <HydrationMark />
         <ScrollProgressBar />
         <CustomCursor />
         <LeviAgent />
