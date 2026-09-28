@@ -38,6 +38,9 @@ export default function BlogPage() {
       {/* Posts */}
       <section className="pb-32 px-5 md:px-10 lg:px-16">
         <div className="max-w-site mx-auto">
+          {posts.length === 0 && (
+            <p className="text-muted text-sm">No posts yet.</p>
+          )}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post, i) => (
               <motion.article
