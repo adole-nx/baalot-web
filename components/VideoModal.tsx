@@ -3,11 +3,12 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { YOUTUBE_ENABLED } from "@/lib/video";
 
 interface VideoModalProps {
   open: boolean;
   onClose: () => void;
-  /** YouTube video ID — defaults to Dhruv Rathee's blockchain elections explainer */
+  /** YouTube video ID. Ignored while YOUTUBE_ENABLED (lib/video.ts) is off: the modal shows a black frame. */
   youtubeId?: string;
 }
 
@@ -55,6 +56,7 @@ export default function VideoModal({
             </button>
             <div className="relative rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.6)]"
               style={{ paddingBottom: "56.25%" }}>
+              {YOUTUBE_ENABLED ? (
               <iframe
                 className="absolute inset-0 w-full h-full"
                 src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1`}
@@ -62,6 +64,9 @@ export default function VideoModal({
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
+              ) : (
+                <div className="absolute inset-0" style={{ background: "#000" }} aria-hidden="true" />
+              )}
             </div>
           </motion.div>
         </motion.div>
