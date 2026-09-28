@@ -38,30 +38,6 @@ function ZKProofViz() {
   );
 }
 
-// ─── Public-ledger (roadmap) visualization ──────────────────────
-function BlockchainViz() {
-  const nodes = [[60,15],[20,45],[100,45],[10,75],[50,75],[70,75],[110,75]];
-  const edges = [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
-  return (
-    <svg viewBox="0 0 120 90" className="w-full h-20" aria-hidden="true">
-      {edges.map(([a, b], i) => (
-        <line key={i}
-          x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]}
-          stroke="rgba(20,184,166,0.25)" strokeWidth="0.8" strokeDasharray="3 2"
-          style={{ animation: `dash-flow ${1.8 + i * 0.15}s linear infinite`, animationDelay: `${i * 0.18}s` }}
-        />
-      ))}
-      {nodes.map(([x, y], i) => (
-        <g key={i}>
-          <circle cx={x} cy={y} r="4" fill="rgba(20,184,166,0.08)" stroke="rgba(20,184,166,0.35)" strokeWidth="0.8" />
-          <circle cx={x} cy={y} r="1.8" fill="#14B8A6"
-            style={{ animation: `node-pulse 2.2s ease-in-out infinite`, animationDelay: `${i * 0.22}s` }} />
-        </g>
-      ))}
-    </svg>
-  );
-}
-
 // ─── Biometric scan visualization ─────────────────────────────
 function BiometricViz() {
   return (
@@ -104,14 +80,6 @@ const pillars = [
     viz: <ZKProofViz />,
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.1)",
-  },
-  {
-    title: "Blockchain Immutability",
-    badge: "Roadmap",
-    body: "Planned: anchoring every result as an immutable on-chain entry no administrator can alter — a public ledger with private identities. It’s on our roadmap, designed to make results independently verifiable.",
-    viz: <BlockchainViz />,
-    color: "#14B8A6",
-    glow: "rgba(20,184,166,0.08)",
   },
   {
     title: "Verified Identity",
@@ -157,7 +125,7 @@ export default function Security() {
             Built to withstand scrutiny.
           </h2>
           <p className="mt-4 text-[15px] max-w-[480px] mx-auto" style={{ color: "#64748B" }}>
-            Anonymous ballots and verified identity protect every vote today. A public, tamper-evident ledger is on our roadmap.
+            Your choice is encrypted before it is stored, and each ballot is recorded in the election’s audit chain.
           </p>
         </SectionReveal>
 
@@ -166,7 +134,7 @@ export default function Security() {
           variants={staggerContainer}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid md:grid-cols-3 gap-5"
+          className="grid md:grid-cols-2 gap-5"
         >
           {pillars.map((pillar, i) => (
             <motion.div

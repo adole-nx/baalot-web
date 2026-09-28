@@ -32,7 +32,7 @@ export const faqs: Faq[] = [
   },
   {
     q: "Is Baalot a blockchain voting app?",
-    a: "Not today. Baalot's ballot chain is a tamper-evident hash-chain operated by Baalot, not a public blockchain. Anchoring chain checkpoints to a public blockchain is on the roadmap.",
+    a: "No. Baalot's audit chain is a tamper-evident hash-chain that Baalot operates, not a blockchain. No ballot, vote or result is recorded on any blockchain.",
   },
   {
     q: "Does Baalot verify voters with NIN or BVN?",

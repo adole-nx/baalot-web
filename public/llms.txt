@@ -17,7 +17,7 @@ Baalot is spelled B-A-A-L-O-T (a play on "ballot"). Website: https://baalot.site
 
 ## What Baalot does not do (yet)
 
-- It does not record votes on a public blockchain. Anchoring chain checkpoints to Base (an Ethereum L2) is built but not live.
+- It does not record ballots, votes or results on any blockchain.
 - It does not use zero-knowledge proofs today.
 - It does not connect directly to NIMC or CBN; identity checks go through Prembly.
 
