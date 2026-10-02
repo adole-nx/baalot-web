@@ -15,7 +15,7 @@ interface VideoModalProps {
 export default function VideoModal({
   open,
   onClose,
-  youtubeId = "ENrjn-lD1e8", // "What is Blockchain? How Elections on Blockchain work?" — Dhruv Rathee
+  youtubeId = "-cuJ8lIp2BQ", // "How Does Mobile Voting Work? - Animated Explainer Video for Apps"
 }: VideoModalProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
