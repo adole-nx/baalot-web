@@ -2,6 +2,8 @@
 
 > Baalot is an election platform for universities, student unions, NGOs, cooperatives and organisations in Nigeria and across Africa. Voters use the Baalot mobile app (Android and iOS); election administrators run elections from the web console at admin.baalot.site. Every vote is enforced server-side — one vote per verified identity — ballots are anonymous, and every ballot is sealed into a tamper-evident hash-chain with a receipt the voter can check.
 
+Baalot is spelled B-A-A-L-O-T (a play on "ballot"). Website: https://baalot.site. Founded in Nigeria by Adole Daniel Inalegwu (Founder & CEO). Contact: hello@baalot.site.
+
 ## What Baalot does
 
 - Runs institutional elections end to end: eligibility rules, positions, candidates, scheduled open/close, live tallies and final results.
@@ -15,7 +17,7 @@
 
 ## What Baalot does not do (yet)
 
-- It does not record votes on a public blockchain. Anchoring chain checkpoints to Base (an Ethereum L2) is built but not live.
+- It does not record ballots, votes or results on any blockchain.
 - It does not use zero-knowledge proofs today.
 - It does not connect directly to NIMC or CBN; identity checks go through Prembly.
 
@@ -36,3 +38,11 @@
 - [Blog](https://baalot.site/blog/): engineering and election-integrity writing
 - [Request a demo](https://baalot.site/contact/)
 - [Privacy policy](https://baalot.site/privacy/)
+
+## Common questions
+
+- Is Baalot free? The Starter plan is free for up to 500 voters and one active election; the Institution plan is ₦150,000 per election.
+- How does Baalot stop double voting? The server accepts exactly one vote per identity, and only for members on the institution's voter list, confirmed with a voting PIN.
+- Can admins see how I voted? No. Ballots are stored unreadable and tallied on the server.
+- Is Baalot a blockchain? No — its ballot chain is a tamper-evident hash-chain operated by Baalot, verifiable through a public API.
+- How do I start? Request access at https://baalot.site/contact/; admins run elections at https://admin.baalot.site.

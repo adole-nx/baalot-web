@@ -13,11 +13,16 @@ const sections = [
 • Account information — name, email address, phone number, and a member or student ID where required, provided during registration.
 • Organisation data — the institution, organisation, or community you belong to (and details such as faculty, department, or group), used to assign you to the correct election.
 • Authentication data — we use Firebase Authentication (Google) to manage sign-in. We do not store passwords.
-• ID card images — when you scan an ID for membership verification, the image is processed for text extraction only and is not stored after processing.
-• Location data — optional approximate location shared only when you enable the live voter map. We do not track your location in the background.
+• ID card images — when you scan an ID for membership verification, the image is read for its text and is not stored by Baalot after processing.
+• Identity verification — if you apply for the optional verified badge, your ID number and a liveness selfie are checked by Prembly. We keep only the result and a salted hash of the number, never the number itself.
+• Levi assistant — messages you type to Levi, and voice you record while holding the mic, are processed to produce a reply. Voice is not kept after it is transcribed.
+• Content you post — comments, photos and campaign reels.
+• Location data — optional location shared only when you turn on the live voter map. We do not track your location in the background.
 • Usage logs — app interactions and error reports used to improve the platform (via Sentry and Firebase Analytics).
 
-We do not collect payment card details. We do not build advertising profiles. We do not sell data.`,
+Ads — the free app shows banner ads from Google AdMob, which uses your device's advertising ID. You can reset or delete that ID in your Android settings.
+
+We do not collect payment card details. We do not sell data.`,
   },
   {
     title: "How We Use Your Information",
@@ -30,6 +35,7 @@ Specifically:
 • To send election notifications you have opted into.
 • To detect fraud and maintain election integrity.
 • To diagnose technical issues and improve platform reliability.
+• To show ads in the free app (via Google AdMob).
 • To comply with legal obligations and respond to valid regulatory requests.
 
 We will never use your information for marketing purposes without explicit opt-in consent.`,
@@ -41,7 +47,12 @@ We will never use your information for marketing purposes without explicit opt-i
 • Firebase (Google) — authentication, Firestore database, and analytics.
 • Vercel — API hosting and serverless functions. No personal data is logged beyond standard access logs.
 • Sentry — error reporting. Error logs contain no personally identifiable information.
-• Prembly IdentityPass — ID card OCR processing for membership verification. Images are not retained after text extraction.
+• Prembly IdentityPass — ID number and liveness checks for the optional verified badge, and ID card reading.
+• Groq — processes Levi chat messages and voice recordings, and reads the text on scanned ID cards.
+• Google AdMob — banner ads, using your device's advertising ID.
+• Paystack — plan payments. Card details are entered on Paystack's own checkout and never reach Baalot.
+• Cloudflare R2 — storage for campaign reels.
+• Expo — push notification delivery.
 • Google Sign-In — optional social login using your Google account (email and profile only).
 
 Each provider operates under standard data protection agreements.`,
@@ -52,7 +63,7 @@ Each provider operates under standard data protection agreements.`,
 
 • Access — request a copy of all data we hold about you.
 • Rectification — request correction of inaccurate data.
-• Erasure — request deletion of your account and associated personal data within 30 days.
+• Erasure — delete your account in the app, or see baalot.site/delete-account. Your personal data is erased 30 days later.
 • Portability — receive your data in a machine-readable format.
 • Objection — object to processing based on legitimate interests.
 • Restriction — request we limit how we process your data while a complaint is resolved.
@@ -63,10 +74,9 @@ To exercise any of these rights, email us at adoledaniel111@gmail.com. We will r
     title: "Data Retention",
     body: `We retain personal data only as long as necessary:
 
-• Account data — retained while your account is active, then deleted within 30 days of a deletion request.
-• Voter identity records — retained for the duration of the election plus 90 days for dispute resolution, then deleted.
-• Election audit logs — retained for 7 years to comply with electoral record-keeping standards.
-• Aggregate election results — retained indefinitely as anonymised public records.`,
+• Account data — retained while your account is active. When you delete your account it is switched off at once, and your personal data is permanently erased 30 days later. Sign back in before then to cancel.
+• Election records — ballots (stored without your name), the record that you voted, your entry on the institution's member roster, any candidacy, and the audit chain are part of the institution's election result. They are kept when an account is deleted, because removing them would change a published count.
+• Aggregate election results — retained as public records.`,
   },
   {
     title: "Children's Privacy",
@@ -82,7 +92,7 @@ Website: https://baalot.site
 
 If you are unhappy with our response, you have the right to lodge a complaint with the Nigeria Data Protection Bureau (NDPB) or your local supervisory authority.
 
-This policy was last updated: June 19, 2026.`,
+This policy was last updated: September 27, 2026.`,
   },
 ];
 

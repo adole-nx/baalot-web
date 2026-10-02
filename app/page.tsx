@@ -12,12 +12,15 @@ import AppFeatureShowcase from "@/components/AppFeatureShowcase";
 import AudienceCTA        from "@/components/AudienceCTA";
 import PricingTeaser      from "@/components/PricingTeaser";
 import ContactForm        from "@/components/ContactForm";
+import FAQ                from "@/components/FAQ";
+import { faqJsonLd }      from "@/lib/faq";
 
 export const metadata: Metadata = { alternates: { canonical: "https://baalot.site/" } };
 
 export default function Home() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <Hero />
       <TrustStrip />
       <ProblemSection />
@@ -30,6 +33,7 @@ export default function Home() {
       <AppFeatureShowcase />
       <PricingTeaser />
       <AudienceCTA />
+      <FAQ />
       <ContactForm />
     </main>
   );

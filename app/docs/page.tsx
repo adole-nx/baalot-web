@@ -19,7 +19,7 @@ const NAV = [
 const SECURITY_LAYERS = [
   [
     "Tamper-evident ballot chain",
-    "Each accepted ballot is sealed into a per-election hash chain in the same transaction that records it. Altering any past ballot breaks every hash after it — including for Baalot. Anchoring chain heads to a public blockchain is on our roadmap.",
+    "Each accepted ballot is sealed into a per-election hash chain in the same transaction that records it. Altering any past ballot breaks every hash after it — including for Baalot.",
   ],
   [
     "Anonymous ballots",

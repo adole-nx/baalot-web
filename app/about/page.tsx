@@ -12,7 +12,6 @@ const milestones = [
   { year: "The build", title: "Baalot takes shape", desc: "A mobile-first election platform: anonymous ballots stored unreadable, server-verified one-vote-per-identity, a voting PIN with optional biometrics, and live real-time tallies." },
   { year: "The platform", title: "More than a ballot", desc: "Per-institution mini-apps and branding, multi-position ballots, elections that auto open and close, an admin dashboard, a community feed, campaign reels, a news feed, and the in-app Levi assistant — on Android, iOS, and web." },
   { year: "Today", title: "In the field", desc: "Baalot's in-app directory now spans 110+ institutions across Nigeria, and every ballot cast is sealed into a tamper-evident hash-chain — with a cryptographic receipt for the voter and public verification for everyone else." },
-  { year: "Roadmap", title: "What we're building", desc: "Anchoring chain heads to a public blockchain and zero-knowledge vote proofs — so any result can be independently verified after polls close, without ever revealing a ballot." },
 ];
 
 const values = [

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
+import { YOUTUBE_ENABLED } from "@/lib/video";
 
 interface YouTubeEmbedProps {
   videoId: string;
@@ -29,6 +30,16 @@ export default function YouTubeEmbed({
   const [active, setActive] = useState(autoLoad);
   const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   const padding = aspectRatio === "4/3" ? "75%" : "56.25%";
+
+  if (!YOUTUBE_ENABLED) {
+    return (
+      <div
+        className={`relative overflow-hidden rounded-2xl ${className}`}
+        style={{ paddingBottom: padding, background: "#000" }}
+        aria-hidden="true"
+      />
+    );
+  }
 
   return (
     <div

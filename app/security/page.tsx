@@ -13,7 +13,7 @@ const pillars = [
   {
     icon: "⛓️",
     title: "Tamper-Evident Ballot Chain (Live)",
-    body: "Every accepted ballot is sealed into a per-election hash-chain in the same transaction that records the vote — altering any past ballot breaks every hash after it. Voters get a cryptographic receipt, and anyone can replay and verify the full chain through our public API. Anchoring chain heads to a public blockchain is the next step on our roadmap.",
+    body: "Every accepted ballot is sealed into a per-election hash-chain in the same transaction that records the vote — altering any past ballot breaks every hash after it. Voters get a cryptographic receipt, and anyone can replay and verify the full chain through our public API.",
     accent: "#3B6EF8",
   },
   {
