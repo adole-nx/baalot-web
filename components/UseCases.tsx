@@ -9,8 +9,9 @@ const tabs = [
     id: "universities",
     label: "Universities",
     headline: "Credible elections for academic communities",
-    // "UNIVERSITY OF NAIROBI STUDENT COUNCIL ELECTION 2025" — real university election footage
+    // "UNIVERSITY OF NAIROBI STUDENT COUNCIL ELECTION 2025" — third-party footage, not run on Baalot
     youtubeId: "L7TvUv7pTGI",
+    videoLabel: "Footage: University of Nairobi student election, 2025 (not run on Baalot)",
     challenges: [
       "Low voter trust in paper elections",
       "Allegations of result manipulation",
@@ -31,6 +32,7 @@ const tabs = [
     headline: "From chaos to credibility in one platform",
     // "Nigeria's Election Process: Experts In Tech, Academia, Law Increase Calls For E-Voting"
     youtubeId: "v7inQSORNl4",
+    videoLabel: "News: Nigerian experts call for e-voting (third-party)",
     challenges: [
       "Ballot stuffing and proxy voting",
       "No voter ID system",
@@ -51,6 +53,7 @@ const tabs = [
     headline: "Boardroom-grade voting for any organization",
     // "How Does Mobile Voting Work? - Animated Explainer Video for Apps"
     youtubeId: "-cuJ8lIp2BQ",
+    videoLabel: "Explainer: how mobile voting works (third-party)",
     challenges: [
       "Member verification for large bodies",
       "Privacy of individual votes",
@@ -72,6 +75,7 @@ const tabs = [
     headline: "Infrastructure for Africa's democratic future",
     // "Nigeria's Election Process: Experts In Tech, Academia, Law" — most relevant for govt
     youtubeId: "v7inQSORNl4",
+    videoLabel: "News: Nigerian experts call for e-voting (third-party)",
     challenges: [
       "NIN/BVN verification at scale",
       "USSD access for non-smartphone users",
@@ -193,7 +197,7 @@ export default function UseCases() {
             <YouTubeEmbed
               videoId={t.youtubeId}
               title={t.headline}
-              label={t.headline}
+              label={t.videoLabel}
               aspectRatio="4/3"
             />
           </motion.div>

@@ -14,9 +14,9 @@ const panels = [
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.12)",
     dir: "left" as const,
-    // Mobile voting animated explainer
-    youtubeId: "-cuJ8lIp2BQ",
-    videoLabel: "How voters cast a Baalot ballot",
+    // "How Does Mobile Voting Work? - Animated Explainer Video for Apps" — third-party, not Baalot
+    youtubeId: "-cuJ8lIp2BQ" as string | undefined,
+    videoLabel: "Explainer: how mobile voting works (third-party)",
   },
   {
     tag: "VERIFY",
@@ -26,9 +26,9 @@ const panels = [
     color: "#14B8A6",
     glow: "rgba(20,184,166,0.12)",
     dir: "right" as const,
-    // Nigeria e-voting experts discussing blockchain verification
-    youtubeId: "v7inQSORNl4",
-    videoLabel: "Experts on verifiable election technology",
+    // No video: a third-party clip here would read as footage of Baalot's chain.
+    youtubeId: undefined,
+    videoLabel: undefined,
   },
   {
     tag: "MANAGE",
@@ -38,9 +38,9 @@ const panels = [
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.12)",
     dir: "left" as const,
-    // University student council election — real managed election footage
-    youtubeId: "L7TvUv7pTGI",
-    videoLabel: "Live election dashboard in action",
+    // No video: there is no recorded Baalot dashboard demo yet.
+    youtubeId: undefined,
+    videoLabel: undefined,
   },
 ];
 

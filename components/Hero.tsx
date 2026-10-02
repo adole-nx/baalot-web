@@ -1264,7 +1264,7 @@ export default function Hero() {
             </span>
           </Link>
 
-          {/* Watch Demo → opens YouTube demo modal */}
+          {/* Watch Explainer → opens a third-party mobile-voting explainer (no Baalot demo video yet) */}
           <motion.button
             onClick={() => setVideoOpen(true)}
             whileHover={{ scale: 1.03 }}
@@ -1285,7 +1285,7 @@ export default function Hero() {
             >
               <Play size={11} fill="#9B5DE5" style={{ color: "#9B5DE5", marginLeft: 1 }} />
             </motion.span>
-            Watch Demo
+            Watch Explainer
           </motion.button>
         </motion.div>
       </motion.div>
@@ -1407,7 +1407,7 @@ export default function Hero() {
         </span>
       </motion.div>
 
-      {/* Demo video modal */}
+      {/* Explainer video modal */}
       <VideoModal open={videoOpen} onClose={() => setVideoOpen(false)} />
     </section>
   );
