@@ -72,7 +72,7 @@ export default function FeaturedVideo() {
           className="mt-8 grid grid-cols-3 gap-4"
         >
           {[
-            { value: "110+",  label: "Institutions in the directory" },
+            { value: "AES-256", label: "Encryption on every ballot" },
             { value: "Free",  label: "To run your first election" },
             { value: "3",     label: "Platforms: Android, iOS, web" },
           ].map((s) => (

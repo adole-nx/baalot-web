@@ -94,8 +94,8 @@ function Orb({ color, opacity, size, blur, top, bottom, left, right, animClass }
 // Verifiable facts only. Baalot has run no customer elections yet, so there are
 // no vote totals, timing averages or incident counts to put here.
 const heroStats = [
-  { value: "110+", label: "Institutions Listed" },
-  { value: "28",   label: "States Covered" },
+  { value: "AES-256", label: "Ballot Encryption" },
+  { value: "SHA-256", label: "Audit Chain" },
   { value: "3",    label: "Platforms" },
   { value: "1",    label: "Vote Per Identity" },
 ];
@@ -147,7 +147,7 @@ export default function PlatformHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.8 }}
         >
-          Baalot gives African institutions anonymous, server-verified, tamper-evident elections —
+          Baalot gives African institutions encrypted, server-verified, tamper-evident elections —
           live as soon as your voter list is ready, usable on any device.
         </motion.p>
 

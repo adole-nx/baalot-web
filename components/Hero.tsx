@@ -7,7 +7,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { ArrowUpRight, Play, Shield, Zap, Globe } from "lucide-react";
+import { ArrowUpRight, Play, Shield, Zap, Globe, Lock } from "lucide-react";
 import { EASE, staggerContainer, fadeUp } from "@/lib/animations";
 import VideoModal from "@/components/VideoModal";
 
@@ -1041,7 +1041,7 @@ const PHASES = [
     hue: 0,
     label: "BUILT FOR ELECTIONS",
     subtitle:
-      "Anonymous ballots, verified voters, live tallies. Run your institution's next election on Baalot — free to start.",
+      "Encrypted ballots, verified voters, live tallies. Run your institution's next election on Baalot — free to start.",
   },
   {
     word: "Verifiable",
@@ -1055,9 +1055,9 @@ const PHASES = [
     word: "Private",
     color: "#F59E0B",
     hue: 120,
-    label: "ANONYMOUS BY DESIGN",
+    label: "ENCRYPTED BY DESIGN",
     subtitle:
-      "Ballots are stored unreadable and unlinked from the voter. One verified identity, one vote — and no one can see how you cast it.",
+      "Your choice is encrypted before it is stored and recorded under a pseudonymous anchor, not your name. One verified identity, one vote.",
   },
 ] as const;
 
@@ -1176,7 +1176,7 @@ export default function Hero() {
             transition={{ duration: 1.6, repeat: Infinity }}
           />
           <span className="text-[11px] font-semibold tracking-wide" style={{ color: "#9B5DE5" }}>
-            110+ institutions in the Baalot directory
+            Now in early access
           </span>
         </motion.div>
 
@@ -1383,7 +1383,7 @@ export default function Hero() {
           style={{ opacity: textOpacity, y: textY }}
           className="w-full max-w-3xl mx-auto px-5 pb-16 grid grid-cols-3 gap-3"
         >
-          <StatPill value="110+"   label="Institutions listed" icon={Globe}  />
+          <StatPill value="AES-256" label="Encrypted ballots"  icon={Lock}   />
           <StatPill value="Free"   label="To start"            icon={Zap}    />
           <StatPill value="1 vote" label="Per verified identity" icon={Shield} />
         </motion.div>

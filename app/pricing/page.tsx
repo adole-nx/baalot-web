@@ -19,7 +19,7 @@ const plans = [
     features: [
       "Up to 500 voters",
       "1 active election",
-      "Anonymous, server-verified results",
+      "Encrypted, server-verified results",
       "Web voting interface",
       "Basic audit trail",
       "Email support",
@@ -37,7 +37,7 @@ const plans = [
       "Unlimited voters",
       "Multiple concurrent elections",
       "Optional NIN / BVN ID badge (via Prembly)",
-      "Anonymous ballots",
+      "Encrypted ballots",
       "Full audit trail",
       "Live results dashboard",
       "Voter receipts for every ballot",

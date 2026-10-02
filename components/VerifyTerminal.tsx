@@ -22,7 +22,7 @@ const LINES: TerminalLine[] = [
   { text: "  Election:   SUG Presidential Election 2026", type: "data", delay: 1850 },
   { text: "", type: "blank", delay: 1950 },
   { text: "Verifying ballot integrity...", type: "muted", delay: 2100 },
-  { text: "  Voter hash:   0x7f3a9c2e...d841b09f  [anonymous]", type: "success", delay: 2400 },
+  { text: "  Voter hash:   0x7f3a9c2e...d841b09f  [pseudonymous]", type: "success", delay: 2400 },
   { text: "  Candidate:    [sealed — stored unreadable]", type: "data", delay: 2600 },
   { text: "  Signature:    valid", type: "success", delay: 2800 },
   { text: "", type: "blank", delay: 2900 },

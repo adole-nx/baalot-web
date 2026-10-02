@@ -38,12 +38,12 @@ export default function Footer() {
               <Logo size="sm" href="/" />
             </div>
             <p className="text-[12px] leading-relaxed mb-5" style={{ color: "#334155" }}>
-              Secure, anonymous election management for African institutions.
+              Secure, verifiable election management for African institutions.
             </p>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 live-dot" />
               <span className="font-mono text-[10px]" style={{ color: "#64748B" }}>
-                110+ institutions in the directory
+                Early access
               </span>
             </div>
           </div>
