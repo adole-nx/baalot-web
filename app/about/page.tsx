@@ -9,9 +9,9 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 const milestones = [
   { year: "The problem", title: "A disputed election", desc: "Founder Adole Daniel sees a student election fall apart — manual counting, contested results, no audit trail — and asks why democratic institutions in Africa still run on paper and spreadsheets." },
-  { year: "The build", title: "Baalot takes shape", desc: "A mobile-first election platform: anonymous ballots stored unreadable, server-verified one-vote-per-identity, a voting PIN with optional biometrics, and live real-time tallies." },
+  { year: "The build", title: "Baalot takes shape", desc: "A mobile-first election platform: ballots encrypted before they are stored, server-verified one-vote-per-identity, a voting PIN with optional biometrics, and live real-time tallies." },
   { year: "The platform", title: "More than a ballot", desc: "Per-institution mini-apps and branding, multi-position ballots, elections that auto open and close, an admin dashboard, a community feed, campaign reels, a news feed, and the in-app Levi assistant — on Android, iOS, and web." },
-  { year: "Today", title: "In the field", desc: "Baalot's in-app directory now spans 110+ institutions across Nigeria, and every ballot cast is sealed into a tamper-evident hash-chain — with a cryptographic receipt for the voter and public verification for everyone else." },
+  { year: "Today", title: "In the field", desc: "Baalot is in early access with institutions across Nigeria, and every ballot cast is sealed into a tamper-evident hash-chain — with a cryptographic receipt for the voter and public verification for everyone else." },
 ];
 
 const values = [
@@ -77,8 +77,8 @@ export default function AboutPage() {
             {[
               // Verifiable facts only. Baalot has run no customer elections yet, so
               // there are no vote totals, turnout averages or incident counts to show.
-              { value: "110+", label: "Institutions Listed", accent: "#9B5DE5" },
-              { value: "28",   label: "States Covered",      accent: "#B27FF0" },
+              { value: "AES-256", label: "Ballot Encryption", accent: "#9B5DE5" },
+              { value: "SHA-256", label: "Audit Chain",        accent: "#B27FF0" },
               { value: "3",    label: "Platforms",           accent: "#14B8A6" },
               { value: "1",    label: "Vote Per Identity",   accent: "#9B5DE5" },
             ].map((s) => (

@@ -30,7 +30,7 @@ const steps = [
   Total records:   2,847
   Imported:        2,801  ✓
   Pending review:     46  (duplicate matric number)
-Sealing anonymous voter registry...
+Sealing pseudonymous voter registry...
   Registry hash: 0x8f2a9c...d31b
 ✓ Voter registry sealed. Ready to open.`,
     successLines: [2, 6],
@@ -47,7 +47,7 @@ Sealing anonymous voter registry...
   Rate:       ▁▃▅▇█▇▅▃▂  votes/min
   Anomalies:  NONE DETECTED
   Ballot chain: sealing each vote
-All ballots stored anonymously. Each one sealed into the chain.`,
+All ballots stored encrypted. Each one sealed into the chain.`,
     successLines: [0, 4],
   },
   {

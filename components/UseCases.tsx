@@ -19,7 +19,7 @@ const tabs = [
     ],
     solutions: [
       "Server-verified votes, tallied live",
-      "Anonymous ballots — votes stored unreadable",
+      "Encrypted ballots — votes stored unreadable",
       "Instant published results",
       "Live results dashboard",
     ],
@@ -59,7 +59,7 @@ const tabs = [
     ],
     solutions: [
       "Custom member database integration",
-      "Anonymous ballots stored unreadable",
+      "Encrypted ballots stored unreadable",
       "One vote per verified member",
       "Vote from anywhere",
     ],

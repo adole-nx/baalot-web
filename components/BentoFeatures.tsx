@@ -373,7 +373,7 @@ export default function BentoFeatures() {
             <span className="absolute bottom-4 right-6 font-syne font-extrabold text-[120px] leading-none pointer-events-none select-none" style={{ color: "rgba(255,255,255,0.02)" }}>01</span>
           </GlassCard>
 
-          {/* Card B — Anonymous ballots */}
+          {/* Card B — Encrypted ballots */}
           <GlassCard className="col-span-4 row-span-1 lg:row-span-2" index={1}>
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2 mb-4">
@@ -383,12 +383,12 @@ export default function BentoFeatures() {
                 <span className="text-[10px] font-bold tracking-wider uppercase" style={{ color: "#B27FF0" }}>Privacy</span>
               </div>
               <h3 className="font-syne font-bold text-xl text-white mb-3 leading-tight">
-                Anonymous By Design
+                Encrypted By Design
               </h3>
               <p className="text-sm leading-relaxed flex-1" style={{ color: "#64748B" }}>
-                Ballots are stored unreadable and unlinked from the voter. Your
-                identity is verified before you vote, never alongside it — not even
-                Baalot can see who you voted for.
+                Your choice is encrypted with AES-256-GCM before it is stored, and
+                ballots are recorded under a pseudonymous anchor, not your name. Baalot
+                holds the key that opens ballots to count them, so we never claim otherwise.
               </p>
 
               {/* Animated privacy ring */}

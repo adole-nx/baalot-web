@@ -30,7 +30,7 @@ const steps = [
   {
     number: "03",
     title: "Verify",
-    desc: "Results are tallied live the moment voting closes, with real-time tallies in the dashboard. Public, cryptographic verification on a block explorer is on our roadmap.",
+    desc: "Results are tallied live the moment voting closes, with real-time tallies in the dashboard. Anyone can replay the ballot chain through Baalot's public verification API.",
     icon: "✅",
   },
 ];

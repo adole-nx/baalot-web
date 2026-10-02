@@ -4,7 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { EASE } from "@/lib/animations";
 
 // ─── Africa SVG map with animated city dots ────────────────────
-// Filled dots are Nigeria, where the 110+ listed institutions actually are.
+// Filled dots are Nigeria, where Baalot's early-access institutions are.
 // The rest of the continent is where Baalot is expanding — not where it already runs.
 const cities = [
   { name: "Lagos, Nigeria",         x: 195, y: 256, major: true  },

@@ -1,11 +1,11 @@
 "use client";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { motion, useInView } from "framer-motion";
 import { EASE, EASE_SPRING, staggerContainer } from "@/lib/animations";
 import SectionReveal from "./SectionReveal";
 
-// ─── Zero-knowledge (roadmap) visualization ────────────────────────
-function ZKProofViz() {
+// ─── Sealed-ballot visualization ──────────────────────────────────
+function SealViz() {
   return (
     <svg viewBox="0 0 120 80" className="w-full h-20" aria-hidden="true">
       {/* Circuit paths */}
@@ -72,18 +72,19 @@ function BiometricViz() {
 }
 
 // ─── Security pillar card ──────────────────────────────────────
-const pillars = [
+type Pillar = { title: string; badge?: string; body: string; viz: ReactNode; color: string; glow: string };
+
+const pillars: Pillar[] = [
   {
-    title: "Zero-Knowledge Proofs",
-    badge: "Roadmap",
-    body: "We’re building zero-knowledge proofs so the system can prove a vote was counted without revealing how you voted. Today, ballots are already stored unreadable — no admin can link a ballot to its voter.",
-    viz: <ZKProofViz />,
+    title: "Encrypted Ballots",
+    body: "Your choice is sealed with AES-256-GCM before it is stored, and ballots are recorded under a pseudonymous anchor, not your name. Baalot holds the key that opens ballots to count them, so the claim is encrypted, not hidden from Baalot.",
+    viz: <SealViz />,
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.1)",
   },
   {
     title: "Verified Identity",
-    body: "Identity verification with a voting PIN and optional biometrics ensures one person, one vote — verified at registration, anonymous at the moment of casting.",
+    body: "One ballot per institution member ID, enforced on the server. A voting PIN — which your device's fingerprint or face unlock can fill in — guards the ballot, and your choice is encrypted at the moment of casting.",
     viz: <BiometricViz />,
     color: "#9B5DE5",
     glow: "rgba(155,93,229,0.1)",

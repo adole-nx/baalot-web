@@ -22,8 +22,8 @@ const SECURITY_LAYERS = [
     "Each accepted ballot is sealed into a per-election hash chain in the same transaction that records it. Altering any past ballot breaks every hash after it — including for Baalot.",
   ],
   [
-    "Anonymous ballots",
-    "Ballots are stored unreadable, and the chain publishes only a salted commitment of each one — enough to prove your ballot was counted, never enough to show what it said. Zero-knowledge proofs that verify validity without revealing the choice are on our roadmap.",
+    "Encrypted ballots",
+    "Ballots are stored unreadable, and the chain publishes only a salted commitment of each one — enough to prove your ballot was counted, never enough to show what it said.",
   ],
   [
     "Verified membership, one vote each",

@@ -7,7 +7,7 @@ import { EASE } from "@/lib/animations";
 // ─── Honest capability chips (real, present-tense features) ─────
 // These replaced a marquee of named universities that were never customers.
 const capabilities = [
-  "Anonymous ballots",
+  "Encrypted ballots",
   "Server-verified voting",
   "One vote per verified identity",
   "Voting PIN + optional biometrics",

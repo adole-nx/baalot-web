@@ -18,8 +18,8 @@ const pillars = [
   },
   {
     icon: "🔐",
-    title: "Anonymous Ballots",
-    body: "Ballots are stored unreadable, so no one — not even Baalot — can tie a vote back to a voter. The chain publishes only a salted commitment of each ballot: the voter alone holds the salt that proves it's theirs. Zero-knowledge proofs that verify a vote is valid without revealing who cast it are on our roadmap.",
+    title: "Encrypted Ballots",
+    body: "Each candidate choice is encrypted with AES-256-GCM before it is stored, and ballots are recorded under a pseudonymous anchor, not your name. The chain publishes only a salted commitment of each ballot: the voter alone holds the salt that proves it's theirs. Baalot operates the database and holds the key that opens ballots to count them, so we do not claim ballots are hidden from Baalot itself.",
     accent: "#7C3AED",
   },
   {
@@ -43,7 +43,7 @@ const pillars = [
   {
     icon: "🛡️",
     title: "Hardened Infrastructure",
-    body: "Votes are server-verified and stored unreadable on hardened, managed cloud infrastructure. A distributed node architecture, so that no single server can alter results, is on our roadmap.",
+    body: "Votes are server-verified and stored unreadable on hardened, managed cloud infrastructure. A change to any past ballot breaks the audit chain, which anyone can re-verify.",
     accent: "#EC4899",
   },
 ];

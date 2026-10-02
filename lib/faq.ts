@@ -24,7 +24,7 @@ export const faqs: Faq[] = [
   },
   {
     q: "Are votes on Baalot anonymous?",
-    a: "Yes. Ballots are stored unreadable and tallied on the server, so administrators, other members and Baalot itself cannot see how an individual voted.",
+    a: "Pseudonymous, not anonymous. Your choice is encrypted with AES-256-GCM before it is stored, and ballots are recorded under a pseudonymous anchor, not your name. Baalot runs the servers and holds the key that opens ballots to count them, so Baalot does not claim ballots are hidden from Baalot itself.",
   },
   {
     q: "How can a voter check that their vote was counted?",

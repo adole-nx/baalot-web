@@ -48,7 +48,7 @@ const jsonLd = {
       url: DOMAIN,
       logo: `${DOMAIN}/icon.png`,
       description:
-        "Baalot is a Nigerian election platform for universities, student unions, NGOs and organisations across Africa: server-enforced one-person-one-vote, anonymous ballots, and a tamper-evident ballot chain with voter receipts.",
+        "Baalot is a Nigerian election platform for universities, student unions, NGOs and organisations across Africa: server-enforced one-person-one-vote, encrypted ballots, and a tamper-evident ballot chain with voter receipts.",
       foundingLocation: { "@type": "Country", name: "Nigeria" },
       areaServed: [{ "@type": "Country", name: "Nigeria" }, { "@type": "Place", name: "Africa" }],
       founder: {
@@ -75,7 +75,7 @@ const jsonLd = {
       name: "Baalot",
       url: DOMAIN,
       description:
-        "Secure, anonymous election management for African universities and organisations. One vote per verified identity, live tallies, and a tamper-evident ballot chain.",
+        "Secure, verifiable election management for African universities and organisations. One vote per verified identity, live tallies, and a tamper-evident ballot chain.",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Android, iOS, Web",
       publisher: { "@id": ORG_ID },
@@ -94,20 +94,20 @@ export const metadata: Metadata = {
     template: "%s | Baalot",
   },
   description:
-    "Run secure, anonymous, server-verified elections at your university or organisation. One vote per verified identity, live tallies, and every ballot sealed in a tamper-evident chain with voter-verifiable receipts.",
+    "Run secure, server-verified elections at your university or organisation. One vote per verified identity, live tallies, and every ballot sealed in a tamper-evident chain with voter-verifiable receipts.",
   keywords: [
     "election management system",
     "university elections Nigeria",
     "secure online voting",
     "student union elections",
     "digital voting platform Africa",
-    "anonymous ballot system",
+    "encrypted ballot system",
     "verified identity voting",
     "electoral management software",
   ],
   openGraph: {
     title: "Baalot — Elections You Can Trust",
-    description: "Secure, anonymous election management for universities and organisations across Africa.",
+    description: "Secure, verifiable election management for universities and organisations across Africa.",
     url: DOMAIN,
     siteName: "Baalot",
     images: [{ url: `${DOMAIN}/og-image.png`, width: 1200, height: 630, alt: "Baalot — Secure Election Platform" }],
@@ -117,7 +117,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Baalot — Elections You Can Trust",
-    description: "Secure, anonymous election management for Africa.",
+    description: "Secure, verifiable election management for Africa.",
     images: [`${DOMAIN}/og-image.png`],
   },
   robots: {
