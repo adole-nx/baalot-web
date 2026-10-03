@@ -5,6 +5,10 @@
       "destination": "/institution/"
     },
     {
+      "source": "/__/auth/handler/:file(.+\\.js)",
+      "destination": "https://baalot-661a5.firebaseapp.com/__/auth/:file"
+    },
+    {
       "source": "/__/auth/:file/",
       "destination": "https://baalot-661a5.firebaseapp.com/__/auth/:file"
     },
