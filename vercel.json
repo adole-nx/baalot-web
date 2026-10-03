@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/institution/:id",
-      "destination": "/institution/index.html"
+      "source": "/institution/:id/",
+      "destination": "/institution/"
     }
   ],
   "headers": [
