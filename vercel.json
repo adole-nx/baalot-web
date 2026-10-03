@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/institution/:id",
+      "destination": "/institution/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)\\.html",
