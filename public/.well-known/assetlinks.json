@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.adolenx.baalot",
+      "sha256_cert_fingerprints": [
+        "10:A9:9C:CB:0D:9C:14:F7:6E:B0:4A:98:96:4C:14:C1:07:A2:AF:CA:0E:A5:60:2B:4B:B1:4E:9B:12:62:22:02"
+      ]
+    }
+  }
+]
