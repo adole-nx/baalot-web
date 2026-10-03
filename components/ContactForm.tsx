@@ -202,7 +202,7 @@ export default function ContactForm() {
                 title: "Chat on WhatsApp",
                 desc: "Prefer a quick conversation? Reach us directly.",
                 cta: "Open WhatsApp →",
-                href: "https://wa.me/2349000000000",
+                href: "https://wa.me/2349038618447",
                 color: "#22c55e",
               },
             ].map((card) => {
