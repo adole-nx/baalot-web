@@ -4,9 +4,10 @@ import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
 // Personal diet/training tracker. baalot-web is a static export with no auth or
-// backend, so this uses a password gate + localStorage (with a JSON export as the
-// off-browser backup). Only the SHA-256 of the password ships in the bundle.
-const PASSWORD_SHA256 = "f8a603132cb4ad4ce8a06fb2e3fde460f969d8448ea4899a1143b15b9c39f830";
+// backend, so data lives in this browser's localStorage (JSON export is the
+// off-browser backup). Because the data never leaves the browser, the password is
+// per-browser too: set on first visit, stored only as a SHA-256 hash.
+const PASS_HASH_KEY = "tracker_pass_hash";
 
 type Meal = { name: string; calories: number; protein: number };
 type MealKey = "breakfast" | "lunch" | "dinner" | "snacks";
@@ -160,33 +161,53 @@ function NumField({ text, value, onChange, step = 1 }: { text: string; value: nu
 }
 
 function Gate({ onUnlock }: { onUnlock: () => void }) {
+  const [stored] = useState(() => {
+    try {
+      return localStorage.getItem(PASS_HASH_KEY);
+    } catch {
+      return null;
+    }
+  });
   const [pw, setPw] = useState("");
-  const [err, setErr] = useState(false);
+  const [confirm, setConfirm] = useState("");
+  const [err, setErr] = useState("");
+  const setup = !stored;
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if ((await sha256(pw.trim())) === PASSWORD_SHA256) {
+    const hash = await sha256(pw.trim());
+    if (setup) {
+      if (pw.trim().length < 4) return setErr("Use at least 4 characters.");
+      if (pw !== confirm) return setErr("Passwords don't match.");
       try {
-        localStorage.setItem(UNLOCK_KEY, "true");
+        localStorage.setItem(PASS_HASH_KEY, hash);
       } catch {}
-      onUnlock();
-    } else setErr(true);
+    } else if (hash !== stored) return setErr("Wrong password.");
+    try {
+      localStorage.setItem(UNLOCK_KEY, "true");
+    } catch {}
+    onUnlock();
   };
+  const field = (value: string, set: (v: string) => void, placeholder: string, autoFocus = false) => (
+    <input
+      type="password"
+      autoFocus={autoFocus}
+      className={input}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => {
+        set(e.target.value);
+        setErr("");
+      }}
+    />
+  );
   return (
     <form onSubmit={submit} className={`${card} mx-auto mt-10 max-w-sm space-y-3`}>
-      <h1 className="font-syne text-xl font-bold text-primary">Private</h1>
-      <input
-        type="password"
-        autoFocus
-        className={input}
-        placeholder="Password"
-        value={pw}
-        onChange={(e) => {
-          setPw(e.target.value);
-          setErr(false);
-        }}
-      />
-      {err && <p className="text-sm text-vote-red">Wrong password.</p>}
-      <button className="w-full rounded-lg bg-amber-500 py-2 text-sm font-semibold text-white">Unlock</button>
+      <h1 className="font-syne text-xl font-bold text-primary">{setup ? "Set a password" : "Private"}</h1>
+      {setup && <p className="text-sm text-secondary">First visit on this browser. Pick a password to lock the tracker here.</p>}
+      {field(pw, setPw, "Password", true)}
+      {setup && field(confirm, setConfirm, "Confirm password")}
+      {err && <p className="text-sm text-vote-red">{err}</p>}
+      <button className="w-full rounded-lg bg-amber-500 py-2 text-sm font-semibold text-white">{setup ? "Set & unlock" : "Unlock"}</button>
     </form>
   );
 }
@@ -279,9 +300,22 @@ function Tracker() {
                   </button>
                 ))}
               </div>
+              <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  try {
+                    localStorage.removeItem(UNLOCK_KEY);
+                  } catch {}
+                  setUnlocked(false);
+                }}
+                className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-secondary hover:text-primary"
+              >
+                Lock
+              </button>
               <button onClick={exportJson} className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-secondary hover:text-primary">
                 Download as JSON
               </button>
+              </div>
             </div>
 
             {tab === "daily" ? (
