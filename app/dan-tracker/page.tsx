@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from "firebase/auth";
+import { getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from "firebase/auth";
 import { collection, doc, onSnapshot, setDoc, writeBatch } from "firebase/firestore";
-import { auth, db } from "@/lib/trackerFirebase";
+import { auth, db, sameOriginAuth } from "@/lib/trackerFirebase";
 import Progress from "./Progress";
 import { addDays, GOAL, today, totals, type DayLog, type Lift, type Meal, type MealKey, type WeekLog } from "./shared";
 
@@ -123,6 +123,17 @@ function GoalBar({ value, goal, ceiling = false }: { value: number; goal: number
   );
 }
 
+const UA = typeof navigator === "undefined" ? "" : navigator.userAgent;
+const MOBILE = /Android|iPhone|iPad|iPod/i.test(UA);
+// Google refuses OAuth inside embedded webviews (disallowed_useragent).
+const IN_APP = /FBAN|FBAV|Instagram|WhatsApp|Snapchat|TikTok|Line\/|; wv\)/i.test(UA);
+const authMessage = (e: unknown) => {
+  const code = (e as { code?: string }).code ?? "";
+  if (code === "auth/popup-blocked") return "Your browser blocked the sign-in window. Allow pop-ups for baalot.site, then tap again.";
+  if (code === "auth/network-request-failed") return "No connection. Try again when you're online.";
+  return `Google sign-in failed (${code || "unknown"}).`;
+};
+
 async function sha256(text: string) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
@@ -192,15 +203,24 @@ function Gate({ onUnlock }: { onUnlock: () => void }) {
     } catch {}
     onUnlock();
   };
+  // Surface a failed redirect sign-in instead of silently landing back on the gate.
+  useEffect(() => {
+    getRedirectResult(auth).catch((e) => setErr(authMessage(e)));
+  }, []);
   const google = async () => {
     setErr("");
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    // Phones: a same-origin redirect is more reliable than a popup tab.
+    if (sameOriginAuth && MOBILE) return signInWithRedirect(auth, provider);
     try {
       await signInWithPopup(auth, provider);
     } catch (e) {
       const code = (e as { code?: string }).code ?? "";
-      if (code === "auth/popup-blocked" || code === "auth/operation-not-supported-in-this-environment") await signInWithRedirect(auth, provider);
-      else if (code !== "auth/popup-closed-by-user" && code !== "auth/cancelled-popup-request") setErr(`Google sign-in failed (${code || "unknown"}).`);
+      if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return;
+      if (sameOriginAuth && (code === "auth/popup-blocked" || code === "auth/operation-not-supported-in-this-environment"))
+        return signInWithRedirect(auth, provider);
+      setErr(authMessage(e));
     }
   };
   const field = (value: string, set: (v: string) => void, placeholder: string, autoFocus = false) => (
@@ -226,6 +246,11 @@ function Gate({ onUnlock }: { onUnlock: () => void }) {
       >
         Sign in with Google · syncs across devices
       </button>
+      {IN_APP && (
+        <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-primary">
+          Google blocks sign-in inside in-app browsers. Open this page in Chrome or Safari.
+        </p>
+      )}
       <p className="pt-2 text-center text-xs uppercase tracking-wider text-secondary">or this device only</p>
       {setup && <p className="text-sm text-secondary">Pick a password to lock the tracker on this browser.</p>}
       {field(pw, setPw, "Password", true)}
