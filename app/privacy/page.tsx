@@ -68,7 +68,7 @@ Each provider operates under standard data protection agreements.`,
 • Objection — object to processing based on legitimate interests.
 • Restriction — request we limit how we process your data while a complaint is resolved.
 
-To exercise any of these rights, email us at adoledaniel111@gmail.com. We will respond within 30 days.`,
+To exercise any of these rights, email us at privacy@baalot.site. We will respond within 30 days.`,
   },
   {
     title: "Data Retention",
@@ -87,7 +87,7 @@ To exercise any of these rights, email us at adoledaniel111@gmail.com. We will r
     body: `If you have any questions about this Privacy Policy or how we handle your data, please contact:
 
 Developer: Adole Daniel
-Email: adoledaniel111@gmail.com
+Email: privacy@baalot.site
 Website: https://baalot.site
 
 If you are unhappy with our response, you have the right to lodge a complaint with the Nigeria Data Protection Bureau (NDPB) or your local supervisory authority.

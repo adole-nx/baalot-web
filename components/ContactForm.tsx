@@ -193,8 +193,8 @@ export default function ContactForm() {
                 icon: Mail,
                 title: "Talk to Sales",
                 desc: "Ready to run an election? We’ll reply within one business day.",
-                cta: "hello@baalot.site",
-                href: "mailto:hello@baalot.site",
+                cta: "institutions@baalot.site",
+                href: "mailto:institutions@baalot.site",
                 color: "#9B5DE5",
               },
               {
@@ -202,7 +202,7 @@ export default function ContactForm() {
                 title: "Chat on WhatsApp",
                 desc: "Prefer a quick conversation? Reach us directly.",
                 cta: "Open WhatsApp →",
-                href: "https://wa.me/2349000000000",
+                href: "https://wa.me/2349038618447",
                 color: "#22c55e",
               },
             ].map((card) => {
