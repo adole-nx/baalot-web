@@ -1,41 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, type User } from "firebase/auth";
+import { collection, doc, onSnapshot, setDoc, writeBatch } from "firebase/firestore";
+import { auth, db } from "@/lib/trackerFirebase";
+import Progress from "./Progress";
+import { addDays, GOAL, today, totals, type DayLog, type Lift, type Meal, type MealKey, type WeekLog } from "./shared";
 
-// Personal diet/training tracker. baalot-web is a static export with no auth or
-// backend, so data lives in this browser's localStorage (JSON export is the
-// off-browser backup). Because the data never leaves the browser, the password is
-// per-browser too: set on first visit, stored only as a SHA-256 hash.
+// Personal diet/training tracker. Signed in with Google, logs sync through Firestore
+// at dan_tracker/{uid}/{days,weeks}/* (owner-only rule) with an offline cache, and
+// localStorage mirrors everything so the page still works signed out. The local
+// password path is per-browser: set on first visit, stored only as a SHA-256 hash.
 const PASS_HASH_KEY = "tracker_pass_hash";
-
-type Meal = { name: string; calories: number; protein: number };
-type MealKey = "breakfast" | "lunch" | "dinner" | "snacks";
-type DayLog = {
-  date: string;
-  breakfast: Meal[];
-  lunch: Meal[];
-  dinner: Meal[];
-  snacks: Meal[];
-  water: number;
-  steps: number;
-  sleepHours: number;
-  gymSession: string;
-  gymCompleted: boolean;
-  absCompleted: boolean;
-  creatineTaken: boolean;
-  notes: string;
-};
-type Lift = "squat" | "bench" | "row" | "rdl" | "ohp" | "pullup";
-type WeekLog = {
-  weekStarting: string;
-  weightKg: number;
-  waistCm: number;
-  photoTaken: boolean;
-  prs: Record<Lift, boolean>;
-  deloadWeek: boolean;
-  notes: string;
-};
 
 const MEALS: [MealKey, string][] = [
   ["breakfast", "Breakfast"],
@@ -67,10 +44,6 @@ const DAYS_KEY = "tracker_days";
 const WEEKS_KEY = "tracker_weeks";
 const UNLOCK_KEY = "tracker_unlocked";
 
-const today = () => {
-  const d = new Date();
-  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-};
 const emptyDay = (date: string): DayLog => ({
   date,
   breakfast: [],
@@ -111,13 +84,45 @@ function save(key: string, value: unknown) {
     /* storage full or blocked — export still works from memory */
   }
 }
-const totals = (d: DayLog) => {
-  const all = [...d.breakfast, ...d.lunch, ...d.dinner, ...d.snacks];
-  return {
-    calories: all.reduce((s, m) => s + (m.calories || 0), 0),
-    protein: all.reduce((s, m) => s + (m.protein || 0), 0),
-  };
-};
+// Union of local + cloud, newest updatedAt wins (cloud wins ties). `upload` is what the
+// cloud is missing or holds an older copy of.
+function mergeLogs<T extends { updatedAt?: number }>(local: T[], cloud: T[], key: (x: T) => string) {
+  const map = new Map(cloud.map((c) => [key(c), c]));
+  const upload: T[] = [];
+  for (const l of local) {
+    const c = map.get(key(l));
+    if (!c || (l.updatedAt ?? 0) > (c.updatedAt ?? 0)) {
+      map.set(key(l), l);
+      upload.push(l);
+    }
+  }
+  return { merged: [...map.values()].sort((a, b) => key(b).localeCompare(key(a))), upload };
+}
+
+function GoalBar({ value, goal, ceiling = false }: { value: number; goal: number; ceiling?: boolean }) {
+  const ok = ceiling ? value > 0 && value <= goal * 1.05 : value >= goal;
+  const over = ceiling && value > goal * 1.05;
+  return (
+    <div className="mt-1.5 w-36">
+      <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+        <div
+          className={`h-full rounded-full ${over ? "bg-vote-red" : ok ? "bg-teal-500" : "bg-amber-500"}`}
+          style={{ width: `${Math.min(100, (value / goal) * 100)}%` }}
+        />
+      </div>
+      <p className="mt-1 text-xs text-secondary">
+        {ceiling
+          ? over
+            ? `${(value - goal).toLocaleString()} over ${goal.toLocaleString()}`
+            : `${Math.max(0, goal - value).toLocaleString()} left of ${goal.toLocaleString()}`
+          : ok
+            ? `goal ${goal} hit`
+            : `${goal - value} to go`}
+      </p>
+    </div>
+  );
+}
+
 async function sha256(text: string) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
@@ -187,6 +192,17 @@ function Gate({ onUnlock }: { onUnlock: () => void }) {
     } catch {}
     onUnlock();
   };
+  const google = async () => {
+    setErr("");
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e) {
+      const code = (e as { code?: string }).code ?? "";
+      if (code === "auth/popup-blocked" || code === "auth/operation-not-supported-in-this-environment") await signInWithRedirect(auth, provider);
+      else if (code !== "auth/popup-closed-by-user" && code !== "auth/cancelled-popup-request") setErr(`Google sign-in failed (${code || "unknown"}).`);
+    }
+  };
   const field = (value: string, set: (v: string) => void, placeholder: string, autoFocus = false) => (
     <input
       type="password"
@@ -202,8 +218,16 @@ function Gate({ onUnlock }: { onUnlock: () => void }) {
   );
   return (
     <form onSubmit={submit} className={`${card} mx-auto mt-10 max-w-sm space-y-3`}>
-      <h1 className="font-syne text-xl font-bold text-primary">{setup ? "Set a password" : "Private"}</h1>
-      {setup && <p className="text-sm text-secondary">First visit on this browser. Pick a password to lock the tracker here.</p>}
+      <h1 className="font-syne text-xl font-bold text-primary">Private</h1>
+      <button
+        type="button"
+        onClick={google}
+        className="w-full rounded-lg border border-white/15 bg-elevated py-2 text-sm font-semibold text-primary hover:border-amber-500"
+      >
+        Sign in with Google · syncs across devices
+      </button>
+      <p className="pt-2 text-center text-xs uppercase tracking-wider text-secondary">or this device only</p>
+      {setup && <p className="text-sm text-secondary">Pick a password to lock the tracker on this browser.</p>}
       {field(pw, setPw, "Password", true)}
       {setup && field(confirm, setConfirm, "Confirm password")}
       {err && <p className="text-sm text-vote-red">{err}</p>}
@@ -220,12 +244,125 @@ function Tracker() {
       return false;
     }
   });
-  const [tab, setTab] = useState<"daily" | "weekly">("daily");
+  const [tab, setTab] = useState<"daily" | "weekly" | "progress">("daily");
   const [days, setDays] = useState<DayLog[]>(() => load<DayLog>(DAYS_KEY));
   const [weeks, setWeeks] = useState<WeekLog[]>(() => load<WeekLog>(WEEKS_KEY));
   const [day, setDay] = useState<DayLog>(() => days.find((x) => x.date === today()) ?? emptyDay(today()));
   const [week, setWeek] = useState<WeekLog>(emptyWeek(today()));
   const [flash, setFlash] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+  const [online, setOnline] = useState(() => navigator.onLine);
+  const [pending, setPending] = useState(false);
+  const [syncErr, setSyncErr] = useState("");
+  const daysRef = useRef(days);
+  const weeksRef = useRef(weeks);
+
+  const applyDays = (next: DayLog[]) => {
+    daysRef.current = next;
+    setDays(next);
+    save(DAYS_KEY, next);
+  };
+  const applyWeeks = (next: WeekLog[]) => {
+    weeksRef.current = next;
+    setWeeks(next);
+    save(WEEKS_KEY, next);
+  };
+
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (u) => {
+        setUser(u);
+        setAuthReady(true);
+      }),
+    [],
+  );
+  useEffect(() => {
+    const on = () => setOnline(true);
+    const off = () => setOnline(false);
+    window.addEventListener("online", on);
+    window.addEventListener("offline", off);
+    return () => {
+      window.removeEventListener("online", on);
+      window.removeEventListener("offline", off);
+    };
+  }, []);
+
+  // Live sync. The first server (non-cache) snapshot of each collection pushes up
+  // anything this browser has that the cloud lacks or holds older; after that, local
+  // writes go straight through setDoc. An open form is only replaced by a remote
+  // update when it has no unsaved edits.
+  useEffect(() => {
+    if (!user) return;
+    const col = (name: string) => collection(db, "dan_tracker", user.uid, name);
+    const pend = { days: false, weeks: false };
+    const sub = <T extends { updatedAt?: number }>(
+      name: "days" | "weeks",
+      key: (x: T) => string,
+      ref: { current: T[] },
+      apply: (next: T[]) => void,
+      setForm: (f: (cur: T) => T) => void,
+      blank: (k: string) => T,
+    ) => {
+      let seeded = false;
+      return onSnapshot(
+        col(name),
+        { includeMetadataChanges: true },
+        (snap) => {
+          const old = ref.current;
+          const { merged, upload } = mergeLogs(old, snap.docs.map((d) => d.data() as T), key);
+          if (!seeded && !snap.metadata.fromCache) {
+            seeded = true;
+            if (upload.length) {
+              const b = writeBatch(db);
+              upload.forEach((x) => b.set(doc(col(name), key(x)), x));
+              b.commit().catch((e) => setSyncErr(String(e?.code ?? e)));
+            }
+          }
+          apply(merged);
+          setForm((cur) => {
+            const now = merged.find((x) => key(x) === key(cur));
+            const was = old.find((x) => key(x) === key(cur)) ?? blank(key(cur));
+            return now && JSON.stringify(cur) === JSON.stringify(was) ? now : cur;
+          });
+          pend[name] = snap.metadata.hasPendingWrites;
+          setPending(pend.days || pend.weeks);
+          setSyncErr("");
+        },
+        (e) => setSyncErr(e.code),
+      );
+    };
+    const a = sub<DayLog>("days", (d) => d.date, daysRef, applyDays, setDay, emptyDay);
+    const b = sub<WeekLog>("weeks", (w) => w.weekStarting, weeksRef, applyWeeks, setWeek, emptyWeek);
+    return () => {
+      a();
+      b();
+    };
+  }, [user]);
+
+  const push = (name: "days" | "weeks", id: string, data: DayLog | WeekLog) => {
+    if (!user) return;
+    setPending(true);
+    setDoc(doc(db, "dan_tracker", user.uid, name, id), data).catch((e) => setSyncErr(String(e?.code ?? e)));
+  };
+
+  const frequent = useMemo(() => {
+    const out = {} as Record<MealKey, Meal[]>;
+    for (const [k] of MEALS) {
+      const seen = new Map<string, { meal: Meal; n: number }>();
+      for (const d of days)
+        for (const m of d[k]) {
+          const name = m.name.trim();
+          if (!name) continue;
+          const hit = seen.get(name.toLowerCase());
+          if (hit) hit.n++;
+          else seen.set(name.toLowerCase(), { meal: { ...m, name }, n: 1 });
+        }
+      out[k] = [...seen.values()].sort((a, b) => b.n - a.n).slice(0, 6).map((x) => x.meal);
+    }
+    return out;
+  }, [days]);
+  const lastBefore = days.find((d) => d.date < day.date && MEALS.some(([k]) => d[k].length));
 
   const notify = (msg: string) => {
     setFlash(msg);
@@ -239,20 +376,18 @@ function Tracker() {
     setDay((d) => ({ ...d, [key]: d[key].map((m, j) => (j === i ? { ...m, ...patch } : m)) }));
 
   const saveDay = () => {
-    const cleaned = { ...day };
+    const cleaned = { ...day, updatedAt: Date.now() };
     for (const [k] of MEALS) cleaned[k] = day[k].filter((m) => m.name.trim() || m.calories || m.protein);
-    const next = [...days.filter((x) => x.date !== day.date), cleaned].sort((a, b) => b.date.localeCompare(a.date));
-    setDays(next);
+    applyDays([...days.filter((x) => x.date !== day.date), cleaned].sort((a, b) => b.date.localeCompare(a.date)));
     setDay(cleaned);
-    save(DAYS_KEY, next);
+    push("days", cleaned.date, cleaned);
     notify(`Saved ${day.date}`);
   };
   const saveWeek = () => {
-    const next = [...weeks.filter((x) => x.weekStarting !== week.weekStarting), week].sort((a, b) =>
-      b.weekStarting.localeCompare(a.weekStarting),
-    );
-    setWeeks(next);
-    save(WEEKS_KEY, next);
+    const saved = { ...week, updatedAt: Date.now() };
+    applyWeeks([...weeks.filter((x) => x.weekStarting !== week.weekStarting), saved].sort((a, b) => b.weekStarting.localeCompare(a.weekStarting)));
+    setWeek(saved);
+    push("weeks", saved.weekStarting, saved);
     notify(`Saved week of ${week.weekStarting}`);
   };
   const exportJson = () => {
@@ -279,7 +414,7 @@ function Tracker() {
 
   return (
     <main className="min-h-screen bg-bg px-4 pb-24 pt-28 font-inter text-primary">
-      {!unlocked ? (
+      {!unlocked && !user && !authReady ? null : !unlocked && !user ? (
         <Gate onUnlock={() => setUnlocked(true)} />
       ) : (
         <div className="mx-auto grid max-w-6xl animate-[fadeIn_0.4s_ease-out] gap-6 lg:grid-cols-[1fr_280px]">
@@ -288,7 +423,7 @@ function Tracker() {
           <div className="min-w-0 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex rounded-full border border-white/10 p-1">
-                {(["daily", "weekly"] as const).map((t) => (
+                {(["daily", "weekly", "progress"] as const).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
@@ -300,17 +435,26 @@ function Tracker() {
                   </button>
                 ))}
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+              <span
+                title={user?.email ?? undefined}
+                className={`rounded-full px-3 py-1 text-xs ${
+                  !user ? "bg-white/5 text-secondary" : syncErr ? "bg-vote-red/15 text-vote-red" : !online || pending ? "bg-amber-500/15 text-amber-400" : "bg-teal-glow text-teal-500"
+                }`}
+              >
+                {!user ? "This device only" : syncErr ? `Sync error: ${syncErr}` : !online ? "Offline · will sync" : pending ? "Syncing…" : "Synced ✓"}
+              </span>
               <button
                 onClick={() => {
                   try {
                     localStorage.removeItem(UNLOCK_KEY);
                   } catch {}
                   setUnlocked(false);
+                  if (user) signOut(auth);
                 }}
                 className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-secondary hover:text-primary"
               >
-                Lock
+                {user ? "Sign out" : "Lock"}
               </button>
               <button onClick={exportJson} className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-secondary hover:text-primary">
                 Download as JSON
@@ -318,7 +462,9 @@ function Tracker() {
               </div>
             </div>
 
-            {tab === "daily" ? (
+            {tab === "progress" ? (
+              <Progress days={days} weeks={weeks} />
+            ) : tab === "daily" ? (
               <>
                 <div className={`${card} flex flex-wrap items-end gap-6`}>
                   <label className="block">
@@ -328,11 +474,21 @@ function Tracker() {
                   <div>
                     <span className={label}>Calories</span>
                     <p className="font-syne text-3xl font-bold text-amber-400">{dayTotals.calories.toLocaleString()}</p>
+                    <GoalBar value={dayTotals.calories} goal={GOAL.calories} ceiling />
                   </div>
                   <div>
                     <span className={label}>Protein</span>
                     <p className="font-syne text-3xl font-bold text-teal-500">{dayTotals.protein}g</p>
+                    <GoalBar value={dayTotals.protein} goal={GOAL.protein} />
                   </div>
+                  {lastBefore && !MEALS.some(([k]) => day[k].length) && (
+                    <button
+                      onClick={() => setDay((d) => ({ ...d, breakfast: lastBefore.breakfast, lunch: lastBefore.lunch, dinner: lastBefore.dinner, snacks: lastBefore.snacks }))}
+                      className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-secondary hover:text-primary"
+                    >
+                      Copy meals from {lastBefore.date === addDays(day.date, -1) ? "yesterday" : lastBefore.date}
+                    </button>
+                  )}
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
@@ -380,6 +536,21 @@ function Tracker() {
                       >
                         + Add item
                       </button>
+                      {frequent[key].some((f) => !day[key].some((m) => m.name.trim().toLowerCase() === f.name.toLowerCase())) && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {frequent[key]
+                            .filter((f) => !day[key].some((m) => m.name.trim().toLowerCase() === f.name.toLowerCase()))
+                            .map((f) => (
+                              <button
+                                key={f.name}
+                                onClick={() => setDay((d) => ({ ...d, [key]: [...d[key].filter((m) => m.name.trim() || m.calories || m.protein), { ...f }] }))}
+                                className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-secondary hover:border-amber-500 hover:text-primary"
+                              >
+                                + {f.name} <span className="opacity-60">{f.calories}</span>
+                              </button>
+                            ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
