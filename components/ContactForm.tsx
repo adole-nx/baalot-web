@@ -193,8 +193,8 @@ export default function ContactForm() {
                 icon: Mail,
                 title: "Talk to Sales",
                 desc: "Ready to run an election? We’ll reply within one business day.",
-                cta: "hello@baalot.site",
-                href: "mailto:hello@baalot.site",
+                cta: "institutions@baalot.site",
+                href: "mailto:institutions@baalot.site",
                 color: "#9B5DE5",
               },
               {
