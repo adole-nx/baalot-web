@@ -49,6 +49,7 @@ We will never use your information for marketing purposes without explicit opt-i
 • Sentry — error reporting. Error logs contain no personally identifiable information.
 • Prembly IdentityPass — ID number and liveness checks for the optional verified badge, and ID card reading.
 • Groq — processes Levi chat messages and voice recordings, and reads the text on scanned ID cards.
+• Google (Gemini) — AI processing for the voice assistant (Levi). Gemini only answers general how-to questions and is not sent your name, institution, faculty or screen contents; Google may use these prompts to improve its products.
 • Google AdMob — banner ads, using your device's advertising ID.
 • Paystack — plan payments. Card details are entered on Paystack's own checkout and never reach Baalot.
 • Cloudflare R2 — storage for campaign reels.
@@ -92,7 +93,7 @@ Website: https://baalot.site
 
 If you are unhappy with our response, you have the right to lodge a complaint with the Nigeria Data Protection Bureau (NDPB) or your local supervisory authority.
 
-This policy was last updated: September 27, 2026.`,
+This policy was last updated: October 9, 2026.`,
   },
 ];
 
