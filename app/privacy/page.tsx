@@ -20,7 +20,7 @@ const sections = [
 • Location data — optional location shared only when you turn on the live voter map. We do not track your location in the background.
 • Usage logs — app interactions and error reports used to improve the platform (via Sentry and Firebase Analytics).
 
-Ads — the free app shows banner ads from Google AdMob, which uses your device's advertising ID. You can reset or delete that ID in your Android settings.
+Ads — the app shows ads in the news feed and between reels. Some are Baalot's own "Sponsored" reels, which collect nothing about you. The rest come from Google AdMob, labelled "Ad", which uses your device's advertising ID, IP address (for general location) and how you interact with the ad. In the EEA, UK and Switzerland Google asks for your consent first. Everywhere else Baalot asks once whether ads may be personalised, and until you answer they are not. You can change that answer in Settings › Security › Ad choices, and reset or delete the advertising ID in your Android settings. Non-personalised ads still use the ID to limit repeats, measure the ad and stop fraud.
 
 We do not collect payment card details. We do not sell data.`,
   },
@@ -35,7 +35,7 @@ Specifically:
 • To send election notifications you have opted into.
 • To detect fraud and maintain election integrity.
 • To diagnose technical issues and improve platform reliability.
-• To show ads in the free app (via Google AdMob).
+• To show ads (Baalot's own sponsored reels, and Google AdMob ads, personalised only if you agree).
 • To comply with legal obligations and respond to valid regulatory requests.
 
 We will never use your information for marketing purposes without explicit opt-in consent.`,
@@ -50,7 +50,7 @@ We will never use your information for marketing purposes without explicit opt-i
 • Prembly IdentityPass — ID number and liveness checks for the optional verified badge, and ID card reading.
 • Groq — processes Levi chat messages and voice recordings, and reads the text on scanned ID cards.
 • Google (Gemini) — AI processing for the voice assistant (Levi). Gemini only answers general how-to questions and is not sent your name, institution, faculty or screen contents; Google may use these prompts to improve its products.
-• Google AdMob — banner ads, using your device's advertising ID.
+• Google AdMob — ads in the news feed and between reels, using your device's advertising ID, IP address and ad interactions, for advertising, measurement and fraud prevention.
 • Paystack — plan payments. Card details are entered on Paystack's own checkout and never reach Baalot.
 • Cloudflare R2 — storage for campaign reels.
 • Expo — push notification delivery.
